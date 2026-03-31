@@ -1,85 +1,93 @@
 <!doctype html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sakedo App</title>
-    <link rel="stylesheet" href="css/layout.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-  </head>
-  <body>
-    <div class="app-container">
-      <aside class="sidebar">
-        <div class="nav-menu">
-          <div class="nav-item" onclick="navigate('home', this)">
-            <i class="fa-solid fa-house"></i>
-            <span class="nav-label">Tổng quan</span>
-          </div>
-          <div class="nav-item" onclick="navigate('fridge', this)">
-            <i class="fa-solid fa-refrigerator"></i>
-            <span class="nav-label">Tủ lạnh</span>
-          </div>
 
-          <div class="camera-wrapper">
-            <div class="camera-item" onclick="navigate('camera', this)">
-              <i class="fa-solid fa-camera"></i>
-            </div>
-            <span class="nav-label">Quét mã</span>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Sakedo App</title>
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
 
-          <div class="nav-item" onclick="navigate('ai-chat', this)">
-            <i class="fa-solid fa-robot"></i>
-            <span class="nav-label">Mr. Chè</span>
-          </div>
-          <div class="nav-item" onclick="navigate('favorite', this)">
-            <i class="fa-solid fa-heart"></i>
-            <span class="nav-label">Yêu thích</span>
-          </div>
-          <div class="nav-item active" onclick="navigate('profile', this)">
-            <i class="fa-solid fa-gear"></i>
-            <span class="nav-label">Cài đặt</span>
-          </div>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="logo">S</div>
+
+      <div class="nav-menu">
+        <div class="nav-item" onclick="navigate('home', this)">
+          <i class="fa-solid fa-house"></i>
+          <span class="nav-label">Tổng quan</span>
         </div>
 
-        <div class="mode-switch-wrapper">
-          <div class="mode-switch">
-            <span class="light-mode"
-              ><i class="fa-solid fa-sun"></i> Light</span
-            >
-            <span class="dark-mode"><i class="fa-solid fa-moon"></i> Dark</span>
-          </div>
+        <div class="nav-item" onclick="navigate('fridge', this)">
+          <i class="fa-solid fa-snowflake"></i>
+          <span class="nav-label">Tủ lạnh</span>
         </div>
-      </aside>
 
-      <div class="main-wrapper">
-        <header class="topbar">
-          <div class="user-profile">
-            <img
-              src="assets/img/avatar.jpg"
-              class="user-avatar"
-              onerror="this.src = 'https://via.placeholder.com/45'"
-            />
-            <div class="welcome">
-              <p>Xin chào, Knuw! 🤘</p>
-              <span>Welcome back</span>
-            </div>
+        <div class="camera-btn" onclick="navigate('camera', this)">
+          <div class="camera-bulge">
+            <i class="fa-solid fa-camera"></i>
           </div>
+          <span class="nav-label">Quét mã</span>
+        </div>
 
-          <div class="search-container">
-            <input type="text" placeholder="Search recipe..." />
-            <button class="btn-search">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
-
-          <button class="btn-noti"><i class="fa-solid fa-bell"></i></button>
-        </header>
-
-        <main id="app-root"></main>
+        <div class="nav-item" onclick="navigate('ai-chat', this)">
+          <i class="fa-solid fa-robot"></i>
+          <span class="nav-label">Mr. Chè</span>
+        </div>
+        <div class="nav-item" onclick="navigate('favorite', this)">
+          <i class="fa-solid fa-heart"></i>
+          <span class="nav-label">Yêu thích</span>
+        </div>
+        <div class="nav-item active" onclick="navigate('profile', this)">
+          <i class="fa-solid fa-gear"></i>
+          <span class="nav-label">Cài đặt</span>
+        </div>
       </div>
+
+      <div class="mode-switch-wrapper">
+        <div class="mode-switch">
+          <span class="light-mode"><i class="fa-solid fa-sun"></i> Light</span>
+          <span class="dark-mode"><i class="fa-solid fa-moon"></i> Dark</span>
+        </div>
+      </div>
+    </aside>
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="auth-buttons">
+          <a href="login.html" class="btn-auth-top active" onclick="switchAuth(event, this, 'login.html')">Đăng nhập</a>
+          <a href="register.html" class="btn-auth-top" onclick="switchAuth(event, this, 'register.html')">Đăng ký</a>
+        </div>
+
+        <div class="search-container">
+          <input type="text" placeholder="" />
+          <button class="btn-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+        </div>
+
+        <div class="topbar-logo">
+          <img src="assets/images/logo.png" alt="Sakedo Logo" onerror="this.onerror=null; this.src = 'https://via.placeholder.com/150x50?text=SAKEDO'" />
+        </div>
+      </header>
+
+      <main id="app-root"></main>
     </div>
-    <script src="js/router.js"></script>
-  </body>
+  </div>
+  <script src="js/router.js"></script>
+  <script>
+    function switchAuth(e, element, targetUrl) {
+      e.preventDefault(); // Ngăn trình duyệt chuyển trang ngay lập tức
+      // Xoá class active ở tất cả các nút
+      document.querySelectorAll('.btn-auth-top').forEach(btn => btn.classList.remove('active'));
+      // Thêm class active vào nút vừa click
+      element.classList.add('active');
+      
+      // Chuyển trang sau 200ms để người dùng kịp nhìn thấy hiệu ứng nổi màu
+      setTimeout(() => {
+        window.location.href = targetUrl;
+      }, 200);
+    }
+  </script>
+</body>
 </html>

@@ -1,0 +1,422 @@
+/* Dashboard styles */
+.dashboard-wrapper {
+  padding: 10px 0px 40px 0px;
+  background-color: transparent;
+  font-family: var(--font-family-main), 'Roboto Slab', serif;
+  position: relative;
+  width: 100%;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: #616A8C; /* Tighter match to Figma title color */
+  margin-bottom: 25px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* 1. STORAGE CARDS */
+.storage-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+.s-card {
+  width: 100%;
+  height: 110px;
+  border-radius: 14px;
+  padding: 15px 25px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.s-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+.s-card h3 {
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: 600;
+  z-index: 1;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+.s-card .s-count {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 8px 0 0;
+  z-index: 1;
+  position: relative;
+}
+
+/* Background gradients based on Figma Image 1 */
+.card-fridge {
+  background: linear-gradient(to right, #79CBEF, #C1ADF4);
+}
+.card-freezer {
+  background: linear-gradient(to right, #8BDDCF, #D8F7F8);
+}
+.card-pantry {
+  background: linear-gradient(to right, #8AD5CD, #FCA2D0);
+}
+
+/* Text color contrast for Ngăn Đá (Dark navy text matching Figma) */
+.card-freezer h3, .card-freezer .s-count {
+  color: #1C335A;
+}
+
+/* Background stars effect */
+.stars-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 100%;
+  /* Pure CSS stars via inline SVG */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M15 25l2 5 5 2-5 2-2 5-2-5-5-2 5-2zm40 10l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5zm25 40l2 6 6 2-6 2-2 6-2-6-6-2 6-2zm-55 15l1 3 3 1-3 1-1 3-1-3-3-1 3-1z' fill='%231C1345'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: cover;
+  opacity: 0.55;
+  z-index: 0;
+}
+/* Adding a more prominent wave shape matching Figma */
+.s-card::after {
+  content: "";
+  position: absolute;
+  bottom: -35px;
+  right: -15px;
+  width: 160px;
+  height: 115px;
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  background: rgba(255,255,255,0.35);
+  transform: rotate(-10deg);
+  z-index: 0;
+}
+
+/* 2. URGENT & STATS */
+.db-urgent {
+  margin-top: 45px;
+}
+.urgent-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+.u-card {
+  width: calc((100% - 60px) / 3);
+  height: 115px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 25px;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+.u-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.u-card .u-count {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin: 5px 0 0;
+}
+
+.card-expiring {
+  background-color: #FCF4F4;
+}
+.card-expiring h4, .card-expiring .u-count {
+  color: #F15A42;
+}
+
+.card-stats {
+  background-color: #F2F8F7;
+}
+.card-stats h4, .card-stats .u-count {
+  color: #5B9B93;
+}
+
+.u-icon-svg {
+  position: absolute;
+  top: -25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  background: transparent;
+}
+.u-icon-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 3. CHARTS ROW */
+.charts-row {
+  display: flex;
+  gap: 30px;
+  margin-top: 40px;
+}
+.chart-card {
+  background: #fff;
+  border: 1px solid #f9f9f9;
+  border-radius: 16px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+.nutrition-chart-card {
+  flex: 0 0 320px;
+}
+.capacity-chart-card {
+  flex: 1;
+}
+.chart-card .card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.chart-card .card-header h4 {
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+.icon-fridge-status {
+  width: 32px;
+  height: 32px;
+  background: #EAF0FF;
+  color: #6184FF;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 0.9rem;
+}
+
+/* DOUGHNUT & LEGEND */
+.nutrition-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.leg-item {
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.leg-item small {
+  color: #999;
+  font-size: 0.75rem;
+  font-weight: normal;
+}
+.dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+/* Assign colors according to image */
+.leg-item:nth-child(1) .dot { background-color: #FF7B8E; } /* Red/Pink - Đạm */
+.leg-item:nth-child(2) .dot { background-color: #4edbba; } /* Teal - Rau củ */
+.leg-item:nth-child(3) .dot { background-color: #FFB3CA; } /* Light pink - Tinh bột */
+
+/* CSS Circle Chart implementation */
+.chart-circle.empty-chart {
+  background: #f0f0f0;
+}
+.chart-circle {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #FF7B8E 0% 25%,
+    #4edbba 25% 65%,
+    #FFB3CA 65% 100%
+  );
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-45deg); /* To match image starting angle */
+}
+.circle-inner {
+  width: 96px;
+  height: 96px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #333;
+  transform: rotate(45deg); /* Counter rotate text */
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* CAPACITY HALF DONUT */
+.capacity-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+.cap-info {
+  text-align: center;
+}
+.cap-info h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 700;
+}
+.cap-info p {
+  font-size: 0.75rem;
+  color: #999;
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+.semi-circle-bg.empty-bg {
+  background: #f0f0f0;
+}
+.semi-circle-fill.empty-fill {
+  background: transparent;
+}
+.semi-circle-bg {
+  width: 200px;
+  height: 100px;
+  background: #FFEAD4;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  position: relative;
+  overflow: hidden;
+}
+.semi-circle-fill {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #39A5F1;
+  transform-origin: bottom center;
+  transform: rotate(-80deg); /* ~56% fill */
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+}
+/* Mask inner to make a donut */
+.semi-circle-bg::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 70px;
+  background: #fff;
+  border-top-left-radius: 70px;
+  border-top-right-radius: 70px;
+  z-index: 2;
+}
+.fill-label {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  color: white;
+  z-index: 3;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* 4. FULL CHART BOTTOM */
+.full-chart {
+  margin-top: 40px;
+  margin-bottom: 50px;
+}
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.chart-header h4 {
+  font-size: 1.05rem;
+  margin: 0;
+  font-weight: 600;
+}
+.btn-export {
+  border: 1px solid #EAEAEA;
+  background: #fff;
+  border-radius: 6px;
+  padding: 6px 18px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  transition: background 0.2s;
+}
+.btn-export:hover {
+  background: #f9f9f9;
+}
+.chart-legends-top {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+.chart-legends-top .dot.c-teal { background-color: #4edbba; }
+.chart-legends-top .dot.c-pink { background-color: #F87D94; }
+.chart-legends-top .leg-item { 
+  font-size: 0.8rem; 
+  display: flex; 
+  align-items: center; 
+  gap: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* SVG Chart */
+.line-chart-area {
+  width: 100%;
+  height: 250px;
+  position: relative;
+}
+.line-chart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.axis-lbl {
+  font-size: 10px;
+  fill: #aaa;
+  font-family: Arial, sans-serif;
+}
+/* Animations for the charts */
+.chart-line-one {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: drawLine 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.chart-line-two {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: drawLine 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.3s;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
