@@ -12,18 +12,21 @@
   <body>
     <div class="app-container">
       <aside class="sidebar">
+        <div class="logo">S</div>
+
         <div class="nav-menu">
           <div class="nav-item" onclick="navigate('home', this)">
             <i class="fa-solid fa-house"></i>
             <span class="nav-label">Tổng quan</span>
           </div>
+
           <div class="nav-item" onclick="navigate('fridge', this)">
-            <i class="fa-solid fa-refrigerator"></i>
+            <i class="fa-solid fa-snowflake"></i>
             <span class="nav-label">Tủ lạnh</span>
           </div>
 
-          <div class="camera-wrapper">
-            <div class="camera-item" onclick="navigate('camera', this)">
+          <div class="camera-btn" onclick="navigate('camera', this)">
+            <div class="camera-bulge">
               <i class="fa-solid fa-camera"></i>
             </div>
             <span class="nav-label">Quét mã</span>
@@ -52,7 +55,6 @@
           </div>
         </div>
       </aside>
-
       <div class="main-wrapper">
         <header class="topbar">
           <div class="user-profile">
