@@ -1,0 +1,209 @@
+/* css/login.css */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-main), 'Roboto Slab', sans-serif;
+  height: 100vh;
+  background-color: #DDEBF3; /* Pale blue base from Figma right edge */
+  overflow: hidden;
+}
+
+.split-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* LEFT SIDE IMAGE */
+.login-image-section {
+  flex: 0 0 40%; /* Image takes 40% to let white board be MASSIVE */
+  height: 100vh;
+  background-color: #2F3640; 
+  background-image: url('../assets/images/tulanh.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  z-index: 1;
+}
+
+/* RIGHT SIDE CONTENT */
+.login-content-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  padding: 2.5vh 3vw 2.5vh 0; /* Smaller gap so white panel is TALLER and WIDER */
+  position: relative;
+  z-index: 2;
+}
+
+/* FLOATING WHITE BOARD */
+.login-panel {
+  width: 100%; 
+  height: 100%; 
+  background: #ffffff;
+  border-radius: 40px; 
+  margin-left: -70px; /* Strong overlap over the fridge image */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.04); 
+}
+
+.login-wrapper {
+  max-width: 500px; /* Form is wider, matching Figma */
+  width: 100%;
+  padding: 0 20px; 
+}
+
+.login-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 45px; /* Restored breathing room */
+  color: #000000;
+  font-family: inherit; 
+  letter-spacing: 0.5px;
+}
+
+/* TABS: Login & Register */
+.auth-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px; /* Reduced gap */
+}
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #bac2c8;
+  cursor: pointer;
+  border-bottom: 1px solid #EAEAEA;
+  text-decoration: none;
+  display: block;
+  transition: color 0.2s;
+}
+.auth-tab:hover {
+  color: #888;
+}
+.auth-tab.active {
+  color: #618A9C; 
+  font-weight: 600;
+  border-bottom-color: transparent;
+  position: relative;
+}
+.auth-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #618A9C; 
+}
+
+/* FORM FIELDS */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #E4E4E4;
+  border-radius: 8px; /* Softer radius */
+  padding: 18px 20px; /* Taller inputs matching Figma */
+  margin-bottom: 25px; /* More spacing */
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-group:focus-within {
+  border-color: #B5DAEC;
+  box-shadow: 0 0 0 3px rgba(181, 218, 236, 0.2);
+}
+
+.input-group i {
+  color: #444;
+  font-size: 1.15rem;
+  margin-right: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  color: #333;
+  font-family: inherit;
+}
+.input-group input::placeholder {
+  color: #B8BCC0;
+}
+
+/* FORGOT PASSWORD ROW */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -5px;
+  margin-bottom: 30px;
+}
+.forgot-pwd {
+  font-size: 0.85rem;
+  color: #618A9C;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.forgot-pwd:hover {
+  text-decoration: underline;
+}
+
+/* CONTINUE BUTTON */
+.btn-continue {
+  width: 100%;
+  padding: 18px; /* Taller button */
+  background-color: #BDE0F0; 
+  color: #264C63; 
+  border: none;
+  border-radius: 35px; /* Classic pill shape */
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  letter-spacing: 0.3px;
+}
+.btn-continue:hover {
+  background-color: #AACEE2;
+  transform: translateY(-2px);
+}
+
+/* SOCIAL & SIGN IN WITH */
+.social-login {
+  margin-top: 35px; /* Reduced gap */
+  text-align: center;
+}
+.social-login p {
+  color: #8C949B;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+}
+.social-icons {
+  display: flex;
+  justify-content: center;
+}
+.social-icon-img {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.social-icon-img:hover {
+  transform: translateY(-3px) scale(1.1);
+}
