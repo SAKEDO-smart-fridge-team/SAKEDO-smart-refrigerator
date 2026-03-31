@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sakedo - Hộp Lưu Trữ Thông Minh (Đăng Nhập)</title>
+  <title>Sakedo - Hộp Lưu Trữ Thông Minh (Đăng Ký)</title>
   <!-- Global fonts & icons -->
   <link rel="stylesheet" href="css/global.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -15,19 +15,29 @@
     <!-- Cột bên trái: Ảnh tủ lạnh -->
     <div class="login-image-section"></div>
     
-    <!-- Cột bên phải: Form đăng nhập -->
+    <!-- Cột bên phải: Form đăng ký -->
     <div class="login-content-section">
       <div class="login-panel">
         <div class="login-wrapper">
           <h1 class="login-title">WELCOME SAKEDO!</h1>
           
           <div class="auth-tabs">
-            <a href="login.html" class="auth-tab active">Đăng nhập</a>
-            <a href="register.html" class="auth-tab">Đăng ký</a>
+            <a href="login.html" class="auth-tab">Đăng nhập</a>
+            <a href="register.html" class="auth-tab active">Đăng ký</a>
           </div>
 
           <!-- Nút submit sẽ chuyển thẳng vào trang chủ index.html -->
           <form action="index.html" class="login-form">
+            <div class="input-group">
+              <i class="fa-regular fa-user"></i>
+              <input type="text" placeholder="Họ và tên" required />
+            </div>
+
+            <div class="input-group">
+              <i class="fa-solid fa-phone" style="font-size: 0.95rem;"></i>
+              <input type="tel" placeholder="Số điện thoại" required />
+            </div>
+
             <div class="input-group">
               <i class="fa-regular fa-envelope"></i>
               <input type="email" placeholder="Email" required />
@@ -38,11 +48,7 @@
               <input type="password" placeholder="Password" required />
             </div>
 
-            <div class="form-actions">
-              <a href="#" class="forgot-pwd">Quên mật khẩu?</a>
-            </div>
-
-            <button type="submit" class="btn-continue">Continue</button>
+            <button type="submit" class="btn-continue" style="margin-top: 15px;">Đăng ký</button>
           </form>
 
           <div class="social-login">
