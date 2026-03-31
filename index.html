@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sakedo App</title>
+    <link rel="stylesheet" href="css/layout.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="nav-menu">
+          <div class="nav-item" onclick="navigate('home', this)">
+            <i class="fa-solid fa-house"></i>
+            <span class="nav-label">Tổng quan</span>
+          </div>
+          <div class="nav-item" onclick="navigate('fridge', this)">
+            <i class="fa-solid fa-refrigerator"></i>
+            <span class="nav-label">Tủ lạnh</span>
+          </div>
+
+          <div class="camera-wrapper">
+            <div class="camera-item" onclick="navigate('camera', this)">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <span class="nav-label">Quét mã</span>
+          </div>
+
+          <div class="nav-item" onclick="navigate('ai-chat', this)">
+            <i class="fa-solid fa-robot"></i>
+            <span class="nav-label">Mr. Chè</span>
+          </div>
+          <div class="nav-item" onclick="navigate('favorite', this)">
+            <i class="fa-solid fa-heart"></i>
+            <span class="nav-label">Yêu thích</span>
+          </div>
+          <div class="nav-item active" onclick="navigate('profile', this)">
+            <i class="fa-solid fa-gear"></i>
+            <span class="nav-label">Cài đặt</span>
+          </div>
+        </div>
+
+        <div class="mode-switch-wrapper">
+          <div class="mode-switch">
+            <span class="light-mode"
+              ><i class="fa-solid fa-sun"></i> Light</span
+            >
+            <span class="dark-mode"><i class="fa-solid fa-moon"></i> Dark</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-wrapper">
+        <header class="topbar">
+          <div class="user-profile">
+            <img
+              src="assets/img/avatar.jpg"
+              class="user-avatar"
+              onerror="this.src = 'https://via.placeholder.com/45'"
+            />
+            <div class="welcome">
+              <p>Xin chào, Knuw! 🤘</p>
+              <span>Welcome back</span>
+            </div>
+          </div>
+
+          <div class="search-container">
+            <input type="text" placeholder="Search recipe..." />
+            <button class="btn-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+
+          <button class="btn-noti"><i class="fa-solid fa-bell"></i></button>
+        </header>
+
+        <main id="app-root"></main>
+      </div>
+    </div>
+    <script src="js/router.js"></script>
+  </body>
+</html>

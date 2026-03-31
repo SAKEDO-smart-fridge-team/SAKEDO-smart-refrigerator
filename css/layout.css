@@ -1,0 +1,262 @@
+/* css/layout.css */
+
+/* 1. RESET & CHUNG */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --primary-blue: #b5daec; /* Màu xanh Sakedo của Như */
+  --sidebar-gray: #e0e0e0; /* Màu xám khi thu gọn */
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --bg-light: #f8f9fa;
+}
+
+body {
+  background-color: #ffffff;
+  overflow: hidden; /* Chặn cuộn toàn trang để Sidebar/Topbar cố định */
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* 2. SIDEBAR (Căn chỉnh cao 2/3 màn hình) */
+.sidebar {
+  width: 75px;
+  height: 70vh; /* Cao bằng khoảng 2/3 màn hình */
+  background-color: var(--sidebar-gray);
+  margin: auto 0 auto 20px; /* Căn giữa chiều dọc và cách lề trái 20px */
+  border-radius: 45px; /* Bo cong cực đại 4 góc */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 0;
+  transition: var(--transition-smooth);
+  z-index: 1000;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Hiệu ứng Bung Sidebar khi Hover */
+.sidebar:hover {
+  width: 220px;
+  background-color: var(--primary-blue);
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  cursor: pointer;
+  position: relative;
+  color: #555;
+  transition: 0.3s;
+}
+
+/* Khoanh tròn Active nằm chính giữa Icon */
+.nav-item.active {
+  color: #000;
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 12.5px; /* Căn chỉnh để vòng tròn nằm giữa icon khi thu gọn */
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.nav-item i {
+  font-size: 20px;
+  min-width: 25px;
+  text-align: center;
+}
+
+.nav-label {
+  margin-left: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0; /* Ẩn chữ khi thu gọn */
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.sidebar:hover .nav-label {
+  opacity: 1;
+}
+
+/* NÚT CAMERA ĐẶC BIỆT (Vòng tròn riêng) */
+.camera-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  position: relative;
+}
+
+.camera-item {
+  width: 55px;
+  height: 55px;
+  background: #e0e0e0; /* Đồng bộ màu sidebar */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  right: -40px; /* Đẩy lồi ra ngoài tạo hình bán nguyệt */
+  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sidebar:hover .camera-item {
+  background: var(--primary-blue);
+  right: -185px; /* Trượt theo độ rộng sidebar */
+}
+
+/* MODE SWITCH (Dưới cùng Sidebar) */
+.mode-switch-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.sidebar:hover .mode-switch-wrapper {
+  opacity: 1;
+}
+
+.mode-switch {
+  background: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #666;
+}
+
+/* 3. MAIN WRAPPER & TOPBAR */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+}
+
+.topbar {
+  height: 110px;
+  width: calc(100% - 50px); /* Kéo rộng gần hết chiều ngang */
+  background-color: var(--primary-blue);
+  margin: 20px auto; /* Căn giữa Topbar */
+  border-radius: 45px; /* Bo cong cực đại */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 45px;
+  box-shadow: 0 8px 25px rgba(181, 218, 236, 0.4);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid white;
+  object-fit: cover;
+}
+
+.welcome p {
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: -2px;
+}
+
+.welcome span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* THANH SEARCH (Dãn rộng cân đối) */
+.search-container {
+  background: white;
+  width: 50%; /* Chiều rộng lý tưởng cho Topbar dài */
+  height: 48px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 5px 8px 5px 20px;
+}
+
+.search-container input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #444;
+}
+
+.btn-search {
+  background: var(--primary-blue);
+  border: none;
+  width: 70px;
+  height: 38px;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-search:hover {
+  background: #96cfe8;
+}
+
+.btn-noti {
+  background: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 15px;
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* 4. VÙNG NỘI DUNG CHÍNH */
+#app-root {
+  flex: 1;
+  padding: 10px 40px 30px 40px;
+  overflow-y: auto; /* Cho phép cuộn nội dung trang con */
+}
+
+/* Tùy chỉnh thanh cuộn cho chuyên nghiệp */
+#app-root::-webkit-scrollbar {
+  width: 6px;
+}
+#app-root::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}

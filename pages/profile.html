@@ -1,0 +1,93 @@
+<link rel="stylesheet" href="../css/profile.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+<section class="profile-container">
+  <div class="profile-section-header">
+    <h2>Thông Tin Cá Nhân</h2>
+    <button class="edit-btn"><i class="fa-solid fa-pen"></i> Chỉnh sửa</button>
+  </div>
+
+  <div class="profile-card basic-info">
+    <div class="avatar-circle">
+      <img
+        src="assets/img/avatar.jpg"
+        alt="User Avatar"
+        onerror="this.src = 'https://via.placeholder.com/100'"
+      />
+    </div>
+    <div class="input-fields">
+      <div class="input-box">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" value="Huỳnh Lê Khả Như" readonly />
+      </div>
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" value="khannhu.uth@gmail.com" readonly />
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-group">
+    <h3>Cài đặt chi tiết</h3>
+
+    <div class="settings-card">
+      <p class="group-label">THÔNG BÁO</p>
+      <div class="setting-row">
+        <span><i class="fa-solid fa-envelope-open-text"></i> Email</span>
+        <label class="switch"
+          ><input type="checkbox" checked /><span class="slider"></span
+        ></label>
+      </div>
+      <div class="setting-row">
+        <span><i class="fa-solid fa-bell"></i> Thông báo đẩy</span>
+        <label class="switch"
+          ><input type="checkbox" /><span class="slider"></span
+        ></label>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <p class="group-label">LOẠI THÔNG BÁO</p>
+      <div class="setting-row">
+        <span><i class="fa-solid fa-calendar-minus"></i> Cảnh báo hết hạn</span>
+        <label class="switch"
+          ><input type="checkbox" checked /><span class="slider"></span
+        ></label>
+      </div>
+      <div class="setting-row">
+        <span><i class="fa-solid fa-utensils"></i> Gợi ý món ăn</span>
+        <label class="switch"
+          ><input type="checkbox" checked /><span class="slider"></span
+        ></label>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <p class="group-label">HIỂN THỊ & CÁ NHÂN HÓA</p>
+      <div class="setting-row clickable">
+        <span
+          ><i class="fa-solid fa-dumbbell"></i> Cài đặt sở thích (Gym, Eat
+          Clean...)</span
+        >
+        <i class="fa-solid fa-chevron-right arrow"></i>
+      </div>
+      <div class="setting-row clickable">
+        <span><i class="fa-solid fa-globe"></i> Ngôn ngữ</span>
+        <span class="val-text"
+          >Tiếng Việt <i class="fa-solid fa-chevron-right arrow"></i
+        ></span>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <p class="group-label">TÀI KHOẢN</p>
+      <div class="setting-row clickable danger">
+        <span><i class="fa-solid fa-user-xmark"></i> Xóa tài khoản</span>
+        <i class="fa-solid fa-chevron-right arrow"></i>
+      </div>
+    </div>
+  </div>
+</section>
