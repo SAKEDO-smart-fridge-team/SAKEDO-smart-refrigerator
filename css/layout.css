@@ -1,0 +1,314 @@
+/* css/layout.css */
+
+/* ========================================= */
+/* 1. RESET & BIẾN MÀU CHUNG                 */
+/* ========================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --primary-blue: #b5daec; /* Màu xanh Sakedo của Như */
+  --sidebar-gray: #e0e0e0; /* Màu xám khi thu gọn */
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --bg-light: #f8f9fa;
+}
+
+body {
+  background-color: #ffffff;
+  overflow: hidden; /* Chặn cuộn toàn trang để Sidebar/Topbar cố định */
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ========================================= */
+/* 2. SIDEBAR HOÀN HẢO (Bóng đổ liền mạch)   */
+/* ========================================= */
+.sidebar {
+  width: 75px;
+  height: 70vh; /* Cao 2/3 màn hình */
+  background-color: var(--sidebar-gray);
+  margin: auto 0 auto 20px;
+  border-radius: 35px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0;
+  transition:
+    width var(--transition-smooth),
+    background-color var(--transition-smooth);
+  z-index: 1000;
+
+  /* Tuyệt chiêu tạo bóng ôm trọn cả phần thân và cục camera lồi ra */
+  filter: drop-shadow(4px 0 15px rgba(0, 0, 0, 0.08));
+}
+
+.sidebar:hover {
+  width: 220px;
+  background-color: var(--primary-blue);
+}
+
+/* LOGO SAKEDO TẠI ĐẦU SIDEBAR */
+.logo {
+  width: 45px;
+  height: 45px;
+  background-color: var(--primary-blue);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 800;
+  border-radius: 12px;
+  margin: 0 auto 20px auto;
+  transition: var(--transition-smooth);
+}
+
+.sidebar:hover .logo {
+  background-color: white;
+  color: var(--primary-blue);
+}
+
+/* ========================================= */
+/* 3. MENU NAV & ICON ACTIVE                 */
+/* ========================================= */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  cursor: pointer;
+  position: relative;
+  color: #555;
+  transition: 0.3s;
+}
+
+/* VÒNG TRÒN ACTIVE TRẮNG MỜ */
+.nav-item.active {
+  color: #000;
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 12.5px;
+  top: 50%;
+  transform: translateY(-50%); /* Căn chính giữa Icon theo chiều dọc */
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.nav-item i {
+  font-size: 20px;
+  min-width: 25px;
+  text-align: center;
+}
+
+.nav-label {
+  margin-left: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.sidebar:hover .nav-label {
+  opacity: 1;
+}
+
+/* ========================================= */
+/* 4. CỤC CAMERA LỒI ĐÃ FIX CHUẨN            */
+/* ========================================= */
+.camera-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 55px;
+  cursor: pointer;
+  padding-left: 70px; /* Thẳng hàng với chữ Quét mã bên trong span */
+  margin: 5px 0;
+}
+
+.camera-bulge {
+  position: absolute;
+  right: -27.5px; /* Thò ra ngoài đúng 1 nửa (55/2) */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 55px;
+  height: 55px;
+  background-color: var(--sidebar-gray); /* Đồng bộ màu với sidebar */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color var(--transition-smooth);
+  z-index: 1;
+}
+
+.sidebar:hover .camera-bulge {
+  background-color: var(--primary-blue);
+}
+
+.camera-bulge i {
+  font-size: 22px;
+  color: #555;
+}
+
+.sidebar:hover .camera-bulge i {
+  color: #333;
+}
+
+/* ========================================= */
+/* 5. MODE SWITCH SÁNG/TỐI                   */
+/* ========================================= */
+.mode-switch-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+  margin-top: auto;
+}
+
+.sidebar:hover .mode-switch-wrapper {
+  opacity: 1;
+}
+
+.mode-switch {
+  background: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #666;
+}
+
+/* ========================================= */
+/* 6. MAIN WRAPPER & TOPBAR                  */
+/* ========================================= */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+}
+
+.topbar {
+  height: 110px;
+  width: calc(100% - 50px);
+  background-color: var(--primary-blue);
+  margin: 20px auto;
+  border-radius: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 45px;
+  box-shadow: 0 8px 25px rgba(181, 218, 236, 0.4);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid white;
+  object-fit: cover;
+}
+
+.welcome p {
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: -2px;
+}
+
+.welcome span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.search-container {
+  background: white;
+  width: 50%;
+  height: 48px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 5px 8px 5px 20px;
+}
+
+.search-container input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #444;
+}
+
+.btn-search {
+  background: var(--primary-blue);
+  border: none;
+  width: 70px;
+  height: 38px;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-search:hover {
+  background: #96cfe8;
+}
+
+.btn-noti {
+  background: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 15px;
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* ========================================= */
+/* 7. VÙNG NỘI DUNG CHÍNH (Nơi đổ ruột vào)  */
+/* ========================================= */
+#app-root {
+  flex: 1;
+  padding: 10px 40px 30px 40px;
+  overflow-y: auto;
+}
+
+/* Custom thanh cuộn */
+#app-root::-webkit-scrollbar {
+  width: 6px;
+}
+#app-root::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
