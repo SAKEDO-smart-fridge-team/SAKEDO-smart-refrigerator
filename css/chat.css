@@ -1,0 +1,299 @@
+/* css/chat.css */
+
+.ai-chat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%; /* Đảm bảo wrapper lớn full */
+  padding: 40px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ai-suggest-card {
+  background-color: #f4f9f9;
+  border-radius: 35px;
+  width: 100%;
+  max-width: 850px;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  padding: 35px 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+  margin-top: 20px;
+}
+
+/* HEADER */
+.ai-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Căn đáy toàn bộ header */
+  padding-bottom: 15px; /* Giảm khoảng cách tới đường viền */
+  border-bottom: 3px solid #e2ecee;
+}
+
+.ai-chef-info {
+  display: flex;
+  align-items: flex-end; /* Chữ và Avatar căn đáy ngang nhau */
+  gap: 15px;
+}
+
+.ai-avatar {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: -15px; /* Kéo ảnh rớt xuống đè lên đường viền */
+  position: relative;
+  z-index: 1;
+}
+
+.ai-text h3 {
+  color: #557582;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 5px 0;
+}
+
+.ai-text p {
+  color: #8da4b1;
+  font-size: 15px;
+  margin: 0;
+  font-weight: 600;
+  padding-bottom: 5px; /* Nâng khoảng cách chữ so với viền một chút */
+}
+
+/* ACTIONS IN HEADER */
+.ai-card-actions {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px; /* Nâng icon lên để ngang tầm với chữ "Mr. Chè" */
+}
+
+.ai-card-actions .btn-icon {
+  background: transparent;
+  border: none;
+  color: #557582;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+  padding: 5px;
+}
+
+.ai-card-actions .btn-icon:hover {
+  color: #b5daec;
+  transform: scale(1.1);
+}
+
+/* BODY CONTENT */
+.ai-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ai-card-body h2 {
+  color: #557582;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: -0.5px;
+}
+
+.ai-card-body p {
+  color: #aabbc2;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* FOOTER BUTTONS */
+.ai-card-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: auto;
+  padding-top: 30px;
+}
+
+.btn-recipe {
+  background: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 16px 20px;
+  flex: 1; /* Chiếm tối đa phần trống như thiết kế */
+  max-width: 450px; /* Giới hạn để nút không bị quá dài trên màn to */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: #a7b7bf;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: 0.3s ease;
+}
+
+.btn-recipe i {
+  font-size: 22px;
+  color: #557582; /* Icon đậm hơn text ở trạng thái normal */
+}
+
+.btn-recipe:hover {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  color: #557582;
+}
+
+.btn-refresh {
+  background: #b5daed;
+  border: none;
+  border-radius: 20px; /* Bo góc mượt bằng với nút recipe */
+  width: 70px;
+  height: 60px; /* Khớp với height của btn-recipe */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #557582;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(181, 218, 237, 0.4);
+  transition: 0.3s ease;
+}
+
+.btn-refresh:hover {
+  background: #9bd0e8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(155, 208, 232, 0.5);
+}
+
+/* ================================ */
+/* NEW SLIDER & FOOD STATES         */
+/* ================================ */
+.state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.state-container.hidden {
+  display: none !important;
+}
+
+#state-food-suggestion {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex: 1; /* Cho phép giãn ra giữa không gian thừa */
+  padding: 20px 0;
+}
+
+.btn-arrow {
+  background: white;
+  border: none;
+  font-size: 22px;
+  color: #7b94a3;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Cho mũi tên nằm trong nút tròn */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.btn-arrow:hover {
+  transform: scale(1.1);
+  color: #557582;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.food-card-preview {
+  width: 520px;
+  height: 320px;
+  border-radius: 35px; /* Bo cong nhiều hơn cho phong cách hiện đại */
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12); /* Đổ bóng sâu hơn để bức ảnh nổi bật */
+  background: white;
+}
+
+.food-card-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.food-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45%;
+  background: linear-gradient(to top, rgba(23, 43, 60, 0.85) 0%, rgba(23, 43, 60, 0) 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 25px 35px; /* Tỉ lệ đệm lớn hơn giúp thoáng mắt */
+  box-sizing: border-box;
+}
+
+.food-overlay h4 {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.food-icon-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a47af1 0%, #8754e0 100%); /* Trông bóng bẩy hơn */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  box-shadow: 0 5px 15px rgba(135, 84, 224, 0.4);
+}
+
+.btn-recipe:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #fdfdfd;
+  color: #b5c4cc; /* Nhạt, mềm hơn */
+  border: 1px solid #eef3f5; /* Thêm tí nét bọc ngoài mờ */
+  box-shadow: none;
+}
+.btn-recipe:disabled i {
+  color: #b5c4cc;
+}
+.btn-recipe:disabled:hover {
+  transform: none;
+  background: #fdfdfd;
+}

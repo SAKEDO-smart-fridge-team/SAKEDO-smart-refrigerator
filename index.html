@@ -2,7 +2,10 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>Sakedo App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sakedo - Smart Fridge</title>
+
+    <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link
       rel="stylesheet"
@@ -12,7 +15,14 @@
   <body>
     <div class="app-container">
       <aside class="sidebar">
-        <div class="logo">S</div>
+        <a href="index.html" class="logo-container">
+          <img
+            src="assets/img/logo.png"
+            alt="Sakedo Logo"
+            class="sakedo-logo"
+            onerror="this.src = 'https://via.placeholder.com/45'"
+          />
+        </a>
 
         <div class="nav-menu">
           <div class="nav-item" onclick="navigate('home', this)">
@@ -26,20 +36,22 @@
           </div>
 
           <div class="camera-btn" onclick="navigate('camera', this)">
+            <span class="nav-label">Quét mã</span>
             <div class="camera-bulge">
               <i class="fa-solid fa-camera"></i>
             </div>
-            <span class="nav-label">Quét mã</span>
           </div>
 
           <div class="nav-item" onclick="navigate('ai-chat', this)">
             <i class="fa-solid fa-robot"></i>
             <span class="nav-label">Mr. Chè</span>
           </div>
+
           <div class="nav-item" onclick="navigate('favorite', this)">
             <i class="fa-solid fa-heart"></i>
             <span class="nav-label">Yêu thích</span>
           </div>
+
           <div class="nav-item active" onclick="navigate('profile', this)">
             <i class="fa-solid fa-gear"></i>
             <span class="nav-label">Cài đặt</span>
@@ -48,20 +60,24 @@
 
         <div class="mode-switch-wrapper">
           <div class="mode-switch">
-            <span class="light-mode"
-              ><i class="fa-solid fa-sun"></i> Light</span
-            >
-            <span class="dark-mode"><i class="fa-solid fa-moon"></i> Dark</span>
+            <span class="light-mode active" id="btn-light">
+              <i class="fa-solid fa-sun"></i> Light
+            </span>
+            <span class="dark-mode" id="btn-dark">
+              <i class="fa-solid fa-moon"></i> Dark
+            </span>
           </div>
         </div>
       </aside>
+
       <div class="main-wrapper">
         <header class="topbar">
           <div class="user-profile">
             <img
               src="assets/img/avatar.jpg"
+              alt="User Avatar"
               class="user-avatar"
-              onerror="this.src = 'https://via.placeholder.com/45'"
+              onerror="this.src = 'https://via.placeholder.com/50'"
             />
             <div class="welcome">
               <p>Xin chào, Knuw! 🤘</p>
@@ -82,6 +98,9 @@
         <main id="app-root"></main>
       </div>
     </div>
+
     <script src="js/router.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/chat.js"></script>
   </body>
 </html>

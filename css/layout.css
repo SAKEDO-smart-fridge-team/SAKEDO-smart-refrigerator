@@ -1,7 +1,7 @@
 /* css/layout.css */
 
 /* ========================================= */
-/* 1. RESET & BIẾN MÀU CHUNG                 */
+/* 1. RESET & VARIABLES                      */
 /* ========================================= */
 * {
   margin: 0;
@@ -11,15 +11,15 @@
 }
 
 :root {
-  --primary-blue: #b5daec; /* Màu xanh Sakedo của Như */
-  --sidebar-gray: #e0e0e0; /* Màu xám khi thu gọn */
+  --primary-blue: #b5daec;
+  --sidebar-gray: #e0e0e0;
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  --bg-light: #f8f9fa;
+  --bg-light: #ffffff;
 }
 
 body {
-  background-color: #ffffff;
-  overflow: hidden; /* Chặn cuộn toàn trang để Sidebar/Topbar cố định */
+  background-color: var(--bg-light);
+  overflow: hidden;
 }
 
 .app-container {
@@ -29,11 +29,11 @@ body {
 }
 
 /* ========================================= */
-/* 2. SIDEBAR HOÀN HẢO (Bóng đổ liền mạch)   */
+/* 2. SIDEBAR CONFIGURATION                  */
 /* ========================================= */
 .sidebar {
   width: 75px;
-  height: 70vh; /* Cao 2/3 màn hình */
+  height: 70vh;
   background-color: var(--sidebar-gray);
   margin: auto 0 auto 20px;
   border-radius: 35px;
@@ -44,8 +44,6 @@ body {
     width var(--transition-smooth),
     background-color var(--transition-smooth);
   z-index: 1000;
-
-  /* Tuyệt chiêu tạo bóng ôm trọn cả phần thân và cục camera lồi ra */
   filter: drop-shadow(4px 0 15px rgba(0, 0, 0, 0.08));
 }
 
@@ -54,29 +52,36 @@ body {
   background-color: var(--primary-blue);
 }
 
-/* LOGO SAKEDO TẠI ĐẦU SIDEBAR */
-.logo {
-  width: 45px;
-  height: 45px;
-  background-color: var(--primary-blue);
-  color: white;
+/* ========================================= */
+/* 3. LOGO IMAGE                             */
+/* ========================================= */
+.logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
-  font-weight: 800;
-  border-radius: 12px;
-  margin: 0 auto 20px auto;
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 15px auto;
   transition: var(--transition-smooth);
 }
 
-.sidebar:hover .logo {
-  background-color: white;
-  color: var(--primary-blue);
+.sakedo-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  opacity: 0.9;
+  transition:
+    transform var(--transition-smooth),
+    opacity var(--transition-smooth);
+}
+
+.sidebar:hover .sakedo-logo {
+  transform: scale(1.1);
+  opacity: 1;
 }
 
 /* ========================================= */
-/* 3. MENU NAV & ICON ACTIVE                 */
+/* 4. NAVIGATION MENU                        */
 /* ========================================= */
 .nav-menu {
   display: flex;
@@ -95,7 +100,6 @@ body {
   transition: 0.3s;
 }
 
-/* VÒNG TRÒN ACTIVE TRẮNG MỜ */
 .nav-item.active {
   color: #000;
 }
@@ -105,7 +109,7 @@ body {
   position: absolute;
   left: 12.5px;
   top: 50%;
-  transform: translateY(-50%); /* Căn chính giữa Icon theo chiều dọc */
+  transform: translateY(-50%);
   width: 50px;
   height: 50px;
   background: rgba(255, 255, 255, 0.5);
@@ -133,7 +137,7 @@ body {
 }
 
 /* ========================================= */
-/* 4. CỤC CAMERA LỒI ĐÃ FIX CHUẨN            */
+/* 5. CAMERA BUTTON                          */
 /* ========================================= */
 .camera-btn {
   position: relative;
@@ -142,18 +146,17 @@ body {
   width: 100%;
   height: 55px;
   cursor: pointer;
-  padding-left: 70px; /* Thẳng hàng với chữ Quét mã bên trong span */
   margin: 5px 0;
 }
 
 .camera-bulge {
   position: absolute;
-  right: -27.5px; /* Thò ra ngoài đúng 1 nửa (55/2) */
+  right: -27.5px;
   top: 50%;
   transform: translateY(-50%);
   width: 55px;
   height: 55px;
-  background-color: var(--sidebar-gray); /* Đồng bộ màu với sidebar */
+  background-color: var(--sidebar-gray);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -175,8 +178,14 @@ body {
   color: #333;
 }
 
+.camera-btn .nav-label {
+  position: absolute;
+  left: 70px;
+  margin-left: 0;
+}
+
 /* ========================================= */
-/* 5. MODE SWITCH SÁNG/TỐI                   */
+/* 6. MODE SWITCH                            */
 /* ========================================= */
 .mode-switch-wrapper {
   width: 100%;
@@ -202,7 +211,7 @@ body {
 }
 
 /* ========================================= */
-/* 6. MAIN WRAPPER & TOPBAR                  */
+/* 7. MAIN CONTENT & TOPBAR                  */
 /* ========================================= */
 .main-wrapper {
   flex: 1;
@@ -295,20 +304,75 @@ body {
   transition: 0.2s;
 }
 
-/* ========================================= */
-/* 7. VÙNG NỘI DUNG CHÍNH (Nơi đổ ruột vào)  */
-/* ========================================= */
 #app-root {
   flex: 1;
   padding: 10px 40px 30px 40px;
   overflow-y: auto;
 }
 
-/* Custom thanh cuộn */
 #app-root::-webkit-scrollbar {
   width: 6px;
 }
+
 #app-root::-webkit-scrollbar-thumb {
   background: #ddd;
   border-radius: 10px;
+}
+
+/* ========================================= */
+/* 8. DARK MODE THEME & TOGGLE STYLE         */
+/* ========================================= */
+
+/* Hiệu ứng làm nổi bật nút đang được chọn */
+.mode-switch span {
+  padding: 5px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mode-switch span.active {
+  background-color: #e0e0e0; /* Nền xám cho nút đang bật */
+  color: #333;
+  font-weight: bold;
+}
+
+/* KHI BODY BẬT CHẾ ĐỘ TỐI (DARK-THEME) */
+body.dark-theme {
+  --bg-light: #1e1e2e; /* Đổi nền trang thành đen xám */
+  --sidebar-gray: #2a2a3c; /* Đổi Sidebar thành xám tối */
+  --primary-blue: #5c9ce6; /* Làm màu xanh dịu lại cho đỡ chói */
+  color: #ffffff; /* Đổi chữ thành màu trắng */
+}
+
+/* Đổi màu các thành phần khác khi ở chế độ tối */
+body.dark-theme .app-container {
+  background-color: var(--bg-light);
+}
+body.dark-theme .topbar,
+body.dark-theme .search-container,
+body.dark-theme .search-container input,
+body.dark-theme .btn-noti,
+body.dark-theme .mode-switch {
+  background-color: #2a2a3c; /* Nền tối cho các khối con */
+  color: #fff;
+}
+body.dark-theme .nav-item {
+  color: #a0a0b0;
+} /* Chữ menu tối màu đi */
+body.dark-theme .nav-item.active {
+  color: #fff;
+}
+body.dark-theme .welcome p,
+body.dark-theme .welcome span {
+  color: #fff;
+}
+body.dark-theme .camera-bulge {
+  background-color: var(--sidebar-gray);
+}
+
+/* Đổi màu nút gạt khi ở dark mode */
+body.dark-theme .mode-switch span.active {
+  background-color: #44445a;
+  color: #fff;
 }

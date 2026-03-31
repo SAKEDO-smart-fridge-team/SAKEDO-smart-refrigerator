@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../css/profile.css" />
+<link rel="stylesheet" href="css/profile.css" />
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -11,21 +11,32 @@
   </div>
 
   <div class="profile-card basic-info">
-    <div class="avatar-circle">
+    <div class="avatar-circle" id="avatar-container">
       <img
+        id="profile-avatar"
         src="assets/img/avatar.jpg"
         alt="User Avatar"
-        onerror="this.src = 'https://via.placeholder.com/100'"
+        onerror="this.src = 'https://via.placeholder.com/120'"
       />
+      <div class="camera-overlay">
+        <i class="fa-solid fa-camera"></i>
+      </div>
+      <input type="file" id="avatar-input" accept="image/*" hidden />
     </div>
     <div class="input-fields">
-      <div class="input-box">
-        <i class="fa-solid fa-user"></i>
-        <input type="text" value="Huỳnh Lê Khả Như" readonly />
+      <div class="input-group">
+        <label class="input-label">Tên của bạn</label>
+        <div class="input-box">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" value="Huỳnh Lê Khả Như" readonly />
+        </div>
       </div>
-      <div class="input-box">
-        <i class="fa-solid fa-envelope"></i>
-        <input type="email" value="khannhu.uth@gmail.com" readonly />
+      <div class="input-group">
+        <label class="input-label">Email</label>
+        <div class="input-box">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" value="khannhu.uth@gmail.com" readonly />
+        </div>
       </div>
     </div>
   </div>
@@ -37,15 +48,17 @@
       <p class="group-label">THÔNG BÁO</p>
       <div class="setting-row">
         <span><i class="fa-solid fa-envelope-open-text"></i> Email</span>
-        <label class="switch"
-          ><input type="checkbox" checked /><span class="slider"></span
-        ></label>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </div>
       <div class="setting-row">
         <span><i class="fa-solid fa-bell"></i> Thông báo đẩy</span>
-        <label class="switch"
-          ><input type="checkbox" /><span class="slider"></span
-        ></label>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
       </div>
     </div>
 
@@ -53,28 +66,27 @@
       <p class="group-label">LOẠI THÔNG BÁO</p>
       <div class="setting-row">
         <span><i class="fa-solid fa-calendar-minus"></i> Cảnh báo hết hạn</span>
-        <label class="switch"
-          ><input type="checkbox" checked /><span class="slider"></span
-        ></label>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </div>
       <div class="setting-row">
         <span><i class="fa-solid fa-utensils"></i> Gợi ý món ăn</span>
-        <label class="switch"
-          ><input type="checkbox" checked /><span class="slider"></span
-        ></label>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </div>
     </div>
 
     <div class="settings-card">
       <p class="group-label">HIỂN THỊ & CÁ NHÂN HÓA</p>
       <div class="setting-row clickable">
-        <span
-          ><i class="fa-solid fa-dumbbell"></i> Cài đặt sở thích (Gym, Eat
-          Clean...)</span
-        >
+        <span><i class="fa-solid fa-dumbbell"></i> Cài đặt sở thích</span>
         <i class="fa-solid fa-chevron-right arrow"></i>
       </div>
-      <div class="setting-row clickable">
+      <div class="setting-row clickable" id="btn-lang">
         <span><i class="fa-solid fa-globe"></i> Ngôn ngữ</span>
         <span class="val-text"
           >Tiếng Việt <i class="fa-solid fa-chevron-right arrow"></i
@@ -83,11 +95,118 @@
     </div>
 
     <div class="settings-card">
-      <p class="group-label">TÀI KHOẢN</p>
-      <div class="setting-row clickable danger">
+      <p class="group-label">TÀI KHOẢN & HỖ TRỢ</p>
+      <div class="setting-row clickable" id="btn-support">
+        <span
+          ><i class="fa-solid fa-circle-question"></i> Trợ giúp & Hỗ trợ</span
+        >
+        <i class="fa-solid fa-chevron-right arrow"></i>
+      </div>
+      <div class="setting-row clickable danger" id="btn-delete-account">
         <span><i class="fa-solid fa-user-xmark"></i> Xóa tài khoản</span>
         <i class="fa-solid fa-chevron-right arrow"></i>
       </div>
     </div>
   </div>
 </section>
+
+<div class="modal-overlay" id="langModal">
+  <div class="modal-content">
+    <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="modal-title">Ngôn ngữ</h3>
+    <div class="lang-list">
+      <div class="lang-item active">
+        <span><i class="fa-solid fa-language"></i> Tiếng Việt</span>
+        <i class="fa-solid fa-check check-icon"></i>
+      </div>
+      <div class="lang-item">
+        <span><i class="fa-solid fa-language"></i> Tiếng Anh</span>
+        <i class="fa-solid fa-check check-icon" style="display: none"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="supportModal">
+  <div class="modal-content support-box">
+    <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+
+    <div class="support-section">
+      <p class="sec-title">Liên hệ hỗ trợ</p>
+      <div class="email-card">
+        <i class="fa-regular fa-envelope"></i>
+        <div class="email-info">
+          <strong>Gửi Email</strong>
+          <span>Sakedo123@gmail.com</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <p class="sec-title">Câu hỏi thường gặp</p>
+      <div class="faq-item">
+        <div class="faq-header">
+          Làm thế nào để thêm sản phẩm mới?
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-body">
+          <p>Bạn có thể nhấn vào nút Quét mã hoặc vào Tủ lạnh để thêm tay.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          Thông báo hết hạn hoạt động như thế nào?
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-body">
+          <p>
+            Hệ thống sẽ gửi thông báo đẩy trước 3 ngày khi thực phẩm sắp hết
+            hạn.
+          </p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          Dữ liệu của tôi có an toàn không?
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-body">
+          <p>Chúng tôi mã hóa 100% dữ liệu của bạn trên máy chủ an toàn.</p>
+        </div>
+      </div>
+      <div class="faq-item active">
+        <div class="faq-header">
+          Làm sao để xóa tài khoản? <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-body">
+          <p>
+            Bạn có thể yêu cầu xóa tài khoản bằng cách liên hệ với chúng tôi qua
+            email Sakedo123@gmail.com. Chúng tôi sẽ xử lý yêu cầu trong vòng 30
+            ngày.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Xóa Tài Khoản -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-content delete-box">
+    <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+    <div class="delete-icon-wrapper" style="text-align: center; margin-bottom: 15px;">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size: 40px; color: #ff6b6b; background: #ffe3e3; padding: 20px; border-radius: 50%;"></i>
+    </div>
+    <h3 class="modal-title" style="text-align: center; margin-bottom: 10px;">Xóa tài khoản</h3>
+    <p style="text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; line-height: 1.5;">
+      Bạn có chắc chắn muốn xóa tài khoản? Mọi dữ liệu của bạn sẽ bị xóa vĩnh viễn và không thể khôi phục.
+    </p>
+    <div class="modal-actions" style="display: flex; gap: 15px;">
+      <button class="btn-cancel close-modal-btn" style="flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: 600; color: #333;">Hủy</button>
+      <button class="btn-confirm-delete" id="confirm-delete-btn" style="flex: 1; padding: 12px; border-radius: 15px; border: none; background: #ff6b6b; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(255,107,107,0.3);">Xóa vĩnh viễn</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>

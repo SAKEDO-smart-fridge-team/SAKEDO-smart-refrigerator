@@ -20,8 +20,36 @@ async function navigate(page, element) {
   }
 }
 
-// Khi vừa mở web, tự động hiện trang Profile
-window.addEventListener("DOMContentLoaded", () => {
-  const defaultTab = document.getElementById("default-tab");
-  navigate("profile", defaultTab);
+// ==========================================
+// LOGIC CHUYỂN ĐỔI CHẾ ĐỘ SÁNG / TỐI (THEME)
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+  const btnLight = document.getElementById("btn-light");
+  const btnDark = document.getElementById("btn-dark");
+  const body = document.body;
+
+  // 1. Kiểm tra xem lần trước người dùng đang xài chế độ nào (Lưu trong LocalStorage)
+  const currentTheme = localStorage.getItem("sakedo_theme");
+
+  if (currentTheme === "dark") {
+    body.classList.add("dark-theme");
+    btnDark.classList.add("active");
+    btnLight.classList.remove("active");
+  }
+
+  // 2. Khi nhấn nút TỐI (Dark)
+  btnDark.addEventListener("click", () => {
+    body.classList.add("dark-theme");
+    localStorage.setItem("sakedo_theme", "dark"); // Lưu lại lựa chọn
+    btnDark.classList.add("active");
+    btnLight.classList.remove("active");
+  });
+
+  // 3. Khi nhấn nút SÁNG (Light)
+  btnLight.addEventListener("click", () => {
+    body.classList.remove("dark-theme");
+    localStorage.setItem("sakedo_theme", "light"); // Lưu lại lựa chọn
+    btnLight.classList.add("active");
+    btnDark.classList.remove("active");
+  });
 });

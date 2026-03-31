@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="css/chat.css" />
+
+<section class="ai-chat-container">
+  <div class="ai-suggest-card">
+    <div class="ai-card-header">
+      <div class="ai-chef-info">
+        <img src="assets/img/Chè.png" alt="Mr. Chè" class="ai-avatar" onerror="this.src='assets/img/Chè.png'" />
+        <div class="ai-text">
+          <h3>Mr. Chè</h3>
+          <p>Hôm nay vào bếp cùng Chè nhé!</p>
+        </div>
+      </div>
+      <div class="ai-card-actions">
+        <button class="btn-icon">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </button>
+        <button class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div class="ai-card-body">
+      <!-- Trạng thái chào mừng ban đầu -->
+      <div id="state-welcome" class="state-container">
+        <h2>Hôm nay ăn gì ?!</h2>
+        <p>
+          Cậu hãy nhấn nút làm mới để Chè giúp bạn tìm<br />những món ăn phù hợp
+          nhé!
+        </p>
+      </div>
+
+      <!-- Trạng thái hiện món ăn -->
+      <div id="state-food-suggestion" class="state-container hidden" data-current-index="0">
+        <button class="btn-arrow left"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="food-card-preview">
+          <img id="food-preview-img" src="assets/img/trungchien.png" alt="Food" />
+          <div class="food-overlay">
+            <h4 id="food-preview-title">Trứng chiên cà</h4>
+            <div class="food-icon-circle">
+              <i class="fa-solid fa-bowl-rice"></i>
+            </div>
+          </div>
+        </div>
+        <button class="btn-arrow right"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div class="ai-card-footer">
+      <button class="btn-recipe" disabled>
+        <i class="fa-regular fa-file-lines"></i> Công thức
+      </button>
+      <button class="btn-refresh"><i class="fa-solid fa-rotate"></i></button>
+    </div>
+  </div>
+</section>

@@ -1,14 +1,16 @@
 /* css/profile.css */
+
 .profile-container {
   max-width: 850px;
   margin: 0 auto;
-  animation: fadeIn 0.5s ease;
+  padding: 10px 10px 50px 10px;
+  animation: fadeIn 0.4s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -16,116 +18,156 @@
   }
 }
 
+/* HEADER & NÚT EDIT */
 .profile-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
-
+.profile-section-header h2 {
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+}
 .edit-btn {
-  background: #b5daec;
+  background-color: var(--primary-blue, #b5daec);
+  color: #fff;
   border: none;
-  padding: 8px 18px;
-  border-radius: 8px;
-  color: #444;
+  padding: 10px 22px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(181, 218, 236, 0.4);
+}
+.edit-btn:hover {
+  background-color: #96cfe8;
+  transform: translateY(-2px);
 }
 
-/* Card thông tin cơ bản */
-.basic-info {
-  background: white;
-  padding: 30px;
-  border-radius: 25px;
+/* THẺ THÔNG TIN CÁ NHÂN */
+.profile-card {
+  background: #fff;
+  border-radius: 30px;
+  padding: 35px 40px;
   display: flex;
   align-items: center;
   gap: 40px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+  margin-bottom: 40px;
 }
-
 .avatar-circle {
-  width: 110px;
-  height: 110px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  overflow: hidden;
-  background: #f0f0f0;
-  border: 3px solid #b5daec;
+  padding: 4px;
+  background: linear-gradient(135deg, #b5daec, #e0e0e0);
+  flex-shrink: 0;
 }
-
 .avatar-circle img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
 }
 
+/* FORMAT Ô NHẬP LIỆU */
 .input-fields {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.input-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #777;
+  padding-left: 5px;
 }
 .input-box {
-  position: relative;
-  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 18px;
+  padding: 0 20px;
+  height: 55px;
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+.input-box:focus-within {
+  border-color: #b5daec;
+  background: #fff;
 }
 .input-box i {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #888;
+  color: #b5daec;
+  font-size: 18px;
+  margin-right: 15px;
 }
 .input-box input {
-  width: 100%;
-  padding: 12px 15px 12px 45px;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  background: #fafafa;
+  flex: 1;
+  border: none;
+  background: transparent;
   outline: none;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
 }
 
-/* Settings Cards */
+/* CÀI ĐẶT CHI TIẾT (SETTINGS CARDS) */
 .settings-group h3 {
   margin-bottom: 20px;
   color: #333;
+  font-size: 20px;
 }
-
 .settings-card {
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  background: #fff;
+  border-radius: 25px;
+  padding: 25px 35px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.02);
 }
-
 .group-label {
-  font-size: 11px;
-  font-weight: bold;
-  color: #5a8f9b;
+  font-size: 12px;
+  font-weight: 700;
+  color: #aaa;
   margin-bottom: 15px;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
-
 .setting-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f9f9f9;
+  padding: 15px 0;
+  border-bottom: 1px solid #f2f2f2;
+  color: #444;
+  font-weight: 500;
+  font-size: 15px;
 }
 .setting-row:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
 .setting-row span i {
-  width: 25px;
-  color: #666;
-  margin-right: 10px;
+  width: 35px;
+  color: #b5daec;
+  font-size: 18px;
+  text-align: left;
 }
 
-/* Switch Toggle Custom */
+/* NÚT TOGGLE BẬT/TẮT */
 .switch {
   position: relative;
-  width: 40px;
-  height: 20px;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
 }
 .switch input {
   opacity: 0;
@@ -139,44 +181,323 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #e0e0e0;
   transition: 0.4s;
-  border-radius: 20px;
+  border-radius: 30px;
 }
 .slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
+  height: 22px;
+  width: 22px;
   left: 3px;
   bottom: 3px;
   background-color: white;
-  transition: 0.4s;
+  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 input:checked + .slider {
   background-color: #b5daec;
 }
 input:checked + .slider:before {
-  transform: translateX(20px);
+  transform: translateX(22px);
 }
 
-/* Clickable Styles */
+/* CLICKABLE & DANGER ZONE */
 .clickable {
   cursor: pointer;
+  transition: 0.2s;
 }
 .clickable:hover {
-  opacity: 0.7;
+  color: #b5daec;
 }
-.danger {
-  color: #ff5c5c;
+.clickable .arrow {
+  color: #ccc;
+  font-size: 14px;
 }
 .val-text {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: #888;
 }
-.arrow {
-  font-size: 12px;
-  color: #ccc;
-  margin-left: 5px;
+.danger {
+  color: #ff6b6b;
 }
+.danger span i {
+  color: #ff6b6b;
+}
+.danger:hover {
+  color: #ff4757;
+}
+
+/* ========================================= */
+/* CSS CHUẨN CHO MODAL (NGÔN NGỮ & HỖ TRỢ)   */
+/* ========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s ease;
+}
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  width: 420px;
+  max-width: 90%;
+  position: relative;
+  transform: translateY(30px);
+  transition: 0.3s ease;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+.modal-overlay.show .modal-content {
+  transform: translateY(0);
+}
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+}
+.modal-title {
+  font-size: 22px;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+/* Modal Ngôn Ngữ */
+.lang-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lang-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: #f0f2f5;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.lang-item.active {
+  background: #3b6b7e;
+  color: #fff;
+}
+.lang-item span i {
+  margin-right: 10px;
+}
+
+/* Modal Hỗ Trợ & FAQ */
+.support-box {
+  width: 500px;
+}
+.sec-title {
+  font-weight: 700;
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+.email-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.email-card i {
+  font-size: 24px;
+  color: #333;
+}
+.email-info {
+  display: flex;
+  flex-direction: column;
+}
+.email-info strong {
+  font-size: 15px;
+  color: #333;
+}
+.email-info span {
+  font-size: 12px;
+  color: #999;
+}
+
+/* FAQ Accordion */
+.faq-item {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+.faq-header {
+  padding: 15px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.faq-header i {
+  transition: 0.3s;
+}
+.faq-body {
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease-out,
+    padding 0.3s;
+  background: #fafafa;
+}
+.faq-body p {
+  padding: 0 15px;
+  margin: 0;
+  font-size: 13px;
+  color: #777;
+  line-height: 1.5;
+}
+
+/* Trạng thái mở FAQ */
+.faq-item.active {
+  border-color: #ddd;
+}
+.faq-item.active .faq-header i {
+  transform: rotate(180deg);
+}
+.faq-item.active .faq-body {
+  max-height: 150px;
+  padding-bottom: 15px;
+}
+
+/* ========================================= */
+/* THÊM TỪ CẬP NHẬT LOGIC CHỨC NĂNG          */
+/* ========================================= */
+
+/* Avatar Camera Overlay */
+.avatar-circle {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden; /* Đảm bảo overlay gọn trong vòng tròn */
+}
+.camera-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none; /* Chỉ click được avatar hình */
+}
+.camera-overlay i {
+  color: white;
+  font-size: 30px;
+}
+.profile-container.editing .camera-overlay {
+  opacity: 1;
+}
+
+/* Edit Mode cho Input */
+.profile-container.editing .input-box {
+  background: #fff;
+  border-color: #b5daec;
+  box-shadow: 0 2px 8px rgba(181, 218, 236, 0.3);
+}
+
+/* Edit Mode cho Nút Edit thành Nút LƯU */
+.edit-btn.editing-mode {
+  background-color: #3b6b7e; /* Xanh ngọc đậm = Lưu */
+  box-shadow: 0 4px 12px rgba(59, 107, 126, 0.4);
+}
+.edit-btn.editing-mode:hover {
+  background-color: #2c5464;
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 80px; /* Tránh đè lên thanh điều hướng */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10000;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(44, 62, 80, 0.95);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideUp 0.3s ease-out forwards;
+}
+.toast.toast-danger i {
+  color: #ff6b6b;
+}
+.toast i {
+  color: #b5daec;
+  font-size: 18px;
+}
+.toast.toast-fadeout {
+  animation: fadeOutDown 0.4s ease-in forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
