@@ -26,27 +26,28 @@
             <a href="register.html" class="auth-tab active">Đăng ký</a>
           </div>
 
-          <!-- Nút submit sẽ chuyển thẳng vào trang chủ index.html -->
-          <form action="index.html" class="login-form">
+          <form id="register-form" class="login-form" novalidate>
             <div class="input-group">
               <i class="fa-regular fa-user"></i>
-              <input type="text" placeholder="Họ và tên" required />
+              <input type="text" name="full_name" placeholder="Họ và tên" autocomplete="name" required />
             </div>
 
             <div class="input-group">
               <i class="fa-solid fa-phone" style="font-size: 0.95rem;"></i>
-              <input type="tel" placeholder="Số điện thoại" required />
+              <input type="tel" name="phone" placeholder="Số điện thoại" autocomplete="tel" required />
             </div>
 
             <div class="input-group">
               <i class="fa-regular fa-envelope"></i>
-              <input type="email" placeholder="Email" required />
+              <input type="email" name="email" placeholder="Email" autocomplete="email" required />
             </div>
             
             <div class="input-group">
               <i class="fa-regular fa-circle-dot"></i>
-              <input type="password" placeholder="Password" required />
+              <input type="password" name="password" placeholder="Password" autocomplete="new-password" required />
             </div>
+
+            <p id="auth-message" class="auth-message" aria-live="polite"></p>
 
             <button type="submit" class="btn-continue" style="margin-top: 15px;">Đăng ký</button>
           </form>
@@ -54,12 +55,18 @@
           <div class="social-login">
             <p>Sign in With</p>
             <div class="social-icons">
-               <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Login" class="social-icon-img" />
+              <div id="google-signin-button" class="google-signin-host" aria-label="Google sign-in button"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    window.SAKEDO_GOOGLE_CLIENT_ID = "";
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

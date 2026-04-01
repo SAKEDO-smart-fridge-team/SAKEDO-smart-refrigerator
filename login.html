@@ -26,20 +26,21 @@
             <a href="register.html" class="auth-tab">Đăng ký</a>
           </div>
 
-          <!-- Nút submit sẽ chuyển thẳng vào trang chủ index.html -->
-          <form action="index.html" class="login-form">
+          <form id="login-form" class="login-form" novalidate>
             <div class="input-group">
               <i class="fa-regular fa-envelope"></i>
-              <input type="email" placeholder="Email" required />
+              <input type="email" name="email" placeholder="Email" autocomplete="email" required />
             </div>
             
             <div class="input-group">
               <i class="fa-regular fa-circle-dot"></i>
-              <input type="password" placeholder="Password" required />
+              <input type="password" name="password" placeholder="Password" autocomplete="current-password" required />
             </div>
 
+            <p id="auth-message" class="auth-message" aria-live="polite"></p>
+
             <div class="form-actions">
-              <a href="#" class="forgot-pwd">Quên mật khẩu?</a>
+              <a href="forgot-password.html" class="forgot-pwd">Quên mật khẩu?</a>
             </div>
 
             <button type="submit" class="btn-continue">Continue</button>
@@ -48,12 +49,18 @@
           <div class="social-login">
             <p>Sign in With</p>
             <div class="social-icons">
-               <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Login" class="social-icon-img" />
+              <div id="google-signin-button" class="google-signin-host" aria-label="Google sign-in button"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    window.SAKEDO_GOOGLE_CLIENT_ID = "";
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>
