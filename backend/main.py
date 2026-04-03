@@ -264,7 +264,14 @@ async def login_user(user: UserLogin):
         expires_delta=access_token_expires
     )
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user": {
+            "full_name": db_user.get("full_name", ""),
+            "email": db_user.get("email", "")
+        }
+    }
 
 
 @app.post("/api/login/google", response_model=Token)
@@ -306,7 +313,14 @@ async def login_user_google(payload: GoogleLoginRequest):
         expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user": {
+            "full_name": db_user.get("full_name", full_name) if db_user else full_name,
+            "email": db_user.get("email", email) if db_user else email
+        }
+    }
 
 
 @app.post("/api/forgot-password")

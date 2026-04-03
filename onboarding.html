@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sakedo - Cá nhân hóa trải nghiệm</title>
+  <!-- Global fonts & icons -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Onboarding specific styles -->
+  <link rel="stylesheet" href="css/onboarding.css" />
+</head>
+
+<body>
+  <div class="split-layout">
+    <!-- Cột bên trái: Ảnh tủ lạnh -->
+    <div class="image-section"></div>
+
+    <!-- Cột bên phải: Content -->
+    <div class="content-section">
+      <div class="onboarding-panel">
+
+        <!-- BƯỚC 1 -->
+        <div id="step-1" class="onboarding-step">
+          <div class="onboarding-wrapper">
+            <h1 class="onboarding-title">Hãy cá nhân hóa trải nghiệm của bạn</h1>
+            <button class="btn-preference" onclick="showStep(2)">Khẩu vị riêng - thực đơn riêng</button>
+          </div>
+
+          <!-- Next button -->
+          <a href="javascript:void(0)" class="next-circle-btn" aria-label="Tiếp theo" onclick="showStep(2)">
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <!-- BƯỚC 2 -->
+        <div id="step-2" class="onboarding-step" style="display: none;">
+          <div class="onboarding-wrapper">
+            <h1 class="onboarding-title">Bạn có tuân thủ theo chế độ ăn kiêng nào?</h1>
+
+            <div class="diet-options">
+              <button class="diet-btn">Ăn thuần chay</button>
+              <button class="diet-btn">Ăn giảm cân</button>
+              <button class="diet-btn">Ăn tự do</button>
+            </div>
+
+            <div class="action-buttons">
+              <button class="btn-continue-dark" onclick="showStep(3)">Tiếp tục</button>
+              <a href="javascript:void(0)" class="btn-skip" onclick="showStep(3)">Bỏ qua</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- BƯỚC 3 -->
+        <div id="step-3" class="onboarding-step" style="display: none;">
+          <div class="onboarding-wrapper">
+            <img src="assets/images/onboard1.png" alt="Allergy" class="onboarding-illustration">
+            <h1 class="onboarding-title" style="margin-bottom: 30px; font-size: 1.4rem;">Bạn đang bị dị ứng với thực phẩm nào?</h1>
+            
+            <div class="tag-options">
+              <button class="tag-btn">Trứng</button>
+              <button class="tag-btn">Sữa</button>
+              <button class="tag-btn">Cá</button>
+              <button class="tag-btn">Thịt đỏ</button>
+              <button class="tag-btn">Đậu Phộng</button>
+              <button class="tag-btn">Hải Sản</button>
+              <button class="tag-btn">Hạt</button>
+              <button class="tag-btn">Lúa mì</button>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn-continue-dark" onclick="showStep(4)">Tiếp tục</button>
+              <a href="javascript:void(0)" class="btn-skip" onclick="showStep(4)">Bỏ qua</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 4 -->
+        <div id="step-4" class="onboarding-step" style="display: none;">
+          <div class="onboarding-wrapper">
+            <img src="assets/images/onboard2.png" alt="Dislike" class="onboarding-illustration">
+            <h1 class="onboarding-title" style="margin-bottom: 30px; font-size: 1.4rem;">Thực phẩm nào bạn không thích ?</h1>
+            
+            <div class="tag-options">
+              <button class="tag-btn">Sầu riêng</button>
+              <button class="tag-btn">Hành tây</button>
+              <button class="tag-btn">Tỏi</button>
+              <button class="tag-btn">Đồ cay</button>
+              <button class="tag-btn">Ớt chuông</button>
+              <button class="tag-btn">Đậu phộng</button>
+              <button class="tag-btn">Rau mùi</button>
+              <button class="tag-btn">Cá</button>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn-continue-dark" onclick="showStep(5)">Tiếp tục</button>
+              <a href="javascript:void(0)" class="btn-skip" onclick="showStep(5)">Bỏ qua</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 5 -->
+        <div id="step-5" class="onboarding-step" style="display: none;">
+          <div class="onboarding-wrapper">
+            <img src="assets/images/onboard3.png" alt="Cuisine" class="onboarding-illustration">
+            <h1 class="onboarding-title" style="margin-bottom: 30px; font-size: 1.4rem;">Ẩm thực nào bạn thích nhất?</h1>
+            
+            <div class="tag-options">
+              <button class="tag-btn">Hàn Quốc</button>
+              <button class="tag-btn">Việt Nam</button>
+              <button class="tag-btn">Ý</button>
+              <button class="tag-btn">Thái Lan</button>
+              <button class="tag-btn">Ấn Độ</button>
+              <button class="tag-btn">Trung Quốc</button>
+              <button class="tag-btn">Nhật Bản</button>
+              <button class="tag-btn">Mỹ</button>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn-continue-dark" onclick="window.location.href='index.html'">Tiếp tục</button>
+              <a href="index.html" class="btn-skip">Bỏ qua</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/onboarding.js"></script>
+</body>
+
+</html>

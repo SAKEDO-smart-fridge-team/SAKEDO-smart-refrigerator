@@ -60,14 +60,14 @@
       const authPayload = {
         access_token: token.access_token,
         token_type: token.token_type,
-        user: { email }
+        user: token.user || { email }
       };
 
       window.sakedoApi.saveAuth(authPayload);
       showMessage("Đăng nhập thành công, đang chuyển trang...", "success");
 
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "onboarding.html";
       }, 500);
     } catch (error) {
       showMessage(error.message || "Đăng nhập thất bại.", "error");
@@ -133,7 +133,7 @@
 
       showMessage("Đăng nhập Google thành công, đang chuyển trang...", "success");
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "onboarding.html";
       }, 500);
     } catch (error) {
       showMessage(error.message || "Đăng nhập Google thất bại.", "error");

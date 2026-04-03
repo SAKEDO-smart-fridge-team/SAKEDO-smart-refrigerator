@@ -1,0 +1,226 @@
+/* css/onboarding.css */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-main), 'Roboto Slab', serif;
+  height: 100vh;
+  background-color: #DDEBF3;
+  overflow: hidden;
+}
+
+.split-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.image-section {
+  flex: 0 0 40%;
+  height: 100vh;
+  background-color: #2F3640; 
+  background-image: url('../assets/images/tulanh.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  z-index: 1;
+}
+
+.content-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  padding: 1.5vh 1.5vw 1.5vh 0;
+  position: relative;
+  z-index: 2;
+}
+
+.onboarding-panel {
+  width: 100%; 
+  height: 100%; 
+  background: #ffffff;
+  border-radius: 40px; 
+  margin-left: -15px;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.04); 
+  position: relative;
+}
+
+.onboarding-step {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.onboarding-wrapper {
+  text-align: center;
+}
+
+.onboarding-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+}
+
+.btn-preference {
+  width: 400px;
+  max-width: 90%;
+  padding: 20px 0;
+  background-color: #BDE0F0;
+  color: #436b7d;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s, background-color 0.2s;
+  font-family: inherit;
+}
+
+.btn-preference:hover {
+  background-color: #AACEE2;
+  transform: translateY(-2px);
+}
+
+.next-circle-btn {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  width: 80px;
+  height: 80px;
+  background-color: #BDE0F0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s, opacity 0.2s;
+  cursor: pointer;
+}
+
+.next-circle-btn i {
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.next-circle-btn:hover {
+  background-color: #AACEE2;
+  transform: translateY(-2px);
+}
+
+/* Styles for Onboarding 2 (Diet Selection) */
+.diet-options {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 50px;
+  align-items: center;
+}
+
+.diet-btn {
+  width: 500px;
+  max-width: 90%;
+  padding: 18px 0;
+  background-color: rgba(181, 218, 236, 0.5); /* #B5DAEC at 50% opacity */
+  color: #376880;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 15px; /* Softer radius matching the image */
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  font-family: inherit;
+}
+
+.diet-btn:hover {
+  background-color: rgba(181, 218, 236, 0.7);
+  transform: translateY(-2px);
+}
+
+.diet-btn.active {
+  background-color: #B5DAEC; /* 100% opacity */
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.btn-continue-dark {
+  width: 250px;
+  padding: 15px 0;
+  background-color: #376880;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  font-family: inherit;
+}
+
+.btn-continue-dark:hover {
+  background-color: #2b5266;
+  transform: translateY(-2px);
+}
+
+.btn-skip {
+  color: #376880;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.2px;
+}
+
+.btn-skip:hover {
+  color: #2b5266;
+  text-decoration: underline;
+}
+
+/* Styles for Onboarding 3 (Allergy Selection) */
+.onboarding-illustration {
+  height: 160px;
+  object-fit: contain;
+  margin-bottom: 25px;
+}
+
+.tag-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  max-width: 480px;
+  margin-bottom: 40px;
+}
+
+.tag-btn {
+  padding: 12px 35px;
+  background-color: rgba(181, 218, 236, 0.5); /* #B5DAEC at 50% opacity */
+  color: #376880;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px; /* Pill shape for smaller buttons */
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  font-family: inherit;
+}
+
+.tag-btn:hover {
+  background-color: rgba(181, 218, 236, 0.7);
+  transform: translateY(-2px);
+}
+
+.tag-btn.active {
+  background-color: #B5DAEC; /* 100% opacity */
+}

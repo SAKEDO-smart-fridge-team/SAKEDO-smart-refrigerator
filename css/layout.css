@@ -66,10 +66,11 @@ body {
 }
 
 .sakedo-logo {
-  max-width: 100%;
+  max-width: 800%;
   max-height: 100%;
   object-fit: contain;
   opacity: 0.9;
+  mix-blend-mode: multiply;
   transition:
     transform var(--transition-smooth),
     opacity var(--transition-smooth);
@@ -229,7 +230,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 45px;
+  padding: 0 10%;
   box-shadow: 0 8px 25px rgba(181, 218, 236, 0.4);
 }
 
@@ -238,6 +239,7 @@ body {
   align-items: center;
   gap: 15px;
   color: white;
+  min-width: 200px;
 }
 
 .user-avatar {
@@ -261,7 +263,8 @@ body {
 
 .search-container {
   background: white;
-  width: 50%;
+  width: 45%;
+  max-width: 650px;
   height: 48px;
   border-radius: 30px;
   display: flex;
@@ -319,6 +322,59 @@ body {
   border-radius: 10px;
 }
 
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 200px;
+  white-space: nowrap;
+}
+
+.auth-buttons .btn-login {
+  background-color: #4b708d;
+  color: white;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.auth-buttons .btn-login:hover {
+  background-color: #3b5f75;
+}
+
+.auth-buttons .btn-register {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.auth-buttons .btn-register:hover {
+  opacity: 0.8;
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 200px;
+  height: 100%;
+}
+
+.topbar-logo img {
+  height: 200px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
 /* ========================================= */
 /* 8. DARK MODE THEME & TOGGLE STYLE         */
 /* ========================================= */
@@ -332,41 +388,53 @@ body {
 }
 
 .mode-switch span.active {
-  background-color: #e0e0e0; /* Nền xám cho nút đang bật */
+  background-color: #e0e0e0;
+  /* Nền xám cho nút đang bật */
   color: #333;
   font-weight: bold;
 }
 
 /* KHI BODY BẬT CHẾ ĐỘ TỐI (DARK-THEME) */
 body.dark-theme {
-  --bg-light: #1e1e2e; /* Đổi nền trang thành đen xám */
-  --sidebar-gray: #2a2a3c; /* Đổi Sidebar thành xám tối */
-  --primary-blue: #5c9ce6; /* Làm màu xanh dịu lại cho đỡ chói */
-  color: #ffffff; /* Đổi chữ thành màu trắng */
+  --bg-light: #1e1e2e;
+  /* Đổi nền trang thành đen xám */
+  --sidebar-gray: #2a2a3c;
+  /* Đổi Sidebar thành xám tối */
+  --primary-blue: #5c9ce6;
+  /* Làm màu xanh dịu lại cho đỡ chói */
+  color: #ffffff;
+  /* Đổi chữ thành màu trắng */
 }
 
 /* Đổi màu các thành phần khác khi ở chế độ tối */
 body.dark-theme .app-container {
   background-color: var(--bg-light);
 }
+
 body.dark-theme .topbar,
 body.dark-theme .search-container,
 body.dark-theme .search-container input,
 body.dark-theme .btn-noti,
 body.dark-theme .mode-switch {
-  background-color: #2a2a3c; /* Nền tối cho các khối con */
+  background-color: #2a2a3c;
+  /* Nền tối cho các khối con */
   color: #fff;
 }
+
 body.dark-theme .nav-item {
   color: #a0a0b0;
-} /* Chữ menu tối màu đi */
+}
+
+/* Chữ menu tối màu đi */
 body.dark-theme .nav-item.active {
   color: #fff;
 }
+
 body.dark-theme .welcome p,
 body.dark-theme .welcome span {
   color: #fff;
 }
+
 body.dark-theme .camera-bulge {
   background-color: var(--sidebar-gray);
 }

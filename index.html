@@ -12,7 +12,9 @@
   <body>
     <div class="app-container">
       <aside class="sidebar">
-        <div class="logo">S</div>
+        <div class="logo-container">
+          <img src="assets/images/logo.png" class="sakedo-logo" alt="Sakedo Logo" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHRleHQgeD0iMTUiIHk9IjM1IiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSJib2xkIj5TPC90ZXh0Pjwvc3Zn>';"/>
+        </div>
 
         <div class="nav-menu">
           <div class="nav-item" onclick="navigate('home', this)">
@@ -52,11 +54,16 @@
       </aside>
       <div class="main-wrapper">
         <header class="topbar">
-          <div class="user-profile">
+          <div id="auth-buttons" class="auth-buttons" style="display: none;">
+            <a href="login.html" class="btn-login">Đăng nhập</a>
+            <a href="register.html" class="btn-register">Đăng ký</a>
+          </div>
+
+          <div class="user-profile" id="user-profile" style="display: none;">
             <img
               src="assets/img/avatar.jpg"
               class="user-avatar"
-              onerror="this.src = 'https://via.placeholder.com/45'"
+              onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI2NjYyIvPjwvc3ZnPg=='"
             />
             <div class="welcome">
               <p id="welcome-name">Xin chào!</p>
@@ -87,10 +94,7 @@
             <img
               src="assets/images/logo.png"
               alt="Sakedo Logo"
-              onerror="
-                this.onerror = null;
-                this.src = 'https://via.placeholder.com/150x50?text=SAKEDO';
-              "
+              onerror="this.onerror = null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjIwIj5TQUtFRE88L3RleHQ+PC9zdmc+';"
             />
           </div>
           <a href="login.html" id="logout-link" style="margin-left: 12px; font-size: 0.92rem; color: #6a7780; text-decoration: none;">Đăng xuất</a>
