@@ -17,27 +17,31 @@
         </div>
 
         <div class="nav-menu">
-          <div class="nav-item" onclick="navigate('home', this)">
+          <div class="nav-item active" onclick="navigate('home', this)">
             <i class="fa-solid fa-house"></i>
             <span class="nav-label">Tổng quan</span>
+          </div>
+
+          <div class="nav-item" onclick="navigate('fridge', this)">
+            <i style="display: flex; align-items: center; justify-content: center; width: 25px;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6Z"></path><path d="M5 10h14"></path><path d="M9 14v2"></path><path d="M9 6v2"></path></svg></i>
+            <span class="nav-label">Tủ lạnh</span>
           </div>
 
           <div class="camera-btn" onclick="navigate('camera', this)">
             <div class="camera-bulge">
               <i class="fa-solid fa-camera"></i>
             </div>
-            <span class="nav-label">Quét mã</span>
           </div>
 
           <div class="nav-item" onclick="navigate('ai-chat', this)">
-            <i class="fa-solid fa-robot"></i>
+            <i class="fa-solid fa-file-lines"></i>
             <span class="nav-label">Mr. Chè</span>
           </div>
           <div class="nav-item" onclick="navigate('favorite', this)">
             <i class="fa-solid fa-heart"></i>
             <span class="nav-label">Yêu thích</span>
           </div>
-          <div class="nav-item active" onclick="navigate('profile', this)">
+          <div class="nav-item" onclick="navigate('profile', this)">
             <i class="fa-solid fa-gear"></i>
             <span class="nav-label">Cài đặt</span>
           </div>

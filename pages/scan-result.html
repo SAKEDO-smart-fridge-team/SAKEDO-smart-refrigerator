@@ -1,0 +1,136 @@
+<link rel="stylesheet" href="css/scan-result.css" />
+
+<div class="scan-result-page">
+  <h2 class="scan-result-title">KẾT QUẢ NHẬN DIỆN</h2>
+
+  <div class="result-list" id="result-list">
+
+    <!-- Item 1: Mando -->
+    <div class="result-item" data-name="Mando">
+      <label class="result-checkbox">
+        <input type="checkbox" checked />
+        <span class="checkmark"></span>
+      </label>
+      <div class="result-thumbnail">
+        <img src="assets/images/mando.png" alt="Mando" />
+      </div>
+      <span class="result-name">Mando</span>
+      <div class="result-actions">
+        <button class="btn-edit-item" title="Chỉnh sửa"><i class="fa-regular fa-pen-to-square"></i></button>
+        <button class="btn-delete-item" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <!-- Item 2: Thịt heo -->
+    <div class="result-item" data-name="Thịt heo">
+      <label class="result-checkbox">
+        <input type="checkbox" checked />
+        <span class="checkmark"></span>
+      </label>
+      <div class="result-thumbnail">
+        <img src="assets/images/thitheo.png" alt="Thịt heo" />
+      </div>
+      <span class="result-name">Thịt heo</span>
+      <div class="result-actions">
+        <button class="btn-edit-item" title="Chỉnh sửa"><i class="fa-regular fa-pen-to-square"></i></button>
+        <button class="btn-delete-item" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <!-- Item 3: Trứng gà -->
+    <div class="result-item" data-name="Trứng gà">
+      <label class="result-checkbox">
+        <input type="checkbox" checked />
+        <span class="checkmark"></span>
+      </label>
+      <div class="result-thumbnail">
+        <img src="assets/images/trungga.png" alt="Trứng gà" />
+      </div>
+      <span class="result-name">Trứng gà</span>
+      <div class="result-actions">
+        <button class="btn-edit-item" title="Chỉnh sửa"><i class="fa-regular fa-pen-to-square"></i></button>
+        <button class="btn-delete-item" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <!-- Item 4: Cá Thu -->
+    <div class="result-item" data-name="Cá Thu">
+      <label class="result-checkbox">
+        <input type="checkbox" checked />
+        <span class="checkmark"></span>
+      </label>
+      <div class="result-thumbnail">
+        <img src="assets/images/cathu.png" alt="Cá Thu" />
+      </div>
+      <span class="result-name">Cá Thu</span>
+      <div class="result-actions">
+        <button class="btn-edit-item" title="Chỉnh sửa"><i class="fa-regular fa-pen-to-square"></i></button>
+        <button class="btn-delete-item" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <!-- Item 5: Sữa Vinamilk -->
+    <div class="result-item" data-name="Sữa Vinamilk">
+      <label class="result-checkbox">
+        <input type="checkbox" checked />
+        <span class="checkmark"></span>
+      </label>
+      <div class="result-thumbnail">
+        <img src="assets/images/suabo.png" alt="Sữa Vinamilk" />
+      </div>
+      <span class="result-name">Sữa Vinamilk</span>
+      <div class="result-actions">
+        <button class="btn-edit-item" title="Chỉnh sửa"><i class="fa-regular fa-pen-to-square"></i></button>
+        <button class="btn-delete-item" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Action buttons -->
+  <div class="scan-result-actions">
+    <button class="btn-cancel" onclick="navigate('camera', document.querySelector('.camera-btn'))">Hủy bỏ</button>
+    <button class="btn-complete" id="btn-complete">Hoàn thành</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Delete item
+  document.querySelectorAll('.btn-delete-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.result-item');
+      item.style.transition = 'all 0.3s ease';
+      item.style.opacity = '0';
+      item.style.transform = 'translateX(30px)';
+      setTimeout(() => item.remove(), 300);
+    });
+  });
+
+  // Complete button
+  const btnComplete = document.getElementById('btn-complete');
+  if (btnComplete) {
+    btnComplete.addEventListener('click', () => {
+      const checkedItems = document.querySelectorAll('.result-item');
+      const items = [];
+      checkedItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox && checkbox.checked) {
+          items.push({
+            name: item.dataset.name,
+            addedAt: new Date().toISOString()
+          });
+        }
+      });
+
+      // Save to localStorage
+      const existing = JSON.parse(localStorage.getItem('sakedo_items') || '[]');
+      existing.push(...items);
+      localStorage.setItem('sakedo_items', JSON.stringify(existing));
+
+      alert('Đã lưu ' + items.length + ' món thành công! 🎉');
+      navigate('home', document.querySelector('.nav-item'));
+    });
+  }
+})();
+</script>

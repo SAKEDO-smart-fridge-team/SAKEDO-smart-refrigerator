@@ -9,6 +9,17 @@ async function navigate(page, element) {
     // 2. Đổ nội dung vào vùng main
     root.innerHTML = html;
 
+    // 2b. Thực thi các thẻ <script> trong trang vừa load
+    root.querySelectorAll("script").forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+
     // 3. Xử lý UI cho Sidebar (Đổi màu icon khi được chọn)
     document
       .querySelectorAll(".nav-item")
