@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="css/cooking-steps.css" />
+
+<section class="cooking-steps-container">
+  <div class="recipe-header">
+    <div class="recipe-image-wrapper play-overlay-container">
+      <img id="cooking-recipe-img" src="assets/img/canhchua.png" alt="Món ăn" onerror="this.src='https://via.placeholder.com/600x400?text=Food'" />
+      <div class="play-overlay"></div>
+    </div>
+    <h2 class="recipe-title" id="cooking-recipe-title">CANH CHUA CÁ BÔNG LAU</h2>
+    <img src="assets/img/Chè.png" alt="Mr. Chè" class="chef-mascot" />
+  </div>
+
+  <div class="steps-content">
+    <h3 class="section-title">Công thức chuẩn vị:</h3>
+    <div id="cooking-steps-list">
+      <!-- Dữ liệu sẽ được render từ JS để sau này AI trả JSON dễ tích hợp -->
+    </div>
+  </div>
+
+  <div class="recipe-actions">
+    <button class="btn-back" onclick="navigate('recipe-detail')">Trở về</button>
+    <button class="btn-cook btn-finish" onclick="finishCooking()">Xong rồiiiii</button>
+  </div>
+</section>

@@ -82,7 +82,7 @@
 
     <div class="settings-card">
       <p class="group-label">HIỂN THỊ & CÁ NHÂN HÓA</p>
-      <div class="setting-row clickable">
+      <div class="setting-row clickable" id="btn-preferences">
         <span><i class="fa-solid fa-dumbbell"></i> Cài đặt sở thích</span>
         <i class="fa-solid fa-chevron-right arrow"></i>
       </div>
@@ -121,6 +121,31 @@
       </div>
       <div class="lang-item">
         <span><i class="fa-solid fa-language"></i> Tiếng Anh</span>
+        <i class="fa-solid fa-check check-icon" style="display: none"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="preferencesModal">
+  <div class="modal-content">
+    <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="modal-title">Cài đặt sở thích</h3>
+    <div class="pref-list">
+      <div class="pref-item active">
+        <span><i class="fa-solid fa-utensils"></i> Không có đặc biệt</span>
+        <i class="fa-solid fa-check check-icon"></i>
+      </div>
+      <div class="pref-item">
+        <span><i class="fa-solid fa-leaf"></i> Ăn chay (Vegan)</span>
+        <i class="fa-solid fa-check check-icon" style="display: none"></i>
+      </div>
+      <div class="pref-item">
+        <span><i class="fa-solid fa-drumstick-bite"></i> Keto</span>
+        <i class="fa-solid fa-check check-icon" style="display: none"></i>
+      </div>
+      <div class="pref-item">
+        <span><i class="fa-solid fa-bowl-food"></i> Eat Clean</span>
         <i class="fa-solid fa-check check-icon" style="display: none"></i>
       </div>
     </div>

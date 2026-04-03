@@ -74,6 +74,12 @@ document.addEventListener("click", function (e) {
     if (supportModal) supportModal.classList.add("show");
   }
 
+  // 3.5 Mở Modal Cài đặt sở thích
+  if (e.target.closest("#btn-preferences")) {
+    const prefsModal = document.getElementById("preferencesModal");
+    if (prefsModal) prefsModal.classList.add("show");
+  }
+
   // 4. Mở Modal Xóa Tài Khoản
   if (e.target.closest("#btn-delete-account")) {
     const deleteModal = document.getElementById("deleteModal");
@@ -95,8 +101,10 @@ document.addEventListener("click", function (e) {
   if (e.target.closest("#confirm-delete-btn")) {
     document.getElementById("deleteModal").classList.remove("show");
     showToast("Đang xử lý yêu cầu xóa tài khoản...", "error");
-    // Ở đây có thể thêm logic logout hoặc chuyển hướng
-    // setTimeout(() => window.location.href = 'login.html', 1500);
+    setTimeout(() => {
+      if (window.sakedoApi) window.sakedoApi.clearAuth();
+      window.location.href = 'login.html';
+    }, 1500);
   }
 
   // 6. Chọn Ngôn ngữ (Đổi màu xanh ngọc #3b6b7e và text ngoài màn hình)
@@ -123,6 +131,25 @@ document.addEventListener("click", function (e) {
     }, 400);
 
     showToast("Đã đổi ngôn ngữ");
+  }
+
+  // 6.5 Chọn Sở thích
+  const prefItem = e.target.closest(".pref-item");
+  if (prefItem) {
+    document.querySelectorAll(".pref-item").forEach((item) => {
+      item.classList.remove("active");
+      item.querySelector(".check-icon").style.display = "none";
+    });
+    prefItem.classList.add("active");
+    prefItem.querySelector(".check-icon").style.display = "inline-block";
+
+    // Đóng Modal tự động sau 0.4 giây
+    setTimeout(() => {
+      const prefsModal = document.getElementById("preferencesModal");
+      if (prefsModal) prefsModal.classList.remove("show");
+    }, 400);
+
+    showToast("Đã cập nhật sở thích");
   }
 
   // 7. Accordion (Mở/Đóng Câu hỏi thường gặp)
@@ -161,3 +188,21 @@ document.addEventListener("change", function (e) {
     }
   }
 });
+
+// Load user data on profile load
+function loadUserProfile() {
+  if (window.sakedoApi) {
+    const auth = window.sakedoApi.getStoredAuth();
+    if (auth && auth.user) {
+      const inputs = document.querySelectorAll(".profile-card.basic-info input");
+      if (inputs.length >= 2) {
+        inputs[0].value = auth.user.full_name || auth.user.email || "Người dùng ẩn danh";
+        inputs[1].value = auth.user.email || "";
+      }
+    }
+  }
+}
+
+// Trigger load after script is added
+document.addEventListener("DOMContentLoaded", loadUserProfile);
+setTimeout(loadUserProfile, 500);

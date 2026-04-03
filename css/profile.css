@@ -310,6 +310,32 @@ input:checked + .slider:before {
   margin-right: 10px;
 }
 
+/* Modal Sở Thích */
+.pref-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pref-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: #f0f2f5;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.pref-item.active {
+  background: #3b6b7e;
+  color: #fff;
+}
+.pref-item span i {
+  margin-right: 10px;
+}
+
 /* Modal Hỗ Trợ & FAQ */
 .support-box {
   width: 500px;

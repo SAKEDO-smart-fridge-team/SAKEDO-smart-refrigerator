@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="css/recipe-detail.css" />
+
+<section class="recipe-detail-container">
+  <div class="recipe-header">
+    <div class="recipe-image-wrapper">
+      <img id="detail-recipe-img" src="assets/img/canhchua.png" alt="Món ăn" onerror="this.src='https://via.placeholder.com/600x400?text=Food'" />
+    </div>
+    <h2 class="recipe-title" id="detail-recipe-title">CANH CHUA CÁ BÔNG LAU</h2>
+    <img src="assets/img/Chè.png" alt="Mr. Chè" class="chef-mascot" />
+  </div>
+
+  <div class="recipe-content">
+    <div class="ingredient-section">
+      <h3 class="section-title available">Nguyên liệu sẵn có:</h3>
+      <div class="ingredient-list" id="available-ingredients">
+        <!-- JS will populate or we hardcode for UI -->
+        <div class="ingredient-item">
+          <div class="ing-icon available-icon"></div>
+          <div class="ing-info">
+            <span class="ing-name">Cá bông lau</span>
+            <span class="ing-weight">500g</span>
+          </div>
+        </div>
+        <div class="ingredient-item">
+          <div class="ing-icon available-icon"></div>
+          <div class="ing-info">
+            <span class="ing-name">Bạc hà</span>
+            <span class="ing-weight">100g</span>
+          </div>
+        </div>
+        <div class="ingredient-item">
+          <div class="ing-icon available-icon"></div>
+          <div class="ing-info">
+            <span class="ing-name">Cà chua</span>
+            <span class="ing-weight">2 quả</span>
+          </div>
+        </div>
+        <div class="ingredient-item">
+          <div class="ing-icon available-icon"></div>
+          <div class="ing-info">
+            <span class="ing-name">Khóm / Thơm</span>
+            <span class="ing-weight">1 quả</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ingredient-section">
+      <h3 class="section-title missing">Cần bổ sung:</h3>
+      <div class="ingredient-list" id="missing-ingredients">
+        <div class="ingredient-item">
+          <div class="ing-icon missing-icon"></div>
+          <div class="ing-info">
+            <span class="ing-name">Đậu bắp</span>
+            <span class="ing-weight">3 trái</span>
+          </div>
+        </div>
+        <div class="ingredient-item">
+          <div class="ing-icon missing-icon"></div>
+          <div class="ing-info">
+            <span class="ing-name">Me, rau nêm</span>
+            <span class="ing-weight">10g</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recipe-actions">
+    <button class="btn-back" onclick="navigate('ai-chat')">Trở về</button>
+    <button class="btn-cook" onclick="startCooking()">Nấu thoôiiiii!</button>
+  </div>
+</section>
