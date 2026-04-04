@@ -94,43 +94,116 @@
   </div>
 </div>
 
-<script>
-(function () {
-  // Delete item
-  document.querySelectorAll('.btn-delete-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = btn.closest('.result-item');
-      item.style.transition = 'all 0.3s ease';
-      item.style.opacity = '0';
-      item.style.transform = 'translateX(30px)';
-      setTimeout(() => item.remove(), 300);
-    });
-  });
+<!-- Modal xác nhận xóa -->
+<div class="delete-modal-overlay" id="delete-modal">
+  <div class="delete-modal">
+    <div class="delete-modal-icon">
+      <i class="fa-solid fa-question"></i>
+    </div>
+    <h3 class="delete-modal-title">Xóa mặt hàng</h3>
+    <p class="delete-modal-msg">Bạn có chắc muốn xóa mặt hàng này khỏi danh sách?</p>
+    <div class="delete-modal-actions">
+      <button class="delete-modal-btn cancel" id="modal-cancel">Hủy</button>
+      <button class="delete-modal-btn confirm" id="modal-confirm">Xóa</button>
+    </div>
+  </div>
+</div>
 
-  // Complete button
-  const btnComplete = document.getElementById('btn-complete');
-  if (btnComplete) {
-    btnComplete.addEventListener('click', () => {
-      const checkedItems = document.querySelectorAll('.result-item');
-      const items = [];
-      checkedItems.forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (checkbox && checkbox.checked) {
-          items.push({
-            name: item.dataset.name,
-            addedAt: new Date().toISOString()
-          });
-        }
-      });
+<!-- Modal chỉnh sửa sản phẩm (Bottom Sheet) -->
+<div class="edit-modal-overlay" id="edit-modal">
+  <div class="edit-modal">
+    <div class="edit-modal-header">
+      <h3 class="edit-modal-title">Chỉnh sửa sản phẩm</h3>
+      <button class="edit-modal-close" id="edit-close">&times;</button>
+    </div>
 
-      // Save to localStorage
-      const existing = JSON.parse(localStorage.getItem('sakedo_items') || '[]');
-      existing.push(...items);
-      localStorage.setItem('sakedo_items', JSON.stringify(existing));
+    <!-- Tên sản phẩm -->
+    <div class="edit-field">
+      <label class="edit-label">Tên sản phẩm</label>
+      <input type="text" class="edit-input" id="edit-name" placeholder="Nhập tên sản phẩm" />
+    </div>
 
-      alert('Đã lưu ' + items.length + ' món thành công! 🎉');
-      navigate('home', document.querySelector('.nav-item'));
-    });
-  }
-})();
-</script>
+    <!-- Số lượng & Đơn vị -->
+    <div class="edit-field">
+      <label class="edit-label">Số lượng & Đơn vị</label>
+      <div class="edit-row">
+        <input type="number" class="edit-input edit-qty" id="edit-qty" placeholder="0.87" step="0.01" min="0" />
+        <input type="text" class="edit-input edit-unit" id="edit-unit" placeholder="kg" />
+      </div>
+    </div>
+
+    <!-- Hạn sử dụng -->
+    <div class="edit-field">
+      <label class="edit-label">Hạn sử dụng</label>
+      <div class="edit-select-box">
+        <i class="fa-regular fa-calendar"></i>
+        <input type="date" class="edit-date" id="edit-expiry" />
+        <i class="fa-solid fa-chevron-down edit-chevron"></i>
+      </div>
+    </div>
+
+    <!-- Danh mục -->
+    <div class="edit-field">
+      <label class="edit-label">Danh mục</label>
+      <div class="edit-select-box" id="edit-category-box">
+        <img src="" alt="" class="edit-select-icon" id="edit-category-icon" />
+        <span id="edit-category-text">Chọn danh mục</span>
+        <i class="fa-solid fa-chevron-right edit-chevron"></i>
+      </div>
+      <!-- Dropdown danh mục -->
+      <div class="edit-dropdown" id="edit-category-dropdown">
+        <button class="edit-dropdown-item" data-category="milk" data-icon="assets/images/milk.png">
+          <img src="assets/images/milk.png" alt="" /> Sữa & Phô mai
+        </button>
+        <button class="edit-dropdown-item" data-category="thit" data-icon="assets/images/thit.png">
+          <img src="assets/images/thit.png" alt="" /> Thịt & Hải sản
+        </button>
+        <button class="edit-dropdown-item" data-category="traicay" data-icon="assets/images/traicay.png">
+          <img src="assets/images/traicay.png" alt="" /> Rau & Trái cây
+        </button>
+        <button class="edit-dropdown-item" data-category="douong" data-icon="assets/images/douong.png">
+          <img src="assets/images/douong.png" alt="" /> Đồ uống
+        </button>
+        <button class="edit-dropdown-item" data-category="khac" data-icon="assets/images/khac.png">
+          <img src="assets/images/khac.png" alt="" /> Khác
+        </button>
+      </div>
+    </div>
+
+    <!-- Vị trí lưu trữ -->
+    <div class="edit-field">
+      <label class="edit-label">Vị trí lưu trữ</label>
+      <div class="edit-select-box" id="edit-location-box">
+        <img src="" alt="" class="edit-select-icon" id="edit-location-icon" />
+        <span id="edit-location-text">Chọn vị trí</span>
+        <i class="fa-solid fa-chevron-right edit-chevron"></i>
+      </div>
+      <!-- Dropdown vị trí -->
+      <div class="edit-dropdown" id="edit-location-dropdown">
+        <button class="edit-dropdown-item" data-location="tulanh" data-icon="assets/images/tlanh.png">
+          <img src="assets/images/tlanh.png" alt="" /> Tủ lạnh
+        </button>
+        <button class="edit-dropdown-item" data-location="ngandong" data-icon="assets/images/ngandong.png">
+          <img src="assets/images/ngandong.png" alt="" /> Ngăn đông
+        </button>
+        <button class="edit-dropdown-item" data-location="tukho" data-icon="assets/images/tukho.png">
+          <img src="assets/images/tukho.png" alt="" /> Tủ khô
+        </button>
+      </div>
+    </div>
+
+    <!-- Ghi chú -->
+    <div class="edit-field">
+      <label class="edit-label">Ghi chú</label>
+      <textarea class="edit-textarea" id="edit-note" placeholder="Thêm ghi chú..." rows="3"></textarea>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="edit-modal-actions">
+      <button class="edit-modal-btn cancel" id="edit-cancel">Hủy</button>
+      <button class="edit-modal-btn save" id="edit-save">Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/scan-result.js"></script>

@@ -114,42 +114,4 @@
   </div>
 </div>
 
-<script>
-  (function () {
-    // Toggle location buttons
-    const locationBtns = document.querySelectorAll('.location-btn');
-    locationBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        locationBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Toggle category buttons (chỉ chọn 1)
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        categoryBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Set default date to today
-    const dateInput = document.getElementById('item-expiry');
-    if (dateInput) {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      dateInput.value = `${yyyy}-${mm}-${dd}`;
-    }
-
-    // Done button - chuyển sang trang kết quả nhận diện
-    const btnDone = document.getElementById('btn-add-item');
-    if (btnDone) {
-      btnDone.addEventListener('click', () => {
-        navigate('scan-result', document.querySelector('.camera-btn'));
-      });
-    }
-  })();
-</script>
+<script src="js/camera.js"></script>
