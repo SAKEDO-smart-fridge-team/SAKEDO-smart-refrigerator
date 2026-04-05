@@ -13,16 +13,6 @@ async function navigate(page, element) {
     // 2. Đổ nội dung vào vùng main
     root.innerHTML = html;
 
-    // Dispatch event to notify scripts that DOM has changed
-    document.dispatchEvent(new CustomEvent('pageChanged', { detail: { page: page } }));
-
-    // 2.5 Hiển thị mượt mà
-    // Dùng setTimeout cực ngắn để trình duyệt nhận diện content mới xong mới hiện
-    setTimeout(() => {
-      root.classList.remove("page-loading");
-      root.classList.add("fade-in");
-    }, 50);
-
     // 3. Xử lý UI cho Sidebar (Đổi màu icon khi được chọn)
     document
       .querySelectorAll(".nav-item")

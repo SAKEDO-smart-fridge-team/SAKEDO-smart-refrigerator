@@ -1,0 +1,117 @@
+<link rel="stylesheet" href="css/camera.css" />
+
+<div class="camera-page">
+
+  <!-- SECTION 1: Thêm món mới -->
+  <div class="add-item-card">
+    <h2 class="add-item-title">Thêm món mới</h2>
+    <div class="scan-options">
+      <button class="scan-btn" id="btn-scan-camera">
+        <div class="scan-icon-wrapper">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+      </button>
+      <button class="scan-btn" id="btn-scan-bill">
+        <div class="scan-icon-wrapper">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Hoặc nhập thủ công -->
+  <div class="manual-entry-card">
+    <h3 class="manual-title">Hoặc nhập thủ công</h3>
+
+    <!-- Tên món -->
+    <div class="form-group">
+      <label class="form-label">Tên món</label>
+      <div class="input-with-icon">
+        <img src="assets/images/cake.png" alt="" class="input-icon" />
+        <input type="text" id="item-name" placeholder="Ví dụ: Thịt bò" />
+      </div>
+    </div>
+
+    <!-- Vị trí -->
+    <div class="form-group">
+      <label class="form-label">Vị trí</label>
+      <div class="location-options">
+        <button class="location-btn" data-location="tulanh">
+          <img src="assets/images/tlanh.png" alt="" class="option-icon" />
+          <span>Tủ lạnh</span>
+        </button>
+        <button class="location-btn" data-location="ngandong">
+          <img src="assets/images/ngandong.png" alt="" class="option-icon" />
+          <span>Ngăn đông</span>
+        </button>
+        <button class="location-btn" data-location="tukho">
+          <img src="assets/images/tukho.png" alt="" class="option-icon" />
+          <span>Tủ khô</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Danh mục -->
+    <div class="form-group">
+      <label class="form-label">Danh mục</label>
+      <div class="category-options">
+        <button class="category-btn" data-category="milk">
+          <img src="assets/images/milk.png" alt="" class="option-icon" />
+          <span>Sữa và phô mai</span>
+        </button>
+        <button class="category-btn" data-category="thit">
+          <img src="assets/images/thit.png" alt="" class="option-icon" />
+          <span>Thịt và hải sản</span>
+        </button>
+        <button class="category-btn" data-category="traicay">
+          <img src="assets/images/traicay.png" alt="" class="option-icon" />
+          <span>Rau và trái cây</span>
+        </button>
+        <button class="category-btn" data-category="douong">
+          <img src="assets/images/douong.png" alt="" class="option-icon" />
+          <span>Đồ uống</span>
+        </button>
+        <button class="category-btn" data-category="khac">
+          <img src="assets/images/khac.png" alt="" class="option-icon" />
+          <span>Khác</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Ngày hết hạn & Số lượng -->
+    <div class="form-row">
+      <div class="form-group half">
+        <label class="form-label label-expiry">Ngày hết hạn</label>
+        <div class="input-with-icon date-input">
+          <input type="date" id="item-expiry" />
+          <i class="fa-solid fa-chevron-down date-chevron"></i>
+        </div>
+      </div>
+      <div class="form-group half">
+        <label class="form-label label-quantity">Số lượng</label>
+        <div class="input-with-icon quantity-input">
+          <img src="assets/images/soluong.png" alt="" class="input-icon" />
+          <input type="number" id="item-quantity" value="01" min="1" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Ghi chú -->
+    <div class="form-group">
+      <label class="form-label label-note">Ghi chú ( tùy chọn )</label>
+      <div class="note-wrapper">
+        <i class="fa-regular fa-clipboard note-icon"></i>
+        <textarea id="item-note" placeholder="Thêm ghi chú về sản phẩm........" rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="form-actions">
+      <button class="btn-back" onclick="navigate('home', document.querySelector('.nav-item'))">Trở về</button>
+      <button class="btn-done" id="btn-add-item">Xong rồiii</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/camera.js"></script>
