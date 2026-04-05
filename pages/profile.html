@@ -1,8 +1,8 @@
 
 <section class="profile-container">
   <div class="profile-section-header">
-    <h2>Thông Tin Cá Nhân</h2>
-    <button class="edit-btn"><i class="fa-solid fa-pen"></i> Chỉnh sửa</button>
+    <h2 data-i18n="profile-title">Thông Tin Cá Nhân</h2>
+    <button class="edit-btn"><i class="fa-solid fa-pen"></i> <span data-i18n="profile-edit">Chỉnh sửa</span></button>
   </div>
 
   <div class="profile-card basic-info">
@@ -22,14 +22,14 @@
     </div>
     <div class="input-fields">
       <div class="input-group">
-        <label class="input-label">Tên của bạn</label>
+        <label class="input-label" data-i18n="profile-name-label">Tên của bạn</label>
         <div class="input-box">
           <i class="fa-solid fa-user"></i>
           <input type="text" id="profile-name" value="Huỳnh Lê Khả Như" readonly />
         </div>
       </div>
       <div class="input-group">
-        <label class="input-label">Email</label>
+        <label class="input-label" data-i18n="profile-email-label">Email</label>
         <div class="input-box">
           <i class="fa-solid fa-envelope"></i>
           <input type="email" id="profile-email" value="khannhu.uth@gmail.com" readonly />
@@ -39,19 +39,19 @@
   </div>
 
   <div class="settings-group">
-    <h3>Cài đặt chi tiết</h3>
+    <h3 data-i18n="profile-settings-title">Cài đặt chi tiết</h3>
 
     <div class="settings-card">
-      <p class="group-label">THÔNG BÁO</p>
+      <p class="group-label" data-i18n="profile-notif-group">THÔNG BÁO</p>
       <div class="setting-row">
-        <span><i class="fa-solid fa-envelope-open-text"></i> Email</span>
+        <span><i class="fa-solid fa-envelope-open-text"></i> <span data-i18n="profile-notif-email">Email</span></span>
         <label class="switch">
           <input type="checkbox" checked />
           <span class="slider"></span>
         </label>
       </div>
       <div class="setting-row">
-        <span><i class="fa-solid fa-bell"></i> Thông báo đẩy</span>
+        <span><i class="fa-solid fa-bell"></i> <span data-i18n="profile-notif-push">Thông báo đẩy</span></span>
         <label class="switch">
           <input type="checkbox" />
           <span class="slider"></span>
@@ -60,16 +60,16 @@
     </div>
 
     <div class="settings-card">
-      <p class="group-label">LOẠI THÔNG BÁO</p>
+      <p class="group-label" data-i18n="profile-notif-type-group">LOẠI THÔNG BÁO</p>
       <div class="setting-row">
-        <span><i class="fa-solid fa-calendar-minus"></i> Cảnh báo hết hạn</span>
+        <span><i class="fa-solid fa-calendar-minus"></i> <span data-i18n="profile-notif-expiry">Cảnh báo hết hạn</span></span>
         <label class="switch">
           <input type="checkbox" checked />
           <span class="slider"></span>
         </label>
       </div>
       <div class="setting-row">
-        <span><i class="fa-solid fa-utensils"></i> Gợi ý món ăn</span>
+        <span><i class="fa-solid fa-utensils"></i> <span data-i18n="profile-notif-suggestion">Gợi ý món ăn</span></span>
         <label class="switch">
           <input type="checkbox" checked />
           <span class="slider"></span>
@@ -78,29 +78,29 @@
     </div>
 
     <div class="settings-card">
-      <p class="group-label">HIỂN THỊ & CÁ NHÂN HÓA</p>
+      <p class="group-label" data-i18n="profile-display-group">HIỂN THỊ & CÁ NHÂN HÓA</p>
       <div class="setting-row clickable" id="btn-preferences">
-        <span><i class="fa-solid fa-dumbbell"></i> Cài đặt sở thích</span>
+        <span><i class="fa-solid fa-dumbbell"></i> <span data-i18n="profile-pref-btn">Cài đặt sở thích</span></span>
         <i class="fa-solid fa-chevron-right arrow"></i>
       </div>
       <div class="setting-row clickable" id="btn-lang">
-        <span><i class="fa-solid fa-globe"></i> Ngôn ngữ</span>
+        <span><i class="fa-solid fa-globe"></i> <span data-i18n="profile-lang-btn">Ngôn ngữ</span></span>
         <span class="val-text"
-          >Tiếng Việt <i class="fa-solid fa-chevron-right arrow"></i
+          ><span data-i18n="profile-lang-val">Tiếng Việt</span> <i class="fa-solid fa-chevron-right arrow"></i
         ></span>
       </div>
     </div>
 
     <div class="settings-card">
-      <p class="group-label">TÀI KHOẢN & HỖ TRỢ</p>
+      <p class="group-label" data-i18n="profile-account-group">TÀI KHOẢN & HỖ TRỢ</p>
       <div class="setting-row clickable" id="btn-support">
         <span
-          ><i class="fa-solid fa-circle-question"></i> Trợ giúp & Hỗ trợ</span
+          ><i class="fa-solid fa-circle-question"></i> <span data-i18n="profile-help-btn">Trợ giúp & Hỗ trợ</span></span
         >
         <i class="fa-solid fa-chevron-right arrow"></i>
       </div>
       <div class="setting-row clickable danger" id="btn-delete-account">
-        <span><i class="fa-solid fa-user-xmark"></i> Xóa tài khoản</span>
+        <span><i class="fa-solid fa-user-xmark"></i> <span data-i18n="profile-delete-btn">Xóa tài khoản</span></span>
         <i class="fa-solid fa-chevron-right arrow"></i>
       </div>
     </div>
@@ -110,14 +110,14 @@
 <div class="modal-overlay" id="langModal">
   <div class="modal-content">
     <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
-    <h3 class="modal-title">Ngôn ngữ</h3>
+    <h3 class="modal-title" data-i18n="modal-lang-title">Ngôn ngữ</h3>
     <div class="lang-list">
       <div class="lang-item active">
-        <span><i class="fa-solid fa-language"></i> Tiếng Việt</span>
+        <span><i class="fa-solid fa-language"></i> <span data-i18n="modal-lang-vi">Tiếng Việt</span></span>
         <i class="fa-solid fa-check check-icon"></i>
       </div>
       <div class="lang-item">
-        <span><i class="fa-solid fa-language"></i> Tiếng Anh</span>
+        <span><i class="fa-solid fa-language"></i> <span data-i18n="modal-lang-en">Tiếng Anh</span></span>
         <i class="fa-solid fa-check check-icon" style="display: none"></i>
       </div>
     </div>
@@ -127,22 +127,22 @@
 <div class="modal-overlay" id="preferencesModal">
   <div class="modal-content">
     <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
-    <h3 class="modal-title">Cài đặt sở thích</h3>
+    <h3 class="modal-title" data-i18n="modal-pref-title">Cài đặt sở thích</h3>
     <div class="pref-list">
       <div class="pref-item active">
-        <span><i class="fa-solid fa-utensils"></i> Không có đặc biệt</span>
+        <span><i class="fa-solid fa-utensils"></i> <span data-i18n="modal-pref-none">Không có đặc biệt</span></span>
         <i class="fa-solid fa-check check-icon"></i>
       </div>
       <div class="pref-item">
-        <span><i class="fa-solid fa-leaf"></i> Ăn chay (Vegan)</span>
+        <span><i class="fa-solid fa-leaf"></i> <span data-i18n="modal-pref-vegan">Ăn chay (Vegan)</span></span>
         <i class="fa-solid fa-check check-icon" style="display: none"></i>
       </div>
       <div class="pref-item">
-        <span><i class="fa-solid fa-drumstick-bite"></i> Keto</span>
+        <span><i class="fa-solid fa-drumstick-bite"></i> <span data-i18n="modal-pref-keto">Keto</span></span>
         <i class="fa-solid fa-check check-icon" style="display: none"></i>
       </div>
       <div class="pref-item">
-        <span><i class="fa-solid fa-bowl-food"></i> Eat Clean</span>
+        <span><i class="fa-solid fa-bowl-food"></i> <span data-i18n="modal-pref-clean">Eat Clean</span></span>
         <i class="fa-solid fa-check check-icon" style="display: none"></i>
       </div>
     </div>
@@ -154,18 +154,18 @@
     <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
 
     <div class="support-section">
-      <p class="sec-title">Liên hệ hỗ trợ</p>
+      <p class="sec-title" data-i18n="modal-support-title">Liên hệ hỗ trợ</p>
       <div class="email-card">
         <i class="fa-regular fa-envelope"></i>
         <div class="email-info">
-          <strong>Gửi Email</strong>
+          <strong data-i18n="modal-support-email">Gửi Email</strong>
           <span>Sakedo123@gmail.com</span>
         </div>
       </div>
     </div>
 
     <div class="faq-section">
-      <p class="sec-title">Câu hỏi thường gặp</p>
+      <p class="sec-title" data-i18n="modal-faq-title">Câu hỏi thường gặp</p>
       <div class="faq-item">
         <div class="faq-header">
           Làm thế nào để thêm sản phẩm mới?
@@ -219,13 +219,13 @@
     <div class="delete-icon-wrapper" style="text-align: center; margin-bottom: 15px;">
       <i class="fa-solid fa-triangle-exclamation" style="font-size: 40px; color: #ff6b6b; background: #ffe3e3; padding: 20px; border-radius: 50%;"></i>
     </div>
-    <h3 class="modal-title" style="text-align: center; margin-bottom: 10px;">Xóa tài khoản</h3>
+    <h3 class="modal-title" style="text-align: center; margin-bottom: 10px;" data-i18n="modal-delete-title">Xóa tài khoản</h3>
     <p style="text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; line-height: 1.5;">
-      Bạn có chắc chắn muốn xóa tài khoản? Mọi dữ liệu của bạn sẽ bị xóa vĩnh viễn và không thể khôi phục.
+      <span data-i18n="modal-delete-desc">Bạn có chắc chắn muốn xóa tài khoản? Mọi dữ liệu của bạn sẽ bị xóa vĩnh viễn và không thể khôi phục.</span>
     </p>
     <div class="modal-actions" style="display: flex; gap: 15px;">
-      <button class="btn-cancel close-modal-btn" style="flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: 600; color: #333;">Hủy</button>
-      <button class="btn-confirm-delete" id="confirm-delete-btn" style="flex: 1; padding: 12px; border-radius: 15px; border: none; background: #ff6b6b; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(255,107,107,0.3);">Xóa vĩnh viễn</button>
+      <button class="btn-cancel close-modal-btn" style="flex: 1; padding: 12px; border-radius: 15px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: 600; color: #333;" data-i18n="modal-delete-cancel">Hủy</button>
+      <button class="btn-confirm-delete" id="confirm-delete-btn" style="flex: 1; padding: 12px; border-radius: 15px; border: none; background: #ff6b6b; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(255,107,107,0.3);" data-i18n="modal-delete-confirm">Xóa vĩnh viễn</button>
     </div>
   </div>
 </div>

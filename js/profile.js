@@ -134,7 +134,13 @@ document.addEventListener("click", function (e) {
     const langText = langItem.innerText.trim();
     const btnLangText = document.querySelector("#btn-lang .val-text");
     if (btnLangText) {
-      btnLangText.innerHTML = `${langText} <i class="fa-solid fa-chevron-right arrow"></i>`;
+      btnLangText.innerHTML = `<span data-i18n="profile-lang-val">${langText}</span> <i class="fa-solid fa-chevron-right arrow"></i>`;
+    }
+
+    // Thực hiện đổi ngôn ngữ hệ thống
+    if (window.sakedoI18n) {
+      const isEnglish = langText.toLowerCase().includes("anh") || langText.toLowerCase().includes("english");
+      window.sakedoI18n.setLanguage(isEnglish ? "en" : "vi");
     }
 
     // Đóng Modal tự động sau 0.4 giây
@@ -143,7 +149,8 @@ document.addEventListener("click", function (e) {
       if (langModal) langModal.classList.remove("show");
     }, 400);
 
-    showToast("Đã đổi ngôn ngữ");
+    const successMsg = window.sakedoI18n ? (window.sakedoI18n.getLanguage() === "vi" ? "Đã đổi ngôn ngữ" : "Language changed") : "Đã đổi ngôn ngữ";
+    showToast(successMsg);
   }
 
   // 6.5 Chọn Sở thích
@@ -232,6 +239,29 @@ function loadUserProfile() {
           avatarPlaceholder.textContent = (auth.user.full_name || emailPrefix).charAt(0).toUpperCase();
         }
       }
+    }
+
+    // Sync Language UI in Profile
+    if (window.sakedoI18n) {
+      const currentLang = window.sakedoI18n.getLanguage();
+      const langItems = document.querySelectorAll(".lang-item");
+      langItems.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        const isEnItem = text.includes("anh") || text.includes("english");
+        const shouldBeActive = (currentLang === "en" && isEnItem) || (currentLang === "vi" && !isEnItem);
+        
+        if (shouldBeActive) {
+          item.classList.add("active");
+          item.querySelector(".check-icon").style.display = "inline-block";
+          const btnLangText = document.querySelector("#btn-lang .val-text");
+          if (btnLangText) {
+            btnLangText.innerHTML = `<span data-i18n="profile-lang-val">${window.sakedoI18n.translate("profile-lang-val")}</span> <i class="fa-solid fa-chevron-right arrow"></i>`;
+          }
+        } else {
+          item.classList.remove("active");
+          item.querySelector(".check-icon").style.display = "none";
+        }
+      });
     }
   }
 }

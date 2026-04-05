@@ -1,22 +1,21 @@
-
 <div class="fridge-view-container">
     <div class="fridge-tabs">
-        <button class="tab-btn active">TỦ LẠNH</button>
-        <button class="tab-btn">NGĂN ĐÁ</button>
-        <button class="tab-btn">NGĂN LẠNH</button>
+        <button class="tab-btn active" data-i18n="fridge-all">TỦ LẠNH</button>
+        <button class="tab-btn" data-i18n="fridge-freezer">NGĂN ĐÁ</button>
+        <button class="tab-btn" data-i18n="fridge-cooler">NGĂN LẠNH</button>
     </div>
 
     <div id="fridge-list-container" class="fridge-list">
         <!-- Tải dữ liệu từ JS -->
-        <p class="loading-text">Đang tải thuốc phẩm...</p>
+        <p class="loading-text" data-i18n="fridge-loading">Đang tải thực phẩm...</p>
     </div>
 
     <div class="view-more-container">
-        <button class="btn-view-more">XEM THÊM</button>
+        <button class="btn-view-more" data-i18n="fridge-view-more">XEM THÊM</button>
     </div>
 
     <div class="suggestions-section">
-        <h2 class="suggestions-title">GỢI Ý MÓN ĂN:</h2>
+        <h2 class="suggestions-title" data-i18n="fridge-suggestions">GỢI Ý MÓN ĂN:</h2>
         <div id="suggested-recipes-grid" class="suggestions-grid">
             <!-- Tải dữ liệu từ JS -->
         </div>
@@ -29,9 +28,9 @@
                 <button class="btn-modal-back" onclick="closeItemDetail()">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <h2 class="modal-title">Chi tiết</h2>
-                <button class="btn-modal-edit">
-                    <i class="fa-solid fa-pencil"></i>
+                <h2 class="modal-title" data-i18n="fridge-detail-title">Chi tiết</h2>
+                <button class="btn-btn-edit-item" id="btn-edit-fridge-item" onclick="toggleEditFridgeItem()">
+                    <i class="fa-solid fa-pen-to-square"></i>
                 </button>
             </header>
 
@@ -46,37 +45,69 @@
                     <div id="detail-item-status-badge" class="status-badge">Đang tải...</div>
                 </div>
 
+                <!-- Edit Form (Hidden by default) -->
+                <div id="edit-item-form" style="display: none; padding: 20px; background: #fff; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #eee; text-align: center;">
+                     <div style="margin-bottom: 15px; text-align: left;">
+                        <label style="font-size: 11px; font-weight: 700; color: #bbb; display: block; margin-bottom: 8px; text-transform: uppercase;" data-i18n="fridge-item-name">Tên sản phẩm</label>
+                        <input type="text" id="edit-name-input" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: #fafafa; font-size: 15px; font-weight: 500;" />
+                     </div>
+                     <div style="margin-bottom: 10px; text-align: left;">
+                        <label style="font-size: 11px; font-weight: 700; color: #bbb; display: block; margin-bottom: 8px; text-transform: uppercase;" data-i18n="fridge-detail-qty-label">SỐ LƯỢNG</label>
+                        <input type="text" id="edit-qty-input" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: #fafafa; font-size: 15px; font-weight: 500;" />
+                     </div>
+                </div>
+
                 <div class="detail-info-grid">
                     <div class="info-card">
                         <div class="info-icon clock"><i class="fa-regular fa-clock"></i></div>
-                        <span class="info-label">TRẠNG THÁI</span>
+                        <span class="info-label" data-i18n="fridge-detail-status-label">TRẠNG THÁI</span>
                         <p id="detail-info-status" class="info-value">Đã hết hạn</p>
                     </div>
                     <div class="info-card">
                         <div class="info-icon tag"><i class="fa-solid fa-tag"></i></div>
-                        <span class="info-label">DANH MỤC</span>
+                        <span class="info-label" data-i18n="fridge-detail-category-label">DANH MỤC</span>
                         <p id="detail-info-category" class="info-value">Sữa & Phô mai</p>
                     </div>
                     <div class="info-card">
                         <div class="info-icon pin"><i class="fa-solid fa-location-dot"></i></div>
-                        <span class="info-label">VỊ TRÍ</span>
+                        <span class="info-label" data-i18n="fridge-detail-location-label">VỊ TRÍ</span>
                         <p id="detail-info-location" class="info-value">Tủ lạnh</p>
                     </div>
                     <div class="info-card">
                         <div class="info-icon box"><i class="fa-solid fa-cube"></i></div>
-                        <span class="info-label">SỐ LƯỢNG</span>
+                        <span class="info-label" data-i18n="fridge-detail-qty-label">SỐ LƯỢNG</span>
                         <p id="detail-info-qty" class="info-value">1 cái</p>
                     </div>
                 </div>
             </div>
 
             <footer class="modal-footer">
-                <button class="btn-action-done" onclick="closeItemDetail(); showToast('Đã đánh dấu đã dùng!', 'success');">
-                    <i class="fa-solid fa-check"></i> Đánh dấu đã dùng
-                </button>
-                <button class="btn-action-delete" onclick="closeItemDetail(); showToast('Đã xóa sản phẩm!', 'info');">
-                    <i class="fa-solid fa-trash-can"></i> Xóa sản phẩm
-                </button>
+                <div id="main-action-buttons" style="display: flex; gap: 10px; width: 100%;">
+                    <button class="btn-action-done" onclick="showQuantityInput('use')">
+                        <i class="fa-solid fa-check"></i> <span data-i18n="fridge-action-done">Đánh dấu đã dùng</span>
+                    </button>
+                    <button class="btn-action-delete" onclick="showQuantityInput('delete')">
+                        <i class="fa-solid fa-trash-can"></i> <span data-i18n="fridge-action-delete">Xóa sản phẩm</span>
+                    </button>
+                </div>
+
+                <!-- Edit Mode Buttons (Hidden by default) -->
+                <div id="edit-action-buttons" style="display: none; width: 100%;">
+                     <button onclick="toggleEditFridgeItem(true)" style="width: 100%; padding: 14px; border-radius: 15px; border: none; background: #376880; color: white; cursor: pointer; font-weight: 600; font-size: 15px; box-shadow: 0 4px 10px rgba(55,104,128,0.3);" data-i18n="fridge-edit-save">Lưu thay đổi</button>
+                </div>
+
+                <!-- Quantity Adjustment Input (Hidden by default) -->
+                <div id="qty-adjust-area" style="display: none; width: 100%; flex-direction: column; gap: 10px; padding: 10px; background: #f9f9f9; border-radius: 12px; border: 1px solid #eee;">
+                    <p id="qty-adjust-title" style="font-weight: 600; text-align: center; font-size: 14px; color: #333;" data-i18n="fridge-use-title">Dùng bao nhiêu?</p>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="number" id="qty-adjust-input" value="1" min="0" step="any" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; text-align: center;" />
+                        <span id="qty-adjust-unit" style="font-weight: 600; color: #666; min-width: 40px;"></span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="hideQuantityInput()" style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: 600;" data-i18n="fridge-adjust-cancel">Hủy</button>
+                        <button onclick="confirmQuantityAdjustment()" style="flex: 1; padding: 10px; border-radius: 10px; border: none; background: #376880; color: white; cursor: pointer; font-weight: 600;" data-i18n="fridge-adjust-confirm">Xác nhận</button>
+                    </div>
+                </div>
             </footer>
         </div>
     </div>

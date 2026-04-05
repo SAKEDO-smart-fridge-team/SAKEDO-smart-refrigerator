@@ -25,7 +25,7 @@
               <path
                 d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             </svg></i>
-          <span class="nav-label">Tổng quan</span>
+          <span class="nav-label" data-i18n="nav-home">Tổng quan</span>
         </div>
 
         <div class="nav-item" onclick="navigate('fridge', this)">
@@ -35,7 +35,7 @@
               <path d="M5 10h14"></path>
               <path d="M15 7v6"></path>
             </svg></i>
-          <span class="nav-label">Tủ lạnh</span>
+          <span class="nav-label" data-i18n="nav-fridge">Tủ lạnh</span>
         </div>
 
         <div class="camera-btn" onclick="navigate('camera', this)">
@@ -57,7 +57,7 @@
               <path d="M16 13H8" />
               <path d="M16 17H8" />
             </svg></i>
-          <span class="nav-label">Mr. Chè</span>
+          <span class="nav-label" data-i18n="nav-ai-chat">Mr. Chè</span>
         </div>
         <div class="nav-item" onclick="navigate('favorite', this)">
           <i><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
@@ -65,7 +65,7 @@
               <path
                 d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
             </svg></i>
-          <span class="nav-label">Yêu thích</span>
+          <span class="nav-label" data-i18n="nav-favorite">Yêu thích</span>
         </div>
         <div class="nav-item" onclick="navigate('profile', this)">
           <i><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
@@ -74,7 +74,7 @@
                 d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
               <circle cx="12" cy="12" r="3" />
             </svg></i>
-          <span class="nav-label">Cài đặt</span>
+          <span class="nav-label" data-i18n="nav-profile">Cài đặt</span>
         </div>
       </div>
 
@@ -105,21 +105,21 @@
     <div class="main-wrapper">
       <header class="topbar">
         <div id="auth-buttons" class="auth-buttons" style="display: none;">
-          <a href="login.html" class="btn-login">Đăng nhập</a>
-          <a href="register.html" class="btn-register">Đăng ký</a>
+          <a href="login.html" class="btn-login" data-i18n="top-login">Đăng nhập</a>
+          <a href="register.html" class="btn-register" data-i18n="top-register">Đăng ký</a>
         </div>
 
         <div class="user-profile" id="user-profile" style="display: none;">
           <img src="assets/img/avatar.jpg" class="user-avatar"
             onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI2NjYyIvPjwvc3ZnPg=='" />
           <div class="welcome">
-            <p id="welcome-name">Xin chào!</p>
-            <span>Welcome back</span>
+            <p id="welcome-name" data-i18n="top-welcome">Xin chào!</p>
+            <span data-i18n="top-welcome-back">Welcome back</span>
           </div>
         </div>
 
         <div class="search-container">
-          <input type="text" placeholder="" />
+          <input type="text" placeholder="" data-i18n="top-search-placeholder" />
           <button class="btn-search">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
@@ -133,13 +133,14 @@
           <img src="assets/images/logo.png" alt="Sakedo Logo"
             onerror="this.onerror = null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjIwIj5TQUtFRE88L3RleHQ+PC9zdmc+';" />
         </div>
-        <a href="login.html" id="logout-link"
+        <a href="login.html" id="logout-link" data-i18n="top-logout"
           style="margin-left: 12px; font-size: 0.92rem; color: #6a7780; text-decoration: none;">Đăng xuất</a>
       </header>
 
       <main id="app-root"></main>
     </div>
   </div>
+  <script src="js/i18n.js"></script>
   <script src="js/api.js"></script>
   <script src="js/router.js"></script>
   <script src="js/main.js"></script>

@@ -5,7 +5,7 @@ const fridgeData = [
   { name: "Trứng gà", img: "assets/images/trungga.png", expiryDate: "2026-04-15", qty: "10 quả", category: "cool" },
   { name: "Sữa bò", img: "assets/images/suabo.png", expiryDate: "2026-05-05", qty: "03", category: "cool" },
   { name: "Cà chua", img: "assets/images/tulanh.png", expiryDate: "2026-04-08", qty: "0.5kg", category: "cool" },
-  
+
   // Ngăn đá (Frozen)
   { name: "Mando", img: "assets/images/mando.png", expiryDate: "2026-04-06", qty: "01", category: "frozen" },
   { name: "Thịt heo", img: "assets/images/thitheo.png", expiryDate: "2026-04-06", qty: "0.5kg", category: "frozen" },
@@ -28,7 +28,7 @@ function initFridgePage() {
   renderFridgeList(currentFridgeTab);
   renderSuggestedRecipes();
   setupFridgeTabs();
-  
+
   const btnMore = document.querySelector(".btn-view-more");
   if (btnMore) {
     btnMore.onclick = () => {
@@ -45,7 +45,7 @@ function setupFridgeTabs() {
     tab.onclick = () => {
       tabs.forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
-      
+
       const categories = ["all", "frozen", "cool"];
       currentFridgeTab = categories[index];
       itemsToShow = 4; // Reset số lượng hiển thị khi đổi tab
@@ -54,15 +54,22 @@ function setupFridgeTabs() {
   });
 }
 
+let currentEditingItem = null;
+let currentAdjustAction = null; // 'use' or 'delete'
+
 function openItemDetail(name) {
   const item = fridgeData.find(i => i.name === name);
   if (!item) return;
+
+  currentEditingItem = name;
+  hideQuantityInput(); // Reset any open adjustment UI
+  resetEditMode();
 
   const modal = document.getElementById("item-detail-modal");
   const img = document.getElementById("detail-item-img");
   const nameEl = document.getElementById("detail-item-name");
   const badge = document.getElementById("detail-item-status-badge");
-  
+
   const infoStatus = document.getElementById("detail-info-status");
   const infoCategory = document.getElementById("detail-info-category");
   const infoLocation = document.getElementById("detail-info-location");
@@ -70,10 +77,10 @@ function openItemDetail(name) {
 
   const daysLeft = calculateDaysLeft(item.expiryDate);
   const isExpired = daysLeft <= 0;
-  
+
   img.src = item.img;
   nameEl.innerText = item.name;
-  
+
   if (isExpired) {
     badge.innerText = "Đã hết hạn";
     badge.className = "status-badge expired";
@@ -91,12 +98,178 @@ function openItemDetail(name) {
   infoLocation.innerText = categoryMap[item.category] || "Tủ lạnh";
   infoQty.innerText = item.qty;
 
+  // Cập nhật giá trị cho Form Edit
+  const nameInput = document.getElementById("edit-name-input");
+  const qtyInput = document.getElementById("edit-qty-input");
+  if (nameInput) nameInput.value = item.name;
+  if (qtyInput) qtyInput.value = item.qty;
+
   modal.classList.add("show");
 }
 
 function closeItemDetail() {
   const modal = document.getElementById("item-detail-modal");
   if (modal) modal.classList.remove("show");
+  currentEditingItem = null;
+}
+
+// --- QUẢN LÝ SỐ LƯỢNG & CHỈNH SỬA ---
+
+function parseQty(qtyStr) {
+  // Tách "10 quả" -> { val: 10, unit: "quả" }
+  const match = qtyStr.match(/^([\d.]+)\s*(.*)$/);
+  if (match) {
+    return { val: parseFloat(match[1]), unit: match[2].trim() };
+  }
+  return { val: 0, unit: "" };
+}
+
+function showQuantityInput(action) {
+  const item = fridgeData.find(i => i.name === currentEditingItem);
+  if (!item) return;
+
+  const { val, unit } = parseQty(item.qty);
+  currentAdjustAction = action;
+
+  const area = document.getElementById("qty-adjust-area");
+  const mainBtns = document.getElementById("main-action-buttons");
+  const title = document.getElementById("qty-adjust-title");
+  const unitLabel = document.getElementById("qty-adjust-unit");
+  const input = document.getElementById("qty-adjust-input");
+
+  if (area && mainBtns) {
+    mainBtns.style.display = "none";
+    area.style.display = "flex";
+
+    const isEn = window.sakedoI18n?.getLanguage() === "en";
+    if (action === "use") {
+      title.innerText = isEn ? "How much used?" : "Sử dụng bao nhiêu?";
+    } else {
+      title.innerText = isEn ? "How much to delete?" : "Xóa bao nhiêu?";
+    }
+
+    unitLabel.innerText = unit;
+    input.value = val;
+    input.max = val;
+    input.focus();
+  }
+}
+
+function hideQuantityInput() {
+  const area = document.getElementById("qty-adjust-area");
+  const mainBtns = document.getElementById("main-action-buttons");
+  if (area && mainBtns) {
+    area.style.display = "none";
+    mainBtns.style.display = "flex";
+  }
+  currentAdjustAction = null;
+}
+
+function confirmQuantityAdjustment() {
+  const itemIndex = fridgeData.findIndex(i => i.name === currentEditingItem);
+  if (itemIndex === -1) return;
+
+  const input = document.getElementById("qty-adjust-input");
+  const adjustVal = parseFloat(input.value);
+
+  const { val, unit } = parseQty(fridgeData[itemIndex].qty);
+
+  if (isNaN(adjustVal) || adjustVal <= 0) {
+    if (window.showToast) window.showToast("Số lượng không hợp lệ", "error");
+    return;
+  }
+
+  if (adjustVal >= val) {
+    // Xóa hoàn toàn
+    fridgeData.splice(itemIndex, 1);
+    if (window.showToast) window.showToast("Đã xóa thực phẩm", "info");
+    closeItemDetail();
+  } else {
+    // Cập nhật số lượng còn lại
+    const newVal = (val - adjustVal).toFixed(1).replace(/\.0$/, "");
+    fridgeData[itemIndex].qty = `${newVal} ${unit}`;
+
+    if (window.showToast) {
+      const msg = currentAdjustAction === "use" ? "Đã cập nhật mục đã dùng" : "Đã giảm số lượng";
+      window.showToast(msg, "success");
+    }
+
+    // Cập nhật lại UI Modal
+    openItemDetail(currentEditingItem);
+  }
+
+  renderFridgeList(currentFridgeTab);
+}
+
+function toggleEditFridgeItem(isSave = false) {
+  const form = document.getElementById("edit-item-form");
+  const grid = document.querySelector(".detail-info-grid");
+  const title = document.getElementById("detail-item-name");
+  const hero = document.querySelector(".detail-hero");
+  const badge = document.getElementById("detail-item-status-badge");
+  const editBtn = document.getElementById("btn-edit-fridge-item");
+  const mainFooter = document.getElementById("main-action-buttons");
+  const editFooter = document.getElementById("edit-action-buttons");
+
+  if (!isSave && form.style.display === "none") {
+    // Chuyển sang mode EDIT
+    form.style.display = "block";
+    grid.style.display = "none";
+    title.style.display = "none";
+    hero.style.display = "none";
+    badge.style.display = "none";
+    
+    if (mainFooter) mainFooter.style.display = "none";
+    if (editFooter) editFooter.style.display = "block";
+    
+    editBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    editBtn.classList.add("btn-cancel-edit");
+  } else if (isSave) {
+    // SAVE ACTION
+    const nameInput = document.getElementById("edit-name-input");
+    const qtyInput = document.getElementById("edit-qty-input");
+    
+    const item = fridgeData.find(i => i.name === currentEditingItem);
+    if (item) {
+      item.name = nameInput.value || item.name;
+      item.qty = qtyInput.value || item.qty;
+      
+      if (window.showToast) window.showToast("Đã lưu thay đổi", "success");
+      currentEditingItem = item.name; // Cập nhật key định danh
+      
+      resetEditMode();
+      openItemDetail(currentEditingItem);
+      renderFridgeList(currentFridgeTab);
+    }
+  } else {
+    // CANCEL (When clicking X or toggling off)
+    resetEditMode();
+  }
+}
+
+function resetEditMode() {
+  const form = document.getElementById("edit-item-form");
+  const grid = document.querySelector(".detail-info-grid");
+  const title = document.getElementById("detail-item-name");
+  const hero = document.querySelector(".detail-hero");
+  const badge = document.getElementById("detail-item-status-badge");
+  const editBtn = document.getElementById("btn-edit-fridge-item");
+  const mainFooter = document.getElementById("main-action-buttons");
+  const editFooter = document.getElementById("edit-action-buttons");
+  
+  if (form) form.style.display = "none";
+  if (grid) grid.style.display = "grid";
+  if (title) title.style.display = "block";
+  if (hero) hero.style.display = "block";
+  if (badge) badge.style.display = "inline-block";
+  
+  if (mainFooter) mainFooter.style.display = "flex";
+  if (editFooter) editFooter.style.display = "none";
+  
+  if (editBtn) {
+      editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+      editBtn.classList.remove("btn-cancel-edit");
+  }
 }
 
 function calculateDaysLeft(expiryDate) {
@@ -122,7 +295,7 @@ function renderFridgeList(category = "all") {
   if (category !== "all") {
     filteredData = fridgeData.filter(item => item.category === category);
   }
-  
+
   if (filteredData.length === 0) {
     listContainer.innerHTML = `<p style="text-align:center; padding: 40px; color: #999;">Không có thực phẩm nào trong ngăn này.</p>`;
     if (viewMoreBtn) viewMoreBtn.style.display = "none";

@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+	// Khởi tạo ngôn ngữ
+	if (window.sakedoI18n) {
+		window.sakedoI18n.translatePage();
+	}
+
 	const auth = window.sakedoApi.getStoredAuth();
 
 	const userProfile = document.getElementById("user-profile");

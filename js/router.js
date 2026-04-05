@@ -30,6 +30,10 @@ async function navigate(page, element) {
       .forEach((item) => item.classList.remove("active"));
     if (element) element.classList.add("active");
     // 4. Phát ra sự kiện báo hiệu trang đã đổi (Để các file JS riêng lẻ tự init)
+    if (window.sakedoI18n) {
+      window.sakedoI18n.translatePage();
+    }
+
     document.dispatchEvent(new CustomEvent("pageChanged", { 
       detail: { page: page } 
     }));

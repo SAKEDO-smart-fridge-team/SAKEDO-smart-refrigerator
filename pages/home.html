@@ -3,20 +3,20 @@
 <div class="dashboard-wrapper">
   <!-- Kho chứa lương thực -->
   <section class="db-section">
-    <h2 class="section-title">Kho chứa lương thực</h2>
+    <h2 class="section-title" data-i18n="db-storage-title">Kho chứa lương thực</h2>
     <div class="storage-cards">
       <div class="s-card card-fridge">
-        <h3>TỦ LẠNH</h3>
+        <h3 data-i18n="db-fridge">TỦ LẠNH</h3>
         <p class="s-count">00</p>
         <div class="stars-bg"></div>
       </div>
       <div class="s-card card-freezer">
-        <h3>NGĂN ĐÁ</h3>
+        <h3 data-i18n="db-freezer">NGĂN ĐÁ</h3>
         <p class="s-count">00</p>
         <div class="stars-bg"></div>
       </div>
       <div class="s-card card-pantry">
-        <h3>TỦ KHÔ</h3>
+        <h3 data-i18n="db-pantry">TỦ KHÔ</h3>
         <p class="s-count">00</p>
         <div class="stars-bg"></div>
       </div>
@@ -25,11 +25,11 @@
 
   <!-- Cần dùng ngay -->
   <section class="db-section db-urgent">
-    <h2 class="section-title">Cần dùng ngay:</h2>
+    <h2 class="section-title" data-i18n="db-urgent-title">Cần dùng ngay:</h2>
     <div class="urgent-cards">
       <div class="u-card card-expiring">
         <div class="u-content">
-          <h4>SẮP HẾT HẠN</h4>
+          <h4 data-i18n="db-expiring">SẮP HẾT HẠN</h4>
           <p class="u-count">0</p>
         </div>
         <div class="u-icon-svg">
@@ -45,7 +45,7 @@
       </div>
       <div class="u-card card-stats">
         <div class="u-content">
-          <h4>THỐNG KÊ</h4>
+          <h4 data-i18n="db-stats">THỐNG KÊ</h4>
           <p class="u-count">0</p>
         </div>
         <div class="u-icon-svg">
@@ -66,13 +66,13 @@
   <section class="db-section charts-row">
     <div class="chart-card nutrition-chart-card">
       <div class="card-header">
-        <h4>Phân loại dinh dưỡng</h4>
+        <h4 data-i18n="db-nutrition-title">Phân loại dinh dưỡng</h4>
       </div>
       <div class="nutrition-content">
         <div class="legend">
-          <div class="leg-item"><span class="dot c-red"></span> 0 <br /><small>Đạm</small></div>
-          <div class="leg-item"><span class="dot c-teal"></span> 0 <br /><small>Rau củ</small></div>
-          <div class="leg-item"><span class="dot c-pink"></span> 0 <br /><small>Tinh bột/ Gia vị</small></div>
+          <div class="leg-item"><span class="dot c-red"></span> 0 <br /><small data-i18n="db-protein">Đạm</small></div>
+          <div class="leg-item"><span class="dot c-teal"></span> 0 <br /><small data-i18n="db-veggies">Rau củ</small></div>
+          <div class="leg-item"><span class="dot c-pink"></span> 0 <br /><small data-i18n="db-carbs">Tinh bột/ Gia vị</small></div>
         </div>
         <div class="chart-circle empty-chart">
           <div class="circle-inner">0</div>
@@ -83,12 +83,12 @@
     <div class="chart-card capacity-chart-card">
       <div class="card-header">
         <div class="icon-fridge-status"><i class="fa-solid fa-temperature-empty"></i></div>
-        <h4>Tình trạng Tủ lạnh</h4>
+        <h4 data-i18n="db-status-title">Tình trạng Tủ lạnh</h4>
       </div>
       <div class="capacity-content">
         <div class="cap-info">
           <h2>0%</h2>
-          <p>CÒN TRỐNG</p>
+          <p data-i18n="db-empty">CÒN TRỐNG</p>
         </div>
         <div class="half-donut">
           <!-- CSS-based semi circle -->
@@ -106,11 +106,11 @@
   <section class="db-section full-chart">
     <div class="chart-card">
       <div class="chart-header">
-        <h4>Thống kê lãng phí thực phẩm hàng tuần</h4>
+        <h4 data-i18n="db-waste-stats">Thống kê lãng phí thực phẩm hàng tuần</h4>
       </div>
       <div class="chart-legends-top">
-        <span class="leg-item"><span class="dot c-teal"></span> Lượng thực nạp vào</span>
-        <span class="leg-item"><span class="dot c-pink"></span> Lượng thực đã được nấu</span>
+        <span class="leg-item"><span class="dot c-teal"></span> <span data-i18n="db-intake">Lượng thực nạp vào</span></span>
+        <span class="leg-item"><span class="dot c-pink"></span> <span data-i18n="db-cooked">Lượng thực đã được nấu</span></span>
       </div>
       <div class="line-chart-area">
         <!-- SVG for chart presentation -->

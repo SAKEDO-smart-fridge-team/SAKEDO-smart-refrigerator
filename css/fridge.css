@@ -213,10 +213,11 @@ body.dark-theme .tab-btn.active {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(8px);
     display: none;
     justify-content: center;
-    align-items: flex-end; /* Slide up from bottom */
+    align-items: center; /* Center on screen as requested */
     z-index: 2000;
 }
 
@@ -226,18 +227,19 @@ body.dark-theme .tab-btn.active {
 
 .fridge-modal-content {
     width: 90%;
-    max-width: 420px; /* Thu nhỏ chiều rộng */
+    max-width: 420px;
     background: #fff;
-    border-top-left-radius: 35px;
-    border-top-right-radius: 35px;
-    padding: 25px; /* Giảm padding */
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 35px; /* Full rounded corners */
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    transform: scale(0.9); /* Subtle scale effect instead of slide-up */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+    opacity: 0;
 }
 
 .fridge-modal-overlay.show .fridge-modal-content {
-    transform: translateY(0);
+    transform: scale(1);
+    opacity: 1;
 }
 
 .modal-header {
