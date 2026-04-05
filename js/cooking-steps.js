@@ -1,11 +1,65 @@
 // js/cooking-steps.js
 
 function finishCooking() {
-  if (typeof window.showToast === "function") {
-    window.showToast("Chúc mừng bạn đã hoàn thành món ăn!", "success");
-  } else {
-    alert("Nấu ăn hoàn tất!");
+  // 1. Lấy thông tin món ăn hiện tại
+  const savedData = localStorage.getItem("sakedo_selected_recipe");
+  if (savedData) {
+    try {
+      const recipe = JSON.parse(savedData);
+      
+      // 2. Lấy kho hàng hiện có (Nếu chưa có thì giả lập rỗng)
+      let inventory = JSON.parse(localStorage.getItem("sakedo_inventory") || "{}");
+
+      // 3. Trừ nguyên liệu (chỉ trừ những nguyên liệu được đánh dấu là 'available')
+      if (recipe.ingredients && recipe.ingredients.available) {
+        recipe.ingredients.available.forEach(item => {
+          const name = item.name.trim();
+          const usedQty = parseQuantity(item.weight);
+
+          if (inventory[name]) {
+            const currentQty = parseQuantity(inventory[name].weight);
+            const unit = inventory[name].unit || extractUnit(item.weight);
+            const newQty = Math.max(0, currentQty - usedQty);
+            
+            if (newQty <= 0) {
+              delete inventory[name]; // Xóa hẳn món nếu hết sạch
+            } else {
+              inventory[name].weight = `${newQty}${unit}`;
+            }
+          }
+        });
+        
+        // Lưu lại kho mới
+        localStorage.setItem("sakedo_inventory", JSON.stringify(inventory));
+      }
+    } catch (e) {
+      console.error("Lỗi khi cập nhật kho hàng:", e);
+    }
   }
+
+  // 4. Thông báo và chuyển hướng
+  if (typeof window.showToast === "function") {
+    window.showToast("Chúc mừng bạn đã hoàn thành món ăn! Đã cập nhật lại tủ lạnh.", "success");
+  }
+
+  setTimeout(() => {
+    if (typeof navigate === "function") {
+      navigate('home');
+    } else {
+      window.location.href = "index.html";
+    }
+  }, 1500);
+}
+
+// Helper: Tách số từ chuỗi (vd: "500g" -> 500, "3 quả" -> 3)
+function parseQuantity(str) {
+  const match = str.match(/(\d+(\.\d+)?)/);
+  return match ? parseFloat(match[1]) : 0;
+}
+
+// Helper: Tách đơn vị từ chuỗi (vd: "500g" -> "g")
+function extractUnit(str) {
+  return str.replace(/[\d\.\s]/g, "");
 }
 
 // Cấu trúc dữ liệu mẫu để sau này AI trả về JSON thì render theo format này

@@ -194,15 +194,45 @@ function loadUserProfile() {
   if (window.sakedoApi) {
     const auth = window.sakedoApi.getStoredAuth();
     if (auth && auth.user) {
-      const inputs = document.querySelectorAll(".profile-card.basic-info input");
-      if (inputs.length >= 2) {
-        inputs[0].value = auth.user.full_name || auth.user.email || "Người dùng ẩn danh";
-        inputs[1].value = auth.user.email || "";
+      const nameInput = document.getElementById("profile-name");
+      const emailInput = document.getElementById("profile-email");
+      const avatarImg = document.getElementById("profile-avatar");
+      const avatarPlaceholder = document.getElementById("avatar-placeholder");
+
+      const emailPrefix = (auth.user?.email || "").split("@")[0] || "U";
+      const displayName = auth.user.full_name || auth.user.email || "Người dùng";
+
+      if (nameInput) nameInput.value = auth.user.full_name || emailPrefix;
+      if (emailInput) emailInput.value = auth.user.email || "";
+
+      // Avatar logic
+      if (auth.user.avatar_url) {
+        if (avatarImg) {
+          avatarImg.src = auth.user.avatar_url;
+          avatarImg.style.display = "block";
+        }
+        if (avatarPlaceholder) avatarPlaceholder.style.display = "none";
+      } else {
+        if (avatarImg) avatarImg.style.display = "none";
+        if (avatarPlaceholder) {
+          avatarPlaceholder.style.display = "flex";
+          avatarPlaceholder.textContent = (auth.user.full_name || emailPrefix).charAt(0).toUpperCase();
+        }
       }
     }
   }
 }
 
-// Trigger load after script is added
-document.addEventListener("DOMContentLoaded", loadUserProfile);
-setTimeout(loadUserProfile, 500);
+// Trigger load on page changed
+document.addEventListener("pageChanged", function(e) {
+  if (e.detail.page === "profile") {
+    loadUserProfile();
+  }
+});
+
+// Also trigger on DOMContentLoaded if profile is the first page loaded
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector(".profile-container")) {
+        loadUserProfile();
+    }
+});

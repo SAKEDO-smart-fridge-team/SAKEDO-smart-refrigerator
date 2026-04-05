@@ -1,9 +1,12 @@
-<link rel="stylesheet" href="css/recipe-detail.css" />
 
 <section class="recipe-detail-container">
   <div class="recipe-header">
     <div class="recipe-image-wrapper">
-      <img id="detail-recipe-img" src="assets/img/canhchua.png" alt="Món ăn" onerror="this.src='https://via.placeholder.com/600x400?text=Food'" />
+      <img id="detail-recipe-img" src="assets/img/canhchua.png" alt="Món ăn"
+        onerror="this.src='https://via.placeholder.com/600x400?text=Food'" />
+      <button class="btn-favorite" id="btn-favorite-recipe" onclick="toggleFavorite()">
+        <i class="fa-regular fa-heart"></i>
+      </button>
     </div>
     <h2 class="recipe-title" id="detail-recipe-title">CANH CHUA CÁ BÔNG LAU</h2>
     <img src="assets/img/Chè.png" alt="Mr. Chè" class="chef-mascot" />

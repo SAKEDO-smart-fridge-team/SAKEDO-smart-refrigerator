@@ -23,6 +23,44 @@
   border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.btn-favorite {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-card-pure);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-favorite i {
+  font-size: 20px;
+  color: #ff6b6b;
+  transition: all 0.3s;
+}
+
+.btn-favorite:hover {
+  transform: scale(1.1);
+  background: var(--bg-card);
+}
+
+.btn-favorite:active {
+  transform: scale(0.9);
+}
+
+.btn-favorite.active i {
+  font-weight: 900; /* fa-solid */
 }
 
 .recipe-image-wrapper img {
@@ -38,11 +76,10 @@
 .recipe-title {
   font-size: 24px;
   font-weight: 800;
-  color: #5d8b9e;
+  color: var(--text-main);
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin: 0;
-  text-shadow: 1px 1px 2px rgba(93, 139, 158, 0.2);
 }
 
 .chef-mascot {
@@ -68,7 +105,7 @@
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #6a7c92;
+  color: var(--text-muted);
 }
 
 .ingredient-list {
@@ -81,14 +118,14 @@
   display: flex;
   align-items: center;
   padding: 15px 0;
-  border-bottom: 1px solid #e0e5eb;
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 0.2s;
 }
 .ingredient-item:last-child {
-  border-bottom: 1px solid #e0e5eb; /* To match sketch, all have borders */
+  border-bottom: 1px solid var(--border-color);
 }
 .ingredient-item:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   padding: 15px 10px;
   margin-left: -10px;
@@ -129,7 +166,7 @@
 .ing-name {
   font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-main);
 }
 
 .ing-weight {
@@ -157,16 +194,16 @@
 }
 
 .btn-back {
-  background-color: #e0e0e0;
-  color: #333;
+  background-color: var(--input-bg);
+  color: var(--text-main);
 }
 .btn-back:hover {
   background-color: #d0d0d0;
 }
 
 .btn-cook {
-  background-color: #b5daec;
-  color: #333;
+  background-color: var(--primary-blue);
+  color: white;
   box-shadow: 0 4px 12px rgba(181, 218, 236, 0.4);
 }
 .btn-cook:hover {

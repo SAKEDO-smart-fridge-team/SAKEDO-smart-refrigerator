@@ -1,114 +1,102 @@
 <!doctype html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sakedo App</title>
-    <link rel="stylesheet" href="css/layout.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-  </head>
-  <body>
-    <div class="app-container">
-      <aside class="sidebar">
-        <div class="logo-container">
-          <img src="assets/images/logo.png" class="sakedo-logo" alt="Sakedo Logo" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHRleHQgeD0iMTUiIHk9IjM1IiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSJib2xkIj5TPC90ZXh0Pjwvc3Zn>';"/>
-        </div>
 
-        <div class="nav-menu">
-          <div class="nav-item" onclick="navigate('home', this)">
-            <i class="fa-solid fa-house"></i>
-            <span class="nav-label">Tổng quan</span>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Sakedo App</title>
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
 
-          <div class="camera-btn" onclick="navigate('camera', this)">
-            <div class="camera-bulge">
-              <i class="fa-solid fa-camera"></i>
-            </div>
-            <span class="nav-label">Quét mã</span>
-          </div>
-
-          <div class="nav-item" onclick="navigate('ai-chat', this)">
-            <i class="fa-solid fa-robot"></i>
-            <span class="nav-label">Mr. Chè</span>
-          </div>
-          <div class="nav-item" onclick="navigate('favorite', this)">
-            <i class="fa-solid fa-heart"></i>
-            <span class="nav-label">Yêu thích</span>
-          </div>
-          <div class="nav-item active" onclick="navigate('profile', this)">
-            <i class="fa-solid fa-gear"></i>
-            <span class="nav-label">Cài đặt</span>
-          </div>
-        </div>
-
-        <div class="mode-switch-wrapper">
-          <div class="mode-switch">
-            <span class="light-mode"
-              ><i class="fa-solid fa-sun"></i> Light</span
-            >
-            <span class="dark-mode"><i class="fa-solid fa-moon"></i> Dark</span>
-          </div>
-        </div>
-      </aside>
-      <div class="main-wrapper">
-        <header class="topbar">
-          <div id="auth-buttons" class="auth-buttons" style="display: none;">
-            <a href="login.html" class="btn-login">Đăng nhập</a>
-            <a href="register.html" class="btn-register">Đăng ký</a>
-          </div>
-
-          <div class="user-profile" id="user-profile" style="display: none;">
-            <img
-              src="assets/img/avatar.jpg"
-              class="user-avatar"
-              onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI2NjYyIvPjwvc3ZnPg=='"
-            />
-            <div class="welcome">
-              <p id="welcome-name">Xin chào!</p>
-              <span>Welcome back</span>
-            </div>
-          </div>
-
-          <div class="search-container">
-            <input type="text" placeholder="" />
-            <button class="btn-search">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </button>
-          </div>
-
-          <div class="topbar-logo">
-            <img
-              src="assets/images/logo.png"
-              alt="Sakedo Logo"
-              onerror="this.onerror = null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjIwIj5TQUtFRE88L3RleHQ+PC9zdmc+';"
-            />
-          </div>
-          <a href="login.html" id="logout-link" style="margin-left: 12px; font-size: 0.92rem; color: #6a7780; text-decoration: none;">Đăng xuất</a>
-        </header>
-
-        <main id="app-root"></main>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="logo-container">
+        <img src="assets/images/logo.png" class="sakedo-logo" alt="Sakedo Logo"
+          onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHRleHQgeD0iMTUiIHk9IjM1IiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSJib2xkIj5TPC90ZXh0Pjwvc3Zn>';" />
       </div>
+
+      <div class="nav-menu">
+        <div class="nav-item" onclick="navigate('home', this)">
+          <i class="fa-solid fa-house"></i>
+          <span class="nav-label">Tổng quan</span>
+        </div>
+
+        <div class="camera-btn" onclick="navigate('camera', this)">
+          <div class="camera-bulge">
+            <i class="fa-solid fa-camera"></i>
+          </div>
+          <span class="nav-label">Quét mã</span>
+        </div>
+
+        <div class="nav-item" onclick="navigate('ai-chat', this)">
+          <i class="fa-solid fa-robot"></i>
+          <span class="nav-label">Mr. Chè</span>
+        </div>
+        <div class="nav-item" onclick="navigate('favorite', this)">
+          <i class="fa-solid fa-heart"></i>
+          <span class="nav-label">Yêu thích</span>
+        </div>
+        <div class="nav-item active" onclick="navigate('profile', this)">
+          <i class="fa-solid fa-gear"></i>
+          <span class="nav-label">Cài đặt</span>
+        </div>
+      </div>
+
+      <div class="mode-switch-wrapper">
+        <div class="mode-switch">
+          <span class="light-mode"><i class="fa-solid fa-sun"></i> Light</span>
+          <span class="dark-mode"><i class="fa-solid fa-moon"></i> Dark</span>
+        </div>
+      </div>
+    </aside>
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div id="auth-buttons" class="auth-buttons" style="display: none;">
+          <a href="login.html" class="btn-login">Đăng nhập</a>
+          <a href="register.html" class="btn-register">Đăng ký</a>
+        </div>
+
+        <div class="user-profile" id="user-profile" style="display: none;">
+          <img src="assets/img/avatar.jpg" class="user-avatar"
+            onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI2NjYyIvPjwvc3ZnPg=='" />
+          <div class="welcome">
+            <p id="welcome-name">Xin chào!</p>
+            <span>Welcome back</span>
+          </div>
+        </div>
+
+        <div class="search-container">
+          <input type="text" placeholder="" />
+          <button class="btn-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="topbar-logo">
+          <img src="assets/images/logo.png" alt="Sakedo Logo"
+            onerror="this.onerror = null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjIwIj5TQUtFRE88L3RleHQ+PC9zdmc+';" />
+        </div>
+        <a href="login.html" id="logout-link"
+          style="margin-left: 12px; font-size: 0.92rem; color: #6a7780; text-decoration: none;">Đăng xuất</a>
+      </header>
+
+      <main id="app-root"></main>
     </div>
-    <script src="js/api.js"></script>
-    <script src="js/router.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/profile.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/recipe-detail.js"></script>
-    <script src="js/cooking-steps.js"></script>
-  </body>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/recipe-detail.js"></script>
+  <script src="js/cooking-steps.js"></script>
+  <script src="js/favorite.js"></script>
+</body>
+
 </html>

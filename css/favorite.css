@@ -1,0 +1,165 @@
+/* css/favorite.css */
+.favorites-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px 10px 50px 10px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.fav-header h2 {
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Grid Layout */
+.fav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Card Styling */
+.fav-card {
+  background: var(--bg-card);
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  border: 1px solid var(--border-color);
+}
+
+.fav-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+.fav-img-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fav-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove-fav {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 35px;
+  height: 35px;
+  background: var(--bg-card-pure);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #ff6b6b;
+  font-size: 16px;
+  transition: 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-remove-fav:hover {
+  background: #ff6b6b;
+  color: white;
+  transform: scale(1.1);
+}
+
+.fav-info {
+  padding: 20px;
+}
+
+.fav-info h3 {
+  font-size: 18px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fav-date {
+  font-size: 12px;
+  color: #aaa;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.btn-view-fav {
+  width: 100%;
+  padding: 10px;
+  background: var(--input-bg);
+  color: var(--text-main);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-view-fav:hover {
+  background: #b5daec;
+  color: white;
+}
+
+/* Empty State */
+.fav-empty {
+  text-align: center;
+  padding: 100px 20px;
+  background: var(--bg-card);
+  border-radius: 30px;
+  border: 2px dashed var(--border-color);
+}
+
+.empty-icon {
+  font-size: 60px;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+.fav-empty h3 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.fav-empty p {
+  color: #999;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.btn-explore {
+  padding: 12px 30px;
+  background: #b5daec;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(181, 218, 236, 0.4);
+}
+
+.btn-explore:hover {
+  background: #92c9df;
+}

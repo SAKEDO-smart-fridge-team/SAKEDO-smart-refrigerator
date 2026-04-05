@@ -22,7 +22,7 @@
 }
 
 .ai-suggest-card {
-  background-color: #f4f9f9;
+  background-color: var(--bg-card);
   border-radius: 35px;
   width: 100%;
   max-width: 850px;
@@ -32,6 +32,7 @@
   padding: 35px 50px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
   margin-top: 20px;
+  border: 1px solid var(--border-color);
 }
 
 /* HEADER */
@@ -40,7 +41,7 @@
   justify-content: space-between;
   align-items: flex-end; /* Căn đáy toàn bộ header */
   padding-bottom: 15px; /* Giảm khoảng cách tới đường viền */
-  border-bottom: 3px solid #e2ecee;
+  border-bottom: 3px solid var(--border-color);
 }
 
 .ai-chef-info {
@@ -59,7 +60,7 @@
 }
 
 .ai-text h3 {
-  color: #557582;
+  color: var(--text-main);
   font-size: 22px;
   font-weight: 800;
   margin: 0 0 5px 0;
@@ -106,7 +107,7 @@
 }
 
 .ai-card-body h2 {
-  color: #557582;
+  color: var(--text-main);
   font-size: 32px;
   font-weight: 800;
   margin-bottom: 15px;
@@ -132,8 +133,8 @@
 }
 
 .btn-recipe {
-  background: #ffffff;
-  border: none;
+  background: var(--bg-card-pure);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 16px 20px;
   flex: 1; /* Chiếm tối đa phần trống như thiết kế */
@@ -142,7 +143,7 @@
   justify-content: center;
   align-items: center;
   gap: 12px;
-  color: #a7b7bf;
+  color: var(--text-muted);
   font-size: 17px;
   font-weight: 700;
   cursor: pointer;
@@ -208,10 +209,10 @@
 }
 
 .btn-arrow {
-  background: white;
-  border: none;
+  background: var(--bg-card-pure);
+  border: 1px solid var(--border-color);
   font-size: 22px;
-  color: #7b94a3;
+  color: var(--text-muted);
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -236,7 +237,8 @@
   overflow: hidden;
   position: relative;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12); /* Đổ bóng sâu hơn để bức ảnh nổi bật */
-  background: white;
+  background: var(--bg-card-pure);
+  border: 1px solid var(--border-color);
 }
 
 .food-card-preview img {

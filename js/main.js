@@ -66,3 +66,32 @@ document.addEventListener("DOMContentLoaded", () => {
 		navigate("home", document.querySelector(".nav-item"));
 	}
 });
+
+// Update Dashboard (Home) stats after navigation
+document.addEventListener("pageChanged", (e) => {
+	if (e.detail.page === "home") {
+		updateHomeStats();
+	}
+});
+
+function updateHomeStats() {
+	const inventory = JSON.parse(localStorage.getItem("sakedo_inventory") || "{}");
+	const itemCount = Object.keys(inventory).length;
+	
+	const fridgeCountEl = document.querySelector(".card-fridge .s-count");
+	if (fridgeCountEl) {
+		fridgeCountEl.textContent = itemCount.toString().padStart(2, '0');
+	}
+
+  // Update percentages or other cards if needed
+  const emptyFillEl = document.querySelector(".semi-circle-fill");
+  const capInfoText = document.querySelector(".cap-info h2");
+  if (emptyFillEl && capInfoText) {
+    const totalCapacity = 20; // Giả sử tủ chứa được tối đa 20 loại món
+    const usedPercent = Math.min(100, Math.round((itemCount / totalCapacity) * 100));
+    const freePercent = 100 - usedPercent;
+
+    capInfoText.textContent = `${freePercent}%`;
+    emptyFillEl.style.transform = `rotate(${1.8 * usedPercent}deg)`; // CSS semi-circle logic placeholder
+  }
+}

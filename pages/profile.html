@@ -1,8 +1,3 @@
-<link rel="stylesheet" href="css/profile.css" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-/>
 
 <section class="profile-container">
   <div class="profile-section-header">
@@ -12,11 +7,13 @@
 
   <div class="profile-card basic-info">
     <div class="avatar-circle" id="avatar-container">
+      <div id="avatar-placeholder" class="avatar-letter" style="display: none;"></div>
       <img
         id="profile-avatar"
-        src="assets/img/avatar.jpg"
+        src=""
         alt="User Avatar"
-        onerror="this.src = 'https://via.placeholder.com/120'"
+        style="display: none;"
+        onerror="this.style.display='none'; document.getElementById('avatar-placeholder').style.display='flex';"
       />
       <div class="camera-overlay">
         <i class="fa-solid fa-camera"></i>
@@ -28,14 +25,14 @@
         <label class="input-label">Tên của bạn</label>
         <div class="input-box">
           <i class="fa-solid fa-user"></i>
-          <input type="text" value="Huỳnh Lê Khả Như" readonly />
+          <input type="text" id="profile-name" value="Huỳnh Lê Khả Như" readonly />
         </div>
       </div>
       <div class="input-group">
         <label class="input-label">Email</label>
         <div class="input-box">
           <i class="fa-solid fa-envelope"></i>
-          <input type="email" value="khannhu.uth@gmail.com" readonly />
+          <input type="email" id="profile-email" value="khannhu.uth@gmail.com" readonly />
         </div>
       </div>
     </div>

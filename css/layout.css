@@ -1,4 +1,10 @@
 /* css/layout.css */
+@import url("profile.css");
+@import url("dashboard.css");
+@import url("chat.css");
+@import url("recipe-detail.css");
+@import url("cooking-steps.css");
+@import url("favorite.css");
 
 /* ========================================= */
 /* 1. RESET & VARIABLES                      */
@@ -11,10 +17,35 @@
 }
 
 :root {
+  /* LIGHT THEME TOKENS */
+  --bg-app: #ffffff;
+  --bg-card: #f8f9fa;
+  --bg-card-pure: #ffffff;
+  --text-main: #333333;
+  --text-muted: #777777;
+  --border-color: #eeeeee;
+  --input-bg: #f3f5f7;
+  --sidebar-bg: #e0e0e0;
+  
   --primary-blue: #b5daec;
-  --sidebar-gray: #e0e0e0;
+  --primary-blue-alt: #5c9ce6;
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --bg-light: #ffffff;
+}
+
+body.dark-theme {
+  /* DARK THEME TOKENS - Softer Obsidian & Slate palette */
+  --bg-app: #0f111a;
+  --bg-card: #1a1d2b;
+  --bg-card-pure: #161925;
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border-color: #2d3748;
+  --input-bg: #222636;
+  --sidebar-bg: #161925;
+  
+  --primary-blue: #5c9ce6;
+  --bg-light: #0f111a;
 }
 
 body {
@@ -34,7 +65,7 @@ body {
 .sidebar {
   width: 75px;
   height: 70vh;
-  background-color: var(--sidebar-gray);
+  background-color: var(--sidebar-bg);
   margin: auto 0 auto 20px;
   border-radius: 35px;
   display: flex;
@@ -202,13 +233,14 @@ body {
 }
 
 .mode-switch {
-  background: white;
+  background: var(--bg-card-pure);
   padding: 5px 10px;
   border-radius: 20px;
   display: flex;
   gap: 10px;
   font-size: 11px;
-  color: #666;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
 }
 
 /* ========================================= */
@@ -262,7 +294,7 @@ body {
 }
 
 .search-container {
-  background: white;
+  background: var(--input-bg);
   width: 45%;
   max-width: 650px;
   height: 48px;
@@ -276,8 +308,9 @@ body {
   flex: 1;
   border: none;
   outline: none;
+  background: transparent;
   font-size: 15px;
-  color: #444;
+  color: var(--text-main);
 }
 
 .btn-search {
@@ -311,6 +344,27 @@ body {
   flex: 1;
   padding: 10px 40px 30px 40px;
   overflow-y: auto;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#app-root.page-loading {
+  opacity: 0;
+}
+
+#app-root.fade-in {
+  animation: sakedoFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes sakedoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 #app-root::-webkit-scrollbar {
@@ -388,55 +442,51 @@ body {
 }
 
 .mode-switch span.active {
-  background-color: #e0e0e0;
-  /* Nền xám cho nút đang bật */
-  color: #333;
+  background-color: var(--sidebar-bg);
+  color: var(--text-main);
   font-weight: bold;
 }
 
 /* KHI BODY BẬT CHẾ ĐỘ TỐI (DARK-THEME) */
 body.dark-theme {
-  --bg-light: #1e1e2e;
-  /* Đổi nền trang thành đen xám */
-  --sidebar-gray: #2a2a3c;
-  /* Đổi Sidebar thành xám tối */
-  --primary-blue: #5c9ce6;
-  /* Làm màu xanh dịu lại cho đỡ chói */
-  color: #ffffff;
-  /* Đổi chữ thành màu trắng */
+  color: var(--text-main);
 }
 
 /* Đổi màu các thành phần khác khi ở chế độ tối */
 body.dark-theme .app-container {
-  background-color: var(--bg-light);
+  background-color: var(--bg-app);
 }
 
-body.dark-theme .topbar,
-body.dark-theme .search-container,
-body.dark-theme .search-container input,
-body.dark-theme .btn-noti,
-body.dark-theme .mode-switch {
-  background-color: #2a2a3c;
-  /* Nền tối cho các khối con */
-  color: #fff;
+body.dark-theme .topbar {
+  background-color: var(--sidebar-bg);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .topbar-logo img {
+  mix-blend-mode: normal;
+  filter: brightness(1.1);
+}
+
+body.dark-theme .btn-noti {
+  background-color: var(--bg-card);
+  color: var(--text-main);
 }
 
 body.dark-theme .nav-item {
-  color: #a0a0b0;
+  color: var(--text-muted);
 }
 
-/* Chữ menu tối màu đi */
 body.dark-theme .nav-item.active {
-  color: #fff;
+  color: var(--text-main);
 }
 
 body.dark-theme .welcome p,
 body.dark-theme .welcome span {
-  color: #fff;
+  color: var(--text-main);
 }
 
 body.dark-theme .camera-bulge {
-  background-color: var(--sidebar-gray);
+  background-color: var(--sidebar-bg);
 }
 
 /* Đổi màu nút gạt khi ở dark mode */

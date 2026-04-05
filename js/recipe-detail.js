@@ -8,6 +8,57 @@ function startCooking() {
   }
 }
 
+// Logic cho nút Yêu thích (Favorite)
+function toggleFavorite() {
+  const btn = document.getElementById("btn-favorite-recipe");
+  const icon = btn.querySelector("i");
+  
+  const savedData = localStorage.getItem("sakedo_selected_recipe");
+  if (!savedData) return;
+  
+  const recipe = JSON.parse(savedData);
+  let favorites = JSON.parse(localStorage.getItem("sakedo_favorites") || "[]");
+  
+  const existingIdx = favorites.findIndex(f => f.title === recipe.title);
+  
+  if (existingIdx > -1) {
+    // Xóa khỏi yêu thích
+    favorites.splice(existingIdx, 1);
+    btn.classList.remove("active");
+    icon.className = "fa-regular fa-heart";
+    if (window.showToast) window.showToast("Đã xóa khỏi mục yêu thích", "info");
+  } else {
+    // Thêm vào yêu thích
+    favorites.push({
+      title: recipe.title,
+      img: recipe.img,
+      date: new Date().toISOString()
+    });
+    btn.classList.add("active");
+    icon.className = "fa-solid fa-heart";
+    if (window.showToast) window.showToast("Đã lưu vào mục yêu thích", "success");
+  }
+  
+  localStorage.setItem("sakedo_favorites", JSON.stringify(favorites));
+}
+
+function checkFavoriteStatus(recipeTitle) {
+  const btn = document.getElementById("btn-favorite-recipe");
+  if (!btn) return;
+  const icon = btn.querySelector("i");
+  
+  const favorites = JSON.parse(localStorage.getItem("sakedo_favorites") || "[]");
+  const isFavorite = favorites.some(f => f.title === recipeTitle);
+  
+  if (isFavorite) {
+    btn.classList.add("active");
+    icon.className = "fa-solid fa-heart";
+  } else {
+    btn.classList.remove("active");
+    icon.className = "fa-regular fa-heart";
+  }
+}
+
 // Khởi tạo trang chi tiết nguyên liệu khi được render
 function initRecipeDetail() {
   const container = document.querySelector(".recipe-detail-container");
@@ -24,6 +75,9 @@ function initRecipeDetail() {
       
       if (titleEl && title) titleEl.innerText = title;
       if (imgEl && img) imgEl.src = img;
+
+      // Cập nhật trạng thái nút yêu thích
+      checkFavoriteStatus(title);
 
       // Render Ingredients if available
       if (savedDataObj.ingredients) {
