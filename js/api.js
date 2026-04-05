@@ -13,14 +13,11 @@ async function apiRequest(path, options = {}) {
 		...options
 	});
 
-	const responseText = await response.text();
-	let responseData = null;
-
-	try {
-		responseData = responseText ? JSON.parse(responseText) : null;
-	} catch (error) {
-		responseData = null;
+	if (response.status === 204) {
+		return null;
 	}
+
+	const responseData = await response.json().catch(() => null);
 
 	if (!response.ok) {
 		const detail = responseData?.detail || "Đã xảy ra lỗi từ máy chủ.";

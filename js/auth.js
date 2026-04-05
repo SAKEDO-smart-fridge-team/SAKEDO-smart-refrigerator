@@ -26,7 +26,13 @@
 
       const base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/");
       const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
-      return JSON.parse(atob(padded));
+      const binaryString = atob(padded);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const utf8String = new TextDecoder().decode(bytes);
+      return JSON.parse(utf8String);
     } catch (error) {
       return null;
     }

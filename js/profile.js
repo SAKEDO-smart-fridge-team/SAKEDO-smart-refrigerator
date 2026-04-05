@@ -44,6 +44,19 @@ document.addEventListener("click", function (e) {
       inputs[0].focus();
     } else {
       // Lưu lại
+      const nameInput = document.getElementById("profile-name");
+      const newName = nameInput ? nameInput.value.trim() : "";
+
+      if (window.sakedoApi) {
+        const auth = window.sakedoApi.getStoredAuth();
+        if (auth && auth.user) {
+          auth.user.full_name = newName;
+          window.sakedoApi.saveAuth(auth);
+          // Gửi event để Topbar cập nhật ngay lập tức
+          document.dispatchEvent(new CustomEvent("userUpdated", { detail: { full_name: newName } }));
+        }
+      }
+
       profileContainer.classList.remove("editing");
       editBtn.classList.remove("editing-mode");
       editBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Chỉnh sửa';
@@ -200,9 +213,9 @@ function loadUserProfile() {
       const avatarPlaceholder = document.getElementById("avatar-placeholder");
 
       const emailPrefix = (auth.user?.email || "").split("@")[0] || "U";
-      const displayName = auth.user.full_name || auth.user.email || "Người dùng";
+      const displayName = auth.user.full_name || auth.user.name || emailPrefix || "Khách hàng";
 
-      if (nameInput) nameInput.value = auth.user.full_name || emailPrefix;
+      if (nameInput) nameInput.value = displayName;
       if (emailInput) emailInput.value = auth.user.email || "";
 
       // Avatar logic
@@ -224,7 +237,7 @@ function loadUserProfile() {
 }
 
 // Trigger load on page changed
-document.addEventListener("pageChanged", function(e) {
+document.addEventListener("pageChanged", function (e) {
   if (e.detail.page === "profile") {
     loadUserProfile();
   }
@@ -232,7 +245,7 @@ document.addEventListener("pageChanged", function(e) {
 
 // Also trigger on DOMContentLoaded if profile is the first page loaded
 document.addEventListener("DOMContentLoaded", () => {
-    if (document.querySelector(".profile-container")) {
-        loadUserProfile();
-    }
+  if (document.querySelector(".profile-container")) {
+    loadUserProfile();
+  }
 });
