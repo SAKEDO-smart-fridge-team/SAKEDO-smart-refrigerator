@@ -1,231 +1,506 @@
-/* css/login.css */
-body {
+/* css/layout.css */
+
+
+/* ========================================= */
+/* 1. RESET & VARIABLES                      */
+/* ========================================= */
+* {
   margin: 0;
   padding: 0;
-  font-family: var(--font-family-main), 'Roboto Slab', sans-serif;
-  height: 100vh;
-  background-color: #DDEBF3; /* Pale blue base from Figma right edge */
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+:root {
+  --primary-blue: #b5daec;
+  --sidebar-gray: #e0e0e0;
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --bg-light: #ffffff;
+}
+
+
+body {
+  background-color: var(--bg-light);
   overflow: hidden;
 }
 
-.split-layout {
+
+.app-container {
   display: flex;
-  width: 100%;
   height: 100vh;
+  width: 100vw;
 }
 
-/* LEFT SIDE IMAGE */
-.login-image-section {
-  flex: 0 0 40%; /* Image takes 40% to let white board be MASSIVE */
-  height: 100vh;
-  background-color: #2F3640; 
-  background-image: url('../assets/images/tulanh.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+
+/* ========================================= */
+/* 2. SIDEBAR CONFIGURATION                  */
+/* ========================================= */
+.sidebar {
+  width: 75px;
+  height: 70vh;
+  background-color: var(--sidebar-gray);
+  margin: auto 0 auto 20px;
+  border-radius: 35px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0;
+  transition:
+    width var(--transition-smooth),
+    background-color var(--transition-smooth);
+  z-index: 1000;
+  filter: drop-shadow(4px 0 15px rgba(0, 0, 0, 0.08));
+}
+
+
+.sidebar:hover {
+  width: 220px;
+  background-color: var(--primary-blue);
+}
+
+
+/* ========================================= */
+/* 3. LOGO IMAGE                             */
+/* ========================================= */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 15px auto;
+  transition: var(--transition-smooth);
+}
+
+
+.sakedo-logo {
+  max-width: 800%;
+  max-height: 100%;
+  object-fit: contain;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+  transition:
+    transform var(--transition-smooth),
+    opacity var(--transition-smooth);
+}
+
+
+.sidebar:hover .sakedo-logo {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+
+/* ========================================= */
+/* 4. NAVIGATION MENU                        */
+/* ========================================= */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  cursor: pointer;
   position: relative;
+  color: #555;
+  transition: 0.3s;
+}
+
+
+.nav-item.active {
+  color: #000;
+}
+
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 12.5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+
+.nav-item i {
+  font-size: 20px;
+  min-width: 25px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.nav-label {
+  margin-left: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+
+.sidebar:hover .nav-label {
+  opacity: 1;
+}
+
+
+/* ========================================= */
+/* 5. CAMERA BUTTON                          */
+/* ========================================= */
+.camera-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 55px;
+  cursor: pointer;
+  margin: 5px 0;
+}
+
+
+.camera-bulge {
+  position: absolute;
+  right: -27.5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 55px;
+  height: 55px;
+  background-color: var(--sidebar-gray);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color var(--transition-smooth);
   z-index: 1;
 }
 
-/* RIGHT SIDE CONTENT */
-.login-content-section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center; 
-  padding: 2.5vh 3vw 2.5vh 0; /* Smaller gap so white panel is TALLER and WIDER */
-  position: relative;
-  z-index: 2;
+
+.sidebar:hover .camera-bulge {
+  background-color: var(--primary-blue);
 }
 
-/* FLOATING WHITE BOARD */
-.login-panel {
-  width: 100%; 
-  height: 100%; 
-  background: #ffffff;
-  border-radius: 40px; 
-  margin-left: -70px; /* Strong overlap over the fridge image */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: -10px 0 40px rgba(0,0,0,0.04); 
+
+.camera-bulge i {
+  font-size: 22px;
+  color: #555;
 }
 
-.login-wrapper {
-  max-width: 500px; /* Form is wider, matching Figma */
-  width: 100%;
-  padding: 0 20px; 
+
+.sidebar:hover .camera-bulge i {
+  color: #333;
 }
 
-.login-title {
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 45px; /* Restored breathing room */
-  color: #000000;
-  font-family: inherit; 
-  letter-spacing: 0.5px;
-}
 
-/* TABS: Login & Register */
-.auth-tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 25px; /* Reduced gap */
-}
-.auth-tab {
-  flex: 1;
-  text-align: center;
-  padding-bottom: 12px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #bac2c8;
-  cursor: pointer;
-  border-bottom: 1px solid #EAEAEA;
-  text-decoration: none;
-  display: block;
-  transition: color 0.2s;
-}
-.auth-tab:hover {
-  color: #888;
-}
-.auth-tab.active {
-  color: #618A9C; 
-  font-weight: 600;
-  border-bottom-color: transparent;
-  position: relative;
-}
-.auth-tab.active::after {
-  content: "";
+.camera-btn .nav-label {
   position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #618A9C; 
+  left: 70px;
+  margin-left: 0;
 }
 
-/* FORM FIELDS */
-.login-form {
+
+/* ========================================= */
+/* 6. MODE SWITCH                            */
+/* ========================================= */
+.mode-switch-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+  margin-top: auto;
+}
+
+
+.sidebar:hover .mode-switch-wrapper {
+  opacity: 1;
+}
+
+
+.mode-switch {
+  background: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #666;
+}
+
+
+/* ========================================= */
+/* 7. MAIN CONTENT & TOPBAR                  */
+/* ========================================= */
+.main-wrapper {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  padding-left: 15px;
 }
 
-.input-group {
+
+.topbar {
+  height: 110px;
+  width: calc(100% - 50px);
+  background-color: var(--primary-blue);
+  margin: 20px auto;
+  border-radius: 45px;
   display: flex;
   align-items: center;
-  border: 1px solid #E4E4E4;
-  border-radius: 8px; /* Softer radius */
-  padding: 18px 20px; /* Taller inputs matching Figma */
-  margin-bottom: 25px; /* More spacing */
-  background: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.input-group:focus-within {
-  border-color: #B5DAEC;
-  box-shadow: 0 0 0 3px rgba(181, 218, 236, 0.2);
+  justify-content: space-between;
+  padding: 0 10%;
+  box-shadow: 0 8px 25px rgba(181, 218, 236, 0.4);
 }
 
-.input-group i {
-  color: #444;
-  font-size: 1.15rem;
-  margin-right: 18px;
-  width: 20px;
-  text-align: center;
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  min-width: 200px;
 }
 
-.input-group input {
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid white;
+  object-fit: cover;
+}
+
+
+.welcome p {
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: -2px;
+}
+
+
+.welcome span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+
+.search-container {
+  background: white;
+  width: 45%;
+  max-width: 650px;
+  height: 48px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 5px 8px 5px 20px;
+}
+
+
+.search-container input {
+  flex: 1;
   border: none;
   outline: none;
-  width: 100%;
-  font-size: 1rem;
-  color: #333;
-  font-family: inherit;
-}
-.input-group input::placeholder {
-  color: #B8BCC0;
+  font-size: 15px;
+  color: #444;
 }
 
-/* FORGOT PASSWORD ROW */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -5px;
-  margin-bottom: 30px;
-}
 
-.auth-message {
-  min-height: 20px;
-  margin: -8px 0 14px;
-  font-size: 0.86rem;
-  font-weight: 600;
-  color: #3b6a7d;
-}
-
-.auth-message.error {
-  color: #b53a3a;
-}
-
-.auth-message.success {
-  color: #2f7a49;
-}
-
-.forgot-pwd {
-  font-size: 0.85rem;
-  color: #618A9C;
-  text-decoration: none;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-}
-.forgot-pwd:hover {
-  text-decoration: underline;
-}
-
-/* CONTINUE BUTTON */
-.btn-continue {
-  width: 100%;
-  padding: 18px; /* Taller button */
-  background-color: #BDE0F0; 
-  color: #264C63; 
+.btn-search {
+  background: var(--primary-blue);
   border: none;
-  border-radius: 35px; /* Classic pill shape */
-  font-size: 1.05rem;
-  font-weight: 700;
+  width: 70px;
+  height: 38px;
+  border-radius: 25px;
+  color: white;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
-  letter-spacing: 0.3px;
-}
-.btn-continue:hover {
-  background-color: #AACEE2;
-  transform: translateY(-2px);
+  transition: 0.2s;
 }
 
-/* SOCIAL & SIGN IN WITH */
-.social-login {
-  margin-top: 35px; /* Reduced gap */
-  text-align: center;
+
+.btn-search:hover {
+  background: #96cfe8;
 }
-.social-login p {
-  color: #8C949B;
-  font-size: 0.9rem;
-  margin-bottom: 25px;
+
+
+.btn-noti {
+  background: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 15px;
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
 }
-.social-icons {
+
+
+#app-root {
+  flex: 1;
+  padding: 10px 40px 30px 40px;
+  overflow-y: auto;
+}
+
+
+#app-root::-webkit-scrollbar {
+  width: 6px;
+}
+
+
+#app-root::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+
+.auth-buttons {
   display: flex;
-  justify-content: center;
-}
-
-.google-signin-host {
-  min-height: 42px;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 15px;
+  min-width: 200px;
+  white-space: nowrap;
 }
 
-.google-signin-missing {
-  font-size: 0.82rem;
-  color: #b53a3a;
-  text-align: center;
-  max-width: 280px;
+
+.auth-buttons .btn-login {
+  background-color: #4b708d;
+  color: white;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+
+.auth-buttons .btn-login:hover {
+  background-color: #3b5f75;
+}
+
+
+.auth-buttons .btn-register {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+
+.auth-buttons .btn-register:hover {
+  opacity: 0.8;
+}
+
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 200px;
+  height: 100%;
+}
+
+
+.topbar-logo img {
+  height: 200px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+
+/* ========================================= */
+/* 8. DARK MODE THEME & TOGGLE STYLE         */
+/* ========================================= */
+
+
+/* Hiệu ứng làm nổi bật nút đang được chọn */
+.mode-switch span {
+  padding: 5px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+.mode-switch span.active {
+  background-color: #e0e0e0;
+  /* Nền xám cho nút đang bật */
+  color: #333;
+  font-weight: bold;
+}
+
+
+/* KHI BODY BẬT CHẾ ĐỘ TỐI (DARK-THEME) */
+body.dark-theme {
+  --bg-light: #1e1e2e;
+  /* Đổi nền trang thành đen xám */
+  --sidebar-gray: #2a2a3c;
+  /* Đổi Sidebar thành xám tối */
+  --primary-blue: #5c9ce6;
+  /* Làm màu xanh dịu lại cho đỡ chói */
+  color: #ffffff;
+  /* Đổi chữ thành màu trắng */
+}
+
+
+/* Đổi màu các thành phần khác khi ở chế độ tối */
+body.dark-theme .app-container {
+  background-color: var(--bg-light);
+}
+
+
+body.dark-theme .topbar,
+body.dark-theme .search-container,
+body.dark-theme .search-container input,
+body.dark-theme .btn-noti,
+body.dark-theme .mode-switch {
+  background-color: #2a2a3c;
+  /* Nền tối cho các khối con */
+  color: #fff;
+}
+
+
+body.dark-theme .nav-item {
+  color: #a0a0b0;
+}
+
+
+/* Chữ menu tối màu đi */
+body.dark-theme .nav-item.active {
+  color: #fff;
+}
+
+
+body.dark-theme .welcome p,
+body.dark-theme .welcome span {
+  color: #fff;
+}
+
+
+body.dark-theme .camera-bulge {
+  background-color: var(--sidebar-gray);
+}
+
+
+/* Đổi màu nút gạt khi ở dark mode */
+body.dark-theme .mode-switch span.active {
+  background-color: #44445a;
+  color: #fff;
 }

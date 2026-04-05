@@ -1,29 +1,44 @@
 async function navigate(page, element) {
   const root = document.getElementById("app-root");
 
-  try {
-    // 0. Bắt đầu ẩn nội dung hiện tại
-    root.classList.add("page-loading");
-    root.classList.remove("fade-in");
 
+  try {
     // 1. Tải nội dung file HTML từ thư mục pages/
     const response = await fetch(`pages/${page}.html`);
     const html = await response.text();
 
+
     // 2. Đổ nội dung vào vùng main
     root.innerHTML = html;
+
+
+    // 2b. Thực thi các thẻ <script> trong trang vừa load
+    root.querySelectorAll("script").forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+
 
     // 3. Xử lý UI cho Sidebar (Đổi màu icon khi được chọn)
     document
       .querySelectorAll(".nav-item")
       .forEach((item) => item.classList.remove("active"));
     if (element) element.classList.add("active");
+    // 4. Phát ra sự kiện báo hiệu trang đã đổi (Để các file JS riêng lẻ tự init)
+    document.dispatchEvent(new CustomEvent("pageChanged", { 
+      detail: { page: page } 
+    }));
   } catch (error) {
     console.error("Lỗi chuyển trang:", error);
     root.innerHTML = "<h2>Trang đang được phát triển...</h2>";
-    root.classList.remove("page-loading");
   }
 }
+
 
 // ==========================================
 // LOGIC CHUYỂN ĐỔI CHẾ ĐỘ SÁNG / TỐI (THEME)
@@ -33,14 +48,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnDark = document.getElementById("btn-dark");
   const body = document.body;
 
+
   // 1. Kiểm tra xem lần trước người dùng đang xài chế độ nào (Lưu trong LocalStorage)
   const currentTheme = localStorage.getItem("sakedo_theme");
+
 
   if (currentTheme === "dark") {
     body.classList.add("dark-theme");
     btnDark.classList.add("active");
     btnLight.classList.remove("active");
   }
+
 
   // 2. Khi nhấn nút TỐI (Dark)
   btnDark.addEventListener("click", () => {
@@ -50,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnLight.classList.remove("active");
   });
 
+
   // 3. Khi nhấn nút SÁNG (Light)
   btnLight.addEventListener("click", () => {
     body.classList.remove("dark-theme");
@@ -58,3 +77,4 @@ document.addEventListener("DOMContentLoaded", () => {
     btnDark.classList.remove("active");
   });
 });
+

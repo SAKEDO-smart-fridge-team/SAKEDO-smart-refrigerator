@@ -1,0 +1,83 @@
+
+<div class="fridge-view-container">
+    <div class="fridge-tabs">
+        <button class="tab-btn active">TỦ LẠNH</button>
+        <button class="tab-btn">NGĂN ĐÁ</button>
+        <button class="tab-btn">NGĂN LẠNH</button>
+    </div>
+
+    <div id="fridge-list-container" class="fridge-list">
+        <!-- Tải dữ liệu từ JS -->
+        <p class="loading-text">Đang tải thuốc phẩm...</p>
+    </div>
+
+    <div class="view-more-container">
+        <button class="btn-view-more">XEM THÊM</button>
+    </div>
+
+    <div class="suggestions-section">
+        <h2 class="suggestions-title">GỢI Ý MÓN ĂN:</h2>
+        <div id="suggested-recipes-grid" class="suggestions-grid">
+            <!-- Tải dữ liệu từ JS -->
+        </div>
+    </div>
+
+    <!-- Modal Chi tiết thực phẩm -->
+    <div id="item-detail-modal" class="modal-overlay fridge-modal-overlay">
+        <div class="modal-content fridge-modal-content slide-up">
+            <header class="modal-header">
+                <button class="btn-modal-back" onclick="closeItemDetail()">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <h2 class="modal-title">Chi tiết</h2>
+                <button class="btn-modal-edit">
+                    <i class="fa-solid fa-pencil"></i>
+                </button>
+            </header>
+
+            <div class="modal-body">
+                <div class="detail-hero">
+                    <div class="detail-img-halo"></div>
+                    <img id="detail-item-img" src="" alt="Food">
+                </div>
+
+                <div class="detail-main-info">
+                    <h1 id="detail-item-name">Sữa</h1>
+                    <div id="detail-item-status-badge" class="status-badge">Đang tải...</div>
+                </div>
+
+                <div class="detail-info-grid">
+                    <div class="info-card">
+                        <div class="info-icon clock"><i class="fa-regular fa-clock"></i></div>
+                        <span class="info-label">TRẠNG THÁI</span>
+                        <p id="detail-info-status" class="info-value">Đã hết hạn</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon tag"><i class="fa-solid fa-tag"></i></div>
+                        <span class="info-label">DANH MỤC</span>
+                        <p id="detail-info-category" class="info-value">Sữa & Phô mai</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon pin"><i class="fa-solid fa-location-dot"></i></div>
+                        <span class="info-label">VỊ TRÍ</span>
+                        <p id="detail-info-location" class="info-value">Tủ lạnh</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon box"><i class="fa-solid fa-cube"></i></div>
+                        <span class="info-label">SỐ LƯỢNG</span>
+                        <p id="detail-info-qty" class="info-value">1 cái</p>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button class="btn-action-done" onclick="closeItemDetail(); showToast('Đã đánh dấu đã dùng!', 'success');">
+                    <i class="fa-solid fa-check"></i> Đánh dấu đã dùng
+                </button>
+                <button class="btn-action-delete" onclick="closeItemDetail(); showToast('Đã xóa sản phẩm!', 'info');">
+                    <i class="fa-solid fa-trash-can"></i> Xóa sản phẩm
+                </button>
+            </footer>
+        </div>
+    </div>
+</div>

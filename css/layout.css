@@ -5,6 +5,8 @@
 @import url("recipe-detail.css");
 @import url("cooking-steps.css");
 @import url("favorite.css");
+@import url("fridge.css");
+@import url("camera.css");
 
 /* ========================================= */
 /* 1. RESET & VARIABLES                      */
@@ -26,26 +28,13 @@
   --border-color: #eeeeee;
   --input-bg: #f3f5f7;
   --sidebar-bg: #e0e0e0;
-  
+  /* Gray as seen in reference */
+
   --primary-blue: #b5daec;
-  --primary-blue-alt: #5c9ce6;
+  --primary-blue-alt: #4b9fb3;
+  /* Teal-ish blue for active items */
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --bg-light: #ffffff;
-}
-
-body.dark-theme {
-  /* DARK THEME TOKENS - Softer Obsidian & Slate palette */
-  --bg-app: #0f111a;
-  --bg-card: #1a1d2b;
-  --bg-card-pure: #161925;
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --border-color: #2d3748;
-  --input-bg: #222636;
-  --sidebar-bg: #161925;
-  
-  --primary-blue: #5c9ce6;
-  --bg-light: #0f111a;
 }
 
 body {
@@ -64,23 +53,24 @@ body {
 /* ========================================= */
 .sidebar {
   width: 75px;
-  height: 70vh;
+  height: 85vh;
   background-color: var(--sidebar-bg);
   margin: auto 0 auto 20px;
-  border-radius: 35px;
+  border-top-right-radius: 60px;
+  border-bottom-right-radius: 60px;
   display: flex;
   flex-direction: column;
   padding: 30px 0;
-  transition:
-    width var(--transition-smooth),
-    background-color var(--transition-smooth);
+  transition: all var(--transition-smooth);
   z-index: 1000;
-  filter: drop-shadow(4px 0 15px rgba(0, 0, 0, 0.08));
+  filter: drop-shadow(10px 0 30px rgba(0, 0, 0, 0.05));
+  position: relative;
 }
 
 .sidebar:hover {
-  width: 220px;
+  width: 210px;
   background-color: var(--primary-blue);
+  /* Main blue when expanded as requested */
 }
 
 /* ========================================= */
@@ -90,9 +80,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 45px;
-  height: 45px;
-  margin: 0 auto 15px auto;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 30px auto;
   transition: var(--transition-smooth);
 }
 
@@ -118,45 +108,83 @@ body {
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
+  overflow-y: visible;
+  /* Prevent clipping of the camera bulge */
+  overflow-x: visible;
+}
+
+/* Ẩn thanh cuộn của menu cho đẹp */
+.nav-menu::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   padding: 15px 25px;
+  /* Spaciously balanced */
+  margin: 4px 10px;
+  /* Room for pill effect */
   cursor: pointer;
   position: relative;
-  color: #555;
-  transition: 0.3s;
+  color: #777;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 35px;
+  /* Rounded pill look */
+  flex-shrink: 0;
 }
 
 .nav-item.active {
-  color: #000;
+  background: white;
+  /* Pill background */
+  color: var(--primary-blue-alt);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Premium depth */
 }
 
+/* Left Indicator Bar for Active Item */
 .nav-item.active::before {
   content: "";
   position: absolute;
-  left: 12.5px;
+  left: -10px;
+  /* Shift to the very edge of the pill */
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  z-index: -1;
+  width: 4px;
+  height: 18px;
+  background-color: var(--primary-blue-alt);
+  border-radius: 10px;
 }
 
 .nav-item i {
-  font-size: 20px;
   min-width: 25px;
+  width: 25px;
+  height: 25px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.nav-item i svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  /* Inherit color from parent i */
+  transition: stroke 0.3s ease;
+}
+
+/* SVG icon specific tweaks if needed */
+.nav-item i svg path {
+  transition: stroke 0.3s ease;
 }
 
 .nav-label {
-  margin-left: 20px;
+  margin-left: 15px;
+  /* Tighter gap for better grouping */
   font-size: 15px;
   font-weight: 500;
   opacity: 0;
@@ -179,26 +207,32 @@ body {
   height: 55px;
   cursor: pointer;
   margin: 5px 0;
+  flex-shrink: 0;
+  /* Đã thêm */
 }
 
 .camera-bulge {
   position: absolute;
-  right: -27.5px;
+  right: -35px;
+  /* Stick out more to form a semi-circle */
   top: 50%;
   transform: translateY(-50%);
-  width: 55px;
-  height: 55px;
-  background-color: var(--sidebar-gray);
+  width: 70px;
+  height: 70px;
+  background-color: var(--sidebar-bg);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background-color var(--transition-smooth);
-  z-index: 1;
+  transition: all var(--transition-smooth);
+  z-index: 5;
+  box-shadow: 10px 0 20px rgba(0, 0, 0, 0.03);
+  /* Subtle depth */
 }
 
 .sidebar:hover .camera-bulge {
   background-color: var(--primary-blue);
+  /* Sync with sidebar hover background */
 }
 
 .camera-bulge i {
@@ -220,27 +254,25 @@ body {
 /* 6. MODE SWITCH                            */
 /* ========================================= */
 .mode-switch-wrapper {
+  margin-top: auto;
   width: 100%;
   display: flex;
   justify-content: center;
-  opacity: 0;
-  transition: 0.3s;
-  margin-top: auto;
-}
-
-.sidebar:hover .mode-switch-wrapper {
-  opacity: 1;
+  padding-bottom: 30px;
+  opacity: 1 !important;
+  /* Always visible */
 }
 
 .mode-switch {
-  background: var(--bg-card-pure);
-  padding: 5px 10px;
-  border-radius: 20px;
-  display: flex;
-  gap: 10px;
-  font-size: 11px;
-  color: var(--text-muted);
-  border: 1px solid var(--border-color);
+  cursor: pointer;
+  font-size: 20px;
+  color: #555;
+  transition: 0.3s;
+}
+
+.mode-switch:hover {
+  transform: scale(1.1);
+  color: var(--primary-blue-alt);
 }
 
 /* ========================================= */
@@ -294,7 +326,7 @@ body {
 }
 
 .search-container {
-  background: var(--input-bg);
+  background: white;
   width: 45%;
   max-width: 650px;
   height: 48px;
@@ -308,9 +340,8 @@ body {
   flex: 1;
   border: none;
   outline: none;
-  background: transparent;
   font-size: 15px;
-  color: var(--text-main);
+  color: #444;
 }
 
 .btn-search {
@@ -344,27 +375,6 @@ body {
   flex: 1;
   padding: 10px 40px 30px 40px;
   overflow-y: auto;
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-}
-
-#app-root.page-loading {
-  opacity: 0;
-}
-
-#app-root.fade-in {
-  animation: sakedoFadeIn 0.4s ease-out forwards;
-}
-
-@keyframes sakedoFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 #app-root::-webkit-scrollbar {
@@ -433,28 +443,28 @@ body {
 /* 8. DARK MODE THEME & TOGGLE STYLE         */
 /* ========================================= */
 
-/* Hiệu ứng làm nổi bật nút đang được chọn */
-.mode-switch span {
-  padding: 5px 12px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.mode-switch span.active {
-  background-color: var(--sidebar-bg);
-  color: var(--text-main);
-  font-weight: bold;
-}
-
 /* KHI BODY BẬT CHẾ ĐỘ TỐI (DARK-THEME) */
 body.dark-theme {
-  color: var(--text-main);
+  /* DARK THEME TOKENS - Softer Obsidian & Slate palette */
+  --bg-app: #0f111a;
+  --bg-card: #1a1d2b;
+  --bg-card-pure: #161925;
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border-color: #2d3748;
+  --input-bg: #222636;
+  --sidebar-bg: #161925;
+
+  --primary-blue: #5c9ce6;
+  --bg-light: #0f111a;
 }
 
-/* Đổi màu các thành phần khác khi ở chế độ tối */
 body.dark-theme .app-container {
   background-color: var(--bg-app);
+}
+
+body.dark-theme .sidebar {
+  background-color: var(--sidebar-bg);
 }
 
 body.dark-theme .topbar {
@@ -477,7 +487,21 @@ body.dark-theme .nav-item {
 }
 
 body.dark-theme .nav-item.active {
-  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.1);
+  /* Subtle highlight in dark mode */
+  color: var(--primary-blue);
+}
+
+body.dark-theme .nav-item.active::before {
+  background-color: var(--primary-blue);
+}
+
+body.dark-theme .sidebar:hover {
+  background-color: #1a1d2b;
+}
+
+body.dark-theme .sidebar:hover .camera-bulge {
+  background-color: #1a1d2b;
 }
 
 body.dark-theme .welcome p,
@@ -490,6 +514,11 @@ body.dark-theme .camera-bulge {
 }
 
 /* Đổi màu nút gạt khi ở dark mode */
+body.dark-theme .mode-switch {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
 body.dark-theme .mode-switch span.active {
   background-color: #44445a;
   color: #fff;

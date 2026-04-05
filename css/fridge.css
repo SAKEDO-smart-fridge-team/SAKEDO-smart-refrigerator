@@ -1,0 +1,443 @@
+/* css/fridge.css */
+
+.fridge-view-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 0;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* TABS */
+.fridge-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.tab-btn {
+    padding: 12px 35px;
+    border-radius: 30px;
+    border: none;
+    background: #e0e0e0;
+    color: #888;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background-color: #b5daec;
+    color: #4b708d;
+}
+
+/* LIST ITEMS */
+.fridge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fridge-item-row {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    transition: background 0.3s;
+}
+
+.status-star {
+    margin-right: 20px;
+}
+
+.status-star.star-red { color: #ff6b6b; }
+.status-star.star-yellow { color: #ffe66d; }
+.status-star.star-green { color: #4edbba; }
+
+.item-img {
+    width: 90px;
+    height: 60px;
+    border-radius: 30px; /* Semi-circle/oval look from design */
+    overflow: hidden;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.item-info p {
+    font-size: 12px;
+    color: #999;
+}
+
+.item-qty {
+    font-weight: 700;
+    font-size: 18px;
+    color: #333;
+    margin-right: 30px;
+}
+
+.item-action {
+    cursor: pointer;
+}
+
+/* VIEW MORE */
+.view-more-container {
+    text-align: center;
+    margin: 30px 0 50px 0;
+}
+
+.btn-view-more {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ccc;
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+/* SUGGESTIONS */
+.suggestions-section {
+    margin-top: 40px;
+}
+
+.suggestions-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #7a7fac;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
+
+.suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.recipe-suggest-card {
+    height: 180px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.recipe-suggest-card:hover {
+    transform: scale(1.03);
+}
+
+.recipe-suggest-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recipe-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recipe-overlay h3 {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.category-icon {
+    width: 30px;
+    height: 30px;
+    background: #7a58c1;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+}
+
+/* DARK MODE ADJUSTMENTS */
+body.dark-theme .item-info h3,
+body.dark-theme .item-qty {
+    color: #eee;
+}
+
+body.dark-theme .tab-btn {
+    background: #2d3748;
+    color: #718096;
+}
+
+body.dark-theme .tab-btn.active {
+    background-color: #4a5568;
+    color: #fff;
+}
+
+/* ========================================= */
+/* MODAL DETAIL STYLES */
+/* ========================================= */
+.fridge-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: flex-end; /* Slide up from bottom */
+    z-index: 2000;
+}
+
+.fridge-modal-overlay.show {
+    display: flex;
+}
+
+.fridge-modal-content {
+    width: 90%;
+    max-width: 420px; /* Thu nhỏ chiều rộng */
+    background: #fff;
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+    padding: 25px; /* Giảm padding */
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fridge-modal-overlay.show .fridge-modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-modal-back, .btn-modal-edit {
+    width: 38px; /* Thu nhỏ nút */
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: #f8faff;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.modal-title {
+    font-size: 16px; /* Giảm font size */
+    font-weight: 700;
+    color: #4b708d;
+}
+
+/* HERO SECTION */
+.modal-body {
+    text-align: center;
+}
+
+.detail-hero {
+    position: relative;
+    width: 120px; /* Thu nhỏ Hero */
+    height: 120px;
+    margin: 0 auto 15px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detail-img-halo {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle, rgba(181, 218, 236, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+#detail-item-img {
+    width: 75px; /* Thu nhỏ ảnh */
+    height: 75px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+}
+
+.detail-main-info h1 {
+    font-size: 24px; /* Thu nhỏ tên món */
+    font-weight: 800;
+    color: #333;
+    margin-bottom: 8px;
+    text-transform: lowercase;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #fff0f0;
+    color: #ff6b6b;
+}
+
+.status-badge.active {
+    background: #e6f9f4;
+    color: #4edbba;
+}
+
+.status-badge.warning {
+    background: #fff8e6;
+    color: #ffb800;
+}
+
+/* INFO GRID */
+.detail-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.info-card {
+    background: #fcfdfe;
+    border: 1px solid #f0f4f8;
+    border-radius: 20px; /* Bo góc gọn hơn */
+    padding: 15px 10px; /* Giảm padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.info-icon {
+    width: 38px; /* Thu nhỏ icon */
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.info-icon.clock { background: #eef7ff; color: #5c9ce6; }
+.info-icon.tag { background: #f6f0ff; color: #a66dfa; }
+.info-icon.pin { background: #e6f9f4; color: #4edbba; }
+.info-icon.box { background: #fff8e6; color: #ffb800; }
+
+.info-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #bfc7d1;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 14px; /* Thu nhỏ giá trị */
+    font-weight: 800;
+    color: #4b5563;
+}
+
+/* FOOTER BUTTONS */
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-action-done {
+    width: 100%;
+    padding: 14px; /* Thu gọn nút */
+    border: none;
+    border-radius: 15px;
+    background: #4686f0;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 20px rgba(70, 134, 240, 0.2);
+}
+
+.btn-action-delete {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 15px;
+    background: #fff5f5;
+    color: #ff6b6b;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* DARK MODE MODAL */
+body.dark-theme .fridge-modal-content {
+    background: #1a1d2b;
+}
+
+body.dark-theme .btn-modal-back, 
+body.dark-theme .btn-modal-edit {
+    background: #232738;
+    color: #eee;
+}
+
+body.dark-theme .modal-title { color: #b5daec; }
+body.dark-theme .detail-main-info h1 { color: #fff; }
+
+body.dark-theme .info-card {
+    background: #232738;
+    border-color: #2d3748;
+}
+
+body.dark-theme .info-value { color: #e2e8f0; }
+
+body.dark-theme .btn-action-delete {
+    background: rgba(255, 107, 107, 0.1);
+}

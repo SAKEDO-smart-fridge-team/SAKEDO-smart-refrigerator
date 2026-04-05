@@ -33,31 +33,33 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
-	// Giao diện Sáng / Tối
-	const lightModeBtn = document.querySelector(".light-mode");
-	const darkModeBtn = document.querySelector(".dark-mode");
+	// Giao diện Sáng / Tối (Single Toggle Button)
+	const themeToggleBtn = document.getElementById("btn-theme-toggle");
+	const lightIcon = document.querySelector(".theme-toggle-btn .light-mode");
+	const darkIcon = document.querySelector(".theme-toggle-btn .dark-mode");
 
-	if (localStorage.getItem("sakedo-theme") === "dark") {
-		document.body.classList.add("dark-theme");
-		if (darkModeBtn) darkModeBtn.classList.add("active");
-		if (lightModeBtn) lightModeBtn.classList.remove("active");
-	} else {
-		if (lightModeBtn) lightModeBtn.classList.add("active");
+	function applyTheme(theme) {
+		if (theme === "dark") {
+			document.body.classList.add("dark-theme");
+			if (lightIcon) lightIcon.style.display = "none";
+			if (darkIcon) darkIcon.style.display = "inline-block";
+		} else {
+			document.body.classList.remove("dark-theme");
+			if (lightIcon) lightIcon.style.display = "inline-block";
+			if (darkIcon) darkIcon.style.display = "none";
+		}
 	}
 
-	if (lightModeBtn && darkModeBtn) {
-		lightModeBtn.addEventListener("click", () => {
-			document.body.classList.remove("dark-theme");
-			lightModeBtn.classList.add("active");
-			darkModeBtn.classList.remove("active");
-			localStorage.setItem("sakedo-theme", "light");
-		});
+	// Initialize theme
+	const storedTheme = localStorage.getItem("sakedo-theme") || "light";
+	applyTheme(storedTheme);
 
-		darkModeBtn.addEventListener("click", () => {
-			document.body.classList.add("dark-theme");
-			darkModeBtn.classList.add("active");
-			lightModeBtn.classList.remove("active");
-			localStorage.setItem("sakedo-theme", "dark");
+	if (themeToggleBtn) {
+		themeToggleBtn.addEventListener("click", () => {
+			const isDark = document.body.classList.contains("dark-theme");
+			const newTheme = isDark ? "light" : "dark";
+			applyTheme(newTheme);
+			localStorage.setItem("sakedo-theme", newTheme);
 		});
 	}
 
