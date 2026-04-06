@@ -54,7 +54,7 @@ const i18nData = {
     "db-storage-title": "Kho chứa lương thực",
     "db-fridge": "TỦ LẠNH",
     "db-freezer": "NGĂN ĐÁ",
-    "db-pantry": "TỦ KHÔ",
+    "db-pantry": "NGĂN LẠNH",
     "db-urgent-title": "Cần dùng ngay",
     "db-expiring": "SẮP HẾT HẠN",
     "db-stats": "THỐNG KÊ",
