@@ -1,7 +1,10 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent
 
 MONGODB_URL: str = os.getenv("MONGODB_URL", "")
 
@@ -26,3 +29,9 @@ SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").strip().lower() in {"1", 
 PASSWORD_RESET_RETURN_LINK: bool = (
     os.getenv("PASSWORD_RESET_RETURN_LINK", "false").strip().lower() in {"1", "true", "yes", "on"}
 )
+
+# AI Inference model
+YOLO_MODEL_PATH: str = os.getenv(
+    "YOLO_MODEL_PATH",
+    str(BASE_DIR / "model" / "best.pt"),
+).strip()

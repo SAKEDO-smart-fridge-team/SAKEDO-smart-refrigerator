@@ -92,24 +92,101 @@ document.addEventListener("pageChanged", (e) => {
 	}
 });
 
-function updateHomeStats() {
-	const inventory = JSON.parse(localStorage.getItem("sakedo_inventory") || "{}");
-	const itemCount = Object.keys(inventory).length;
+function getDaysLeft(expiryDate) {
+	if (!expiryDate) return null;
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	const expiry = new Date(expiryDate);
+	expiry.setHours(0, 0, 0, 0);
+	return Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+}
 
-	const fridgeCountEl = document.querySelector(".card-fridge .s-count");
-	if (fridgeCountEl) {
-		fridgeCountEl.textContent = itemCount.toString().padStart(2, '0');
-	}
+function normalizeLocation(location) {
+	if (location === "nganlanh") return "tulanh";
+	return location || "tulanh";
+}
 
-	// Update percentages or other cards if needed
+async function updateHomeStats() {
+	const fridgeCountEls = document.querySelectorAll(".card-fridge .s-count");
+	const freezerCountEls = document.querySelectorAll(".card-freezer .s-count");
+	const pantryCountEls = document.querySelectorAll(".card-pantry .s-count");
+	const expiringCountEl = document.querySelector(".card-expiring .u-count");
+	const statsCountEl = document.querySelector(".card-stats .u-count");
 	const emptyFillEl = document.querySelector(".semi-circle-fill");
 	const capInfoText = document.querySelector(".cap-info h2");
-	if (emptyFillEl && capInfoText) {
-		const totalCapacity = 20; // Giả sử tủ chứa được tối đa 20 loại món
-		const usedPercent = Math.min(100, Math.round((itemCount / totalCapacity) * 100));
-		const freePercent = 100 - usedPercent;
+	const circleInner = document.querySelector(".circle-inner");
 
-		capInfoText.textContent = `${freePercent}%`;
-		emptyFillEl.style.transform = `rotate(${1.8 * usedPercent}deg)`; // CSS semi-circle logic placeholder
+	const nutritionLegendItems = document.querySelectorAll(".nutrition-chart-card .leg-item");
+
+	const resetDashboard = () => {
+		fridgeCountEls.forEach((el) => (el.textContent = "00"));
+		freezerCountEls.forEach((el) => (el.textContent = "00"));
+		pantryCountEls.forEach((el) => (el.textContent = "00"));
+		if (expiringCountEl) expiringCountEl.textContent = "0";
+		if (statsCountEl) statsCountEl.textContent = "0";
+		if (capInfoText) capInfoText.textContent = "0%";
+		if (circleInner) circleInner.textContent = "0";
+		if (emptyFillEl) emptyFillEl.style.transform = "rotate(0deg)";
+		if (nutritionLegendItems.length >= 3) {
+			nutritionLegendItems[0].innerHTML = '<span class="dot c-red"></span> 0 <br /><small data-i18n="db-protein">Đạm</small>';
+			nutritionLegendItems[1].innerHTML = '<span class="dot c-teal"></span> 0 <br /><small data-i18n="db-veggies">Rau củ</small>';
+			nutritionLegendItems[2].innerHTML = '<span class="dot c-pink"></span> 0 <br /><small data-i18n="db-carbs">Tinh bột/ Gia vị</small>';
+		}
+	};
+
+	const auth = window.sakedoApi.getStoredAuth();
+	if (!auth?.access_token) {
+		resetDashboard();
+		return;
+	}
+
+	try {
+		const items = await window.sakedoApi.getFridgeItems();
+		const counts = {
+			tulanh: 0,
+			ngandong: 0,
+			nganlanh: 0,
+			expiring: 0,
+			total: items.length,
+			protein: 0,
+			veggies: 0,
+			carbs: 0
+		};
+
+		items.forEach((item) => {
+			const location = normalizeLocation(item.location);
+			if (location === "tulanh") counts.tulanh += 1;
+			else if (location === "ngandong") counts.ngandong += 1;
+			else if (location === "nganlanh") counts.nganlanh += 1;
+
+			const daysLeft = getDaysLeft(item.expiry_date);
+			if (daysLeft !== null && daysLeft <= 3) counts.expiring += 1;
+
+			const category = (item.category || "khac").toLowerCase();
+			if (category === "thit") counts.protein += Number(item.quantity) || 1;
+			else if (category === "traicay") counts.veggies += Number(item.quantity) || 1;
+			else counts.carbs += Number(item.quantity) || 1;
+		});
+
+		fridgeCountEls.forEach((el) => (el.textContent = String(counts.tulanh + counts.nganlanh).padStart(2, "0")));
+		freezerCountEls.forEach((el) => (el.textContent = String(counts.ngandong).padStart(2, "0")));
+		pantryCountEls.forEach((el) => (el.textContent = String(counts.carbs).padStart(2, "0")));
+		if (expiringCountEl) expiringCountEl.textContent = String(counts.expiring);
+		if (statsCountEl) statsCountEl.textContent = String(counts.total);
+
+		const totalCapacity = 20;
+		const usedPercent = Math.min(100, Math.round((counts.total / totalCapacity) * 100));
+		const freePercent = 100 - usedPercent;
+		if (capInfoText) capInfoText.textContent = `${freePercent}%`;
+		if (circleInner) circleInner.textContent = String(counts.total);
+		if (emptyFillEl) emptyFillEl.style.transform = `rotate(${1.8 * usedPercent}deg)`;
+
+		if (nutritionLegendItems.length >= 3) {
+			nutritionLegendItems[0].innerHTML = `<span class="dot c-red"></span> ${counts.protein} <br /><small data-i18n="db-protein">Đạm</small>`;
+			nutritionLegendItems[1].innerHTML = `<span class="dot c-teal"></span> ${counts.veggies} <br /><small data-i18n="db-veggies">Rau củ</small>`;
+			nutritionLegendItems[2].innerHTML = `<span class="dot c-pink"></span> ${counts.carbs} <br /><small data-i18n="db-carbs">Tinh bột/ Gia vị</small>`;
+		}
+	} catch (error) {
+		resetDashboard();
 	}
 }

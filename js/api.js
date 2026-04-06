@@ -5,9 +5,19 @@ const GOOGLE_CLIENT_ID =
 let resolvedGoogleClientId = GOOGLE_CLIENT_ID;
 
 async function apiRequest(path, options = {}) {
+	const auth = getStoredAuth();
+	const isFormData = options.body instanceof FormData;
+	const defaultHeaders = {
+		...(auth?.access_token ? { Authorization: `Bearer ${auth.access_token}` } : {})
+	};
+
+	if (!isFormData) {
+		defaultHeaders["Content-Type"] = "application/json";
+	}
+
 	const response = await fetch(`${API_BASE_URL}${path}`, {
 		headers: {
-			"Content-Type": "application/json",
+			...defaultHeaders,
 			...(options.headers || {})
 		},
 		...options
@@ -62,6 +72,49 @@ function resetPassword(payload) {
 	});
 }
 
+function detectFromImage(file) {
+	const formData = new FormData();
+	formData.append("file", file);
+
+	return apiRequest("/api/scan/detect", {
+		method: "POST",
+		body: formData
+	});
+}
+
+function saveScannedItems(payload) {
+	return apiRequest("/api/fridge/items/bulk", {
+		method: "POST",
+		body: JSON.stringify(payload)
+	});
+}
+
+function getFridgeItems() {
+	return apiRequest("/api/fridge/items", {
+		method: "GET"
+	});
+}
+
+function updateFridgeItem(itemId, payload) {
+	return apiRequest(`/api/fridge/items/${itemId}`, {
+		method: "PATCH",
+		body: JSON.stringify(payload)
+	});
+}
+
+function adjustFridgeItem(itemId, payload) {
+	return apiRequest(`/api/fridge/items/${itemId}/adjust`, {
+		method: "POST",
+		body: JSON.stringify(payload)
+	});
+}
+
+function deleteFridgeItem(itemId) {
+	return apiRequest(`/api/fridge/items/${itemId}`, {
+		method: "DELETE"
+	});
+}
+
 async function getPublicConfig() {
 	return apiRequest("/api/config/public", {
 		method: "GET"
@@ -112,6 +165,12 @@ window.sakedoApi = {
 	loginWithGoogle,
 	forgotPassword,
 	resetPassword,
+	detectFromImage,
+	saveScannedItems,
+	getFridgeItems,
+	updateFridgeItem,
+	adjustFridgeItem,
+	deleteFridgeItem,
 	getPublicConfig,
 	getGoogleClientId,
 	getStoredAuth,

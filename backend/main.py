@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import close_db, connect_db
-from routes import auth, config
+from routes import auth, config, fridge, inference
 
 app = FastAPI(title="Sakedo Smart Fridge API")
 
@@ -29,6 +29,8 @@ async def shutdown_event():
 # Include routers
 app.include_router(config.router, tags=["Config"])
 app.include_router(auth.router, tags=["Authentication"])
+app.include_router(inference.router, tags=["Inference"])
+app.include_router(fridge.router, tags=["Fridge"])
 
 
 @app.get("/", tags=["Root"])

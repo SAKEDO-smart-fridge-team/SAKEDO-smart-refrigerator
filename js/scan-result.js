@@ -1,219 +1,199 @@
 (function () {
-  // ===== DELETE MODAL =====
-  const modal = document.getElementById('delete-modal');
-  const modalCancel = document.getElementById('modal-cancel');
-  const modalConfirm = document.getElementById('modal-confirm');
-  let itemToDelete = null;
+  const resultList = document.getElementById("result-list");
+  const emptyState = document.getElementById("scan-empty-state");
+  const messageEl = document.getElementById("scan-result-message");
+  const btnComplete = document.getElementById("btn-complete");
 
-  // Show modal when clicking delete button
-  document.querySelectorAll('.btn-delete-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      itemToDelete = btn.closest('.result-item');
-      modal.classList.add('active');
-    });
-  });
+  const modal = document.getElementById("delete-modal");
+  const modalCancel = document.getElementById("modal-cancel");
+  const modalConfirm = document.getElementById("modal-confirm");
 
-  // Cancel – close modal
-  modalCancel.addEventListener('click', () => {
-    modal.classList.remove('active');
-    itemToDelete = null;
-  });
+  let itemToDeleteId = null;
+  let detections = [];
 
-  // Confirm – delete item with animation
-  modalConfirm.addEventListener('click', () => {
-    if (itemToDelete) {
-      const item = itemToDelete;
+  function showMessage(message, isError = false) {
+    if (!messageEl) return;
+    messageEl.textContent = message || "";
+    messageEl.classList.toggle("error", Boolean(isError));
+  }
 
-      // Ghi nhớ chiều cao thực tế trước khi animation
-      const itemHeight = item.offsetHeight;
-      item.style.height = itemHeight + 'px';
-      item.style.overflow = 'hidden';
+  function toDateInputValue(date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  }
 
-      // Phase 1: Fade out + trượt sang phải (0.25s)
-      item.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-      item.style.opacity = '0';
-      item.style.transform = 'translateX(40px)';
+  function getDefaultExpiry() {
+    const date = new Date();
+    date.setDate(date.getDate() + 7);
+    return toDateInputValue(date);
+  }
 
-      // Phase 2: Thu gọn chiều cao → các item dồn lên (0.3s)
+  function normalizeDetections(rawItems) {
+    return rawItems
+      .filter((item) => item && item.name)
+      .map((item, idx) => ({
+        id: `${item.name}-${idx}-${Date.now()}`,
+        name: String(item.name).trim(),
+        quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1,
+        confidence: Number(item.confidence) || 0,
+        expiry_date: getDefaultExpiry(),
+        selected: true
+      }));
+  }
+
+  function getCategoryByName(name) {
+    const text = name.toLowerCase();
+    if (text.includes("sua") || text.includes("milk") || text.includes("cheese")) return "milk";
+    if (text.includes("thit") || text.includes("ca") || text.includes("hai san")) return "thit";
+    if (text.includes("rau") || text.includes("qua") || text.includes("fruit") || text.includes("vegetable")) return "traicay";
+    if (text.includes("nuoc") || text.includes("drink")) return "douong";
+    return "khac";
+  }
+
+  function getCategoryLabel(category) {
+    const mapping = {
+      milk: "Sữa và phô mai",
+      thit: "Thịt và hải sản",
+      traicay: "Rau và trái cây",
+      douong: "Đồ uống",
+      khac: "Khác"
+    };
+    return mapping[category] || mapping.khac;
+  }
+
+  function renderList() {
+    if (!resultList || !emptyState) return;
+
+    if (!detections.length) {
+      resultList.innerHTML = "";
+      emptyState.style.display = "grid";
+      btnComplete.disabled = true;
+      return;
+    }
+
+    emptyState.style.display = "none";
+    btnComplete.disabled = false;
+
+    resultList.innerHTML = detections.map((item) => `
+      <div class="result-item" data-id="${item.id}">
+        <label class="result-checkbox">
+          <input type="checkbox" ${item.selected ? "checked" : ""} data-action="toggle" data-id="${item.id}" />
+          <span class="checkmark"></span>
+        </label>
+
+        <div class="result-thumbnail text-thumb">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div class="result-main">
+          <span class="result-name">${item.name}</span>
+          <span class="result-sub">Số lượng tự động: ${item.quantity} | Độ tin cậy: ${(item.confidence * 100).toFixed(1)}%</span>
+          <div class="result-expiry">
+            <label>Hạn dùng</label>
+            <input type="date" data-action="expiry" data-id="${item.id}" value="${item.expiry_date}" />
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-delete-item" title="Xóa" data-action="delete" data-id="${item.id}"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function readFromSession() {
+    const raw = sessionStorage.getItem("sakedo_scan_detections") || "[]";
+    const parsed = JSON.parse(raw);
+    detections = normalizeDetections(Array.isArray(parsed) ? parsed : []);
+    renderList();
+  }
+
+  function openDeleteModal(itemId) {
+    itemToDeleteId = itemId;
+    modal?.classList.add("active");
+  }
+
+  function closeDeleteModal() {
+    itemToDeleteId = null;
+    modal?.classList.remove("active");
+  }
+
+  async function saveToBackend() {
+    const selectedItems = detections.filter((item) => item.selected);
+
+    if (!selectedItems.length) {
+      showMessage("Hãy chọn ít nhất 1 sản phẩm để thêm vào tủ lạnh.", true);
+      return;
+    }
+
+    const missingExpiry = selectedItems.find((item) => !item.expiry_date);
+    if (missingExpiry) {
+      showMessage(`Vui lòng nhập hạn dùng cho ${missingExpiry.name}.`, true);
+      return;
+    }
+
+    const payload = {
+      items: selectedItems.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        expiry_date: item.expiry_date,
+        location: "tulanh",
+        category: item.category || getCategoryByName(item.name)
+      }))
+    };
+
+    try {
+      showMessage("Đang lưu sản phẩm vào tủ lạnh...");
+      const response = await window.sakedoApi.saveScannedItems(payload);
+      showMessage(`Đã thêm vào tủ lạnh thành công (${response?.inserted_or_updated || selectedItems.length} sản phẩm).`);
+
+      sessionStorage.removeItem("sakedo_scan_detections");
       setTimeout(() => {
-        item.style.transition = 'height 0.3s ease, padding 0.3s ease, margin 0.3s ease, border 0.3s ease';
-        item.style.height = '0';
-        item.style.padding = '0 10px';
-        item.style.marginBottom = '0';
-        item.style.borderBottomWidth = '0';
-
-        // Xóa hẳn khỏi DOM sau khi animation xong
-        setTimeout(() => item.remove(), 300);
-      }, 250);
+        navigate("fridge", document.querySelectorAll(".nav-item")[1]);
+      }, 550);
+    } catch (error) {
+      showMessage(error.message || "Không thể lưu sản phẩm vào tủ lạnh.", true);
     }
-    modal.classList.remove('active');
-    itemToDelete = null;
-  });
-
-  // Close modal when clicking overlay background
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
-      itemToDelete = null;
-    }
-  });
-
-
-  // ===== EDIT MODAL (Bottom Sheet) =====
-  const editModal = document.getElementById('edit-modal');
-  const editClose = document.getElementById('edit-close');
-  const editCancel = document.getElementById('edit-cancel');
-  const editSave = document.getElementById('edit-save');
-  const editName = document.getElementById('edit-name');
-  const editQty = document.getElementById('edit-qty');
-  const editUnit = document.getElementById('edit-unit');
-  const editExpiry = document.getElementById('edit-expiry');
-  const editNote = document.getElementById('edit-note');
-
-  // Category elements
-  const editCategoryBox = document.getElementById('edit-category-box');
-  const editCategoryDropdown = document.getElementById('edit-category-dropdown');
-  const editCategoryIcon = document.getElementById('edit-category-icon');
-  const editCategoryText = document.getElementById('edit-category-text');
-
-  // Location elements
-  const editLocationBox = document.getElementById('edit-location-box');
-  const editLocationDropdown = document.getElementById('edit-location-dropdown');
-  const editLocationIcon = document.getElementById('edit-location-icon');
-  const editLocationText = document.getElementById('edit-location-text');
-
-  let itemToEdit = null;
-
-  // --- Open edit modal ---
-  document.querySelectorAll('.btn-edit-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      itemToEdit = btn.closest('.result-item');
-      const name = itemToEdit.dataset.name || '';
-
-      // Pre-fill fields
-      editName.value = name;
-      editQty.value = '1';
-      editUnit.value = 'kg';
-      editNote.value = '';
-
-      // Set default date to today
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      editExpiry.value = `${yyyy}-${mm}-${dd}`;
-
-      // Reset category & location
-      editCategoryIcon.src = '';
-      editCategoryIcon.style.display = 'none';
-      editCategoryText.textContent = 'Chọn danh mục';
-      editLocationIcon.src = '';
-      editLocationIcon.style.display = 'none';
-      editLocationText.textContent = 'Chọn vị trí';
-
-      // Close any open dropdowns
-      editCategoryDropdown.classList.remove('open');
-      editLocationDropdown.classList.remove('open');
-
-      // Show modal
-      editModal.classList.add('active');
-    });
-  });
-
-  // --- Close edit modal ---
-  function closeEditModal() {
-    editModal.classList.remove('active');
-    editCategoryDropdown.classList.remove('open');
-    editLocationDropdown.classList.remove('open');
-    itemToEdit = null;
   }
 
-  editClose.addEventListener('click', closeEditModal);
-  editCancel.addEventListener('click', closeEditModal);
+  resultList?.addEventListener("input", (event) => {
+    const target = event.target;
+    const itemId = target.dataset.id;
+    const action = target.dataset.action;
+    const item = detections.find((d) => d.id === itemId);
+    if (!item) return;
 
-  editModal.addEventListener('click', (e) => {
-    if (e.target === editModal) closeEditModal();
-  });
-
-  // --- Category dropdown toggle ---
-  editCategoryBox.addEventListener('click', () => {
-    editCategoryDropdown.classList.toggle('open');
-    editLocationDropdown.classList.remove('open');
-  });
-
-  // --- Category selection ---
-  editCategoryDropdown.querySelectorAll('.edit-dropdown-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const iconSrc = item.dataset.icon;
-      const text = item.textContent.trim();
-
-      editCategoryIcon.src = iconSrc;
-      editCategoryIcon.style.display = 'block';
-      editCategoryText.textContent = text;
-      editCategoryDropdown.classList.remove('open');
-    });
-  });
-
-  // --- Location dropdown toggle ---
-  editLocationBox.addEventListener('click', () => {
-    editLocationDropdown.classList.toggle('open');
-    editCategoryDropdown.classList.remove('open');
-  });
-
-  // --- Location selection ---
-  editLocationDropdown.querySelectorAll('.edit-dropdown-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const iconSrc = item.dataset.icon;
-      const text = item.textContent.trim();
-
-      editLocationIcon.src = iconSrc;
-      editLocationIcon.style.display = 'block';
-      editLocationText.textContent = text;
-      editLocationDropdown.classList.remove('open');
-    });
-  });
-
-  // --- Save changes ---
-  editSave.addEventListener('click', () => {
-    if (itemToEdit) {
-      const newName = editName.value.trim();
-
-      if (newName) {
-        // Update item name in the list
-        const nameEl = itemToEdit.querySelector('.result-name');
-        if (nameEl) nameEl.textContent = newName;
-
-        // Update data-name attribute
-        itemToEdit.dataset.name = newName;
-      }
+    if (action === "toggle") {
+      item.selected = Boolean(target.checked);
+      return;
     }
-    closeEditModal();
+
+    if (action === "expiry") {
+      item.expiry_date = target.value;
+    }
   });
 
+  resultList?.addEventListener("click", (event) => {
+    const btn = event.target.closest("button[data-action='delete']");
+    if (!btn) return;
+    openDeleteModal(btn.dataset.id);
+  });
 
-  // ===== COMPLETE BUTTON =====
-  const btnComplete = document.getElementById('btn-complete');
-  if (btnComplete) {
-    btnComplete.addEventListener('click', () => {
-      const checkedItems = document.querySelectorAll('.result-item');
-      const items = [];
-      checkedItems.forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (checkbox && checkbox.checked) {
-          items.push({
-            name: item.dataset.name,
-            addedAt: new Date().toISOString()
-          });
-        }
-      });
+  modalCancel?.addEventListener("click", closeDeleteModal);
+  modal?.addEventListener("click", (event) => {
+    if (event.target === modal) closeDeleteModal();
+  });
+  modalConfirm?.addEventListener("click", () => {
+    if (itemToDeleteId) {
+      detections = detections.filter((item) => item.id !== itemToDeleteId);
+      renderList();
+    }
+    closeDeleteModal();
+  });
 
-      // Save to localStorage
-      const existing = JSON.parse(localStorage.getItem('sakedo_items') || '[]');
-      existing.push(...items);
-      localStorage.setItem('sakedo_items', JSON.stringify(existing));
+  btnComplete?.addEventListener("click", saveToBackend);
 
-      alert('Đã lưu ' + items.length + ' món thành công! 🎉');
-      navigate('home', document.querySelector('.nav-item'));
-    });
-  }
+  readFromSession();
 })();

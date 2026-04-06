@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
 
 # Khuôn mẫu khi Frontend gửi dữ liệu Đăng ký lên
 class UserRegister(BaseModel):
@@ -36,3 +37,54 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     user: Optional[dict] = None
+
+
+class DetectedItem(BaseModel):
+    name: str
+    quantity: int
+    confidence: float
+    category: Optional[str] = None
+
+
+class ScanDetectResponse(BaseModel):
+    detections: list[DetectedItem]
+
+
+class FridgeItemCreate(BaseModel):
+    name: str
+    quantity: int = 1
+    expiry_date: Optional[str] = None
+    location: str = "tulanh"
+    category: str = "khac"
+    note: Optional[str] = None
+
+
+class FridgeBulkCreateRequest(BaseModel):
+    items: list[FridgeItemCreate]
+
+
+class FridgeItemUpdate(BaseModel):
+    name: Optional[str] = None
+    quantity: Optional[int] = None
+    expiry_date: Optional[str] = None
+    location: Optional[str] = None
+    category: Optional[str] = None
+    note: Optional[str] = None
+
+
+class FridgeItemAdjustRequest(BaseModel):
+    action: str
+    quantity: int = 1
+
+
+class FridgeItemResponse(BaseModel):
+    id: str
+    user_id: str
+    name: str
+    quantity: int
+    expiry_date: Optional[str] = None
+    location: str
+    category: str
+    note: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime

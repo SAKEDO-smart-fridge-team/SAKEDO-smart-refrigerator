@@ -3,8 +3,9 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
 
-from fastapi import HTTPException, status
-from jose import jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from config import (
@@ -16,6 +17,7 @@ from config import (
 
 # Công cụ mã hóa mật khẩu
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 
 
 def hash_password(password: str) -> str:
@@ -31,6 +33,27 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def decode_access_token(token: str) -> dict:
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token không hợp lệ hoặc đã hết hạn.",
+        )
+
+
+def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
+    payload = decode_access_token(token)
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token không hợp lệ: thiếu thông tin người dùng.",
+        )
+    return str(user_id)
 
 
 def verify_google_id_token(id_token: str) -> dict:
