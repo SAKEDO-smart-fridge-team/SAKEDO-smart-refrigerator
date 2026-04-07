@@ -273,14 +273,26 @@ const loadFridgeItems = async () => {
 
 const initAiSuggestions = async ({ showToast = false } = {}) => {
   cachedFridgeItems = await loadFridgeItems();
+
+  // Thử gọi AI trước
   const aiResults = await fetchAiSuggestions(cachedFridgeItems);
-  aiSuggestedFoods = aiResults.length ? aiResults : [];
+
+  if (aiResults.length) {
+    // ✅ AI thành công
+    aiSuggestedFoods = aiResults;
+  } else if (cachedFridgeItems.length) {
+    // ✅ Fallback: dùng logic local với RECIPE_TEMPLATES
+    aiSuggestedFoods = buildSuggestions(cachedFridgeItems);
+    if (showToast && typeof window.showToast === "function") {
+      window.showToast("Đang dùng gợi ý thông minh từ tủ lạnh của bạn 🥘", "info");
+    }
+  } else {
+    // Tủ lạnh trống
+    aiSuggestedFoods = [];
+  }
 
   if (!aiSuggestedFoods.length) {
     toggleSuggestionState(false);
-    if (showToast && typeof window.showToast === "function") {
-      window.showToast("Chưa có gợi ý từ AI. Hãy kiểm tra đăng nhập hoặc API.", "info");
-    }
     return;
   }
 
