@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import close_db, connect_db
-from routes import auth, config, fridge, inference
+from routes import auth, config, fridge, inference, recipes
 
 app = FastAPI(title="Sakedo Smart Fridge API")
 
@@ -31,6 +31,7 @@ app.include_router(config.router, tags=["Config"])
 app.include_router(auth.router, tags=["Authentication"])
 app.include_router(inference.router, tags=["Inference"])
 app.include_router(fridge.router, tags=["Fridge"])
+app.include_router(recipes.router, tags=["Recipes"])
 
 
 @app.get("/", tags=["Root"])

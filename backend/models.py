@@ -88,3 +88,30 @@ class FridgeItemResponse(BaseModel):
     note: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+
+
+class RecipeIngredient(BaseModel):
+    name: str
+    weight: str
+
+
+class RecipeIngredients(BaseModel):
+    available: list[RecipeIngredient]
+    missing: list[RecipeIngredient]
+
+
+class RecipeStep(BaseModel):
+    stepNumber: int
+    title: str
+    instructions: list[str]
+
+
+class RecipeSuggestion(BaseModel):
+    name: str
+    img: str
+    ingredients: RecipeIngredients
+    steps: list[RecipeStep]
+
+
+class RecipeSuggestResponse(BaseModel):
+    recipes: list[RecipeSuggestion]

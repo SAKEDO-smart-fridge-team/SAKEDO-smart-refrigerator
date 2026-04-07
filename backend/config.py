@@ -35,3 +35,7 @@ YOLO_MODEL_PATH: str = os.getenv(
     "YOLO_MODEL_PATH",
     str(BASE_DIR / "model" / "best.pt"),
 ).strip()
+
+# OpenRouter AI
+OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "").strip()
+OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "openai/gpt-oss-120b:free").strip()

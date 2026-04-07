@@ -95,6 +95,13 @@ function getFridgeItems() {
 	});
 }
 
+function suggestRecipes(payload = {}) {
+	return apiRequest("/api/recipes/suggest", {
+		method: "POST",
+		body: JSON.stringify(payload)
+	});
+}
+
 function updateFridgeItem(itemId, payload) {
 	return apiRequest(`/api/fridge/items/${itemId}`, {
 		method: "PATCH",
@@ -168,6 +175,7 @@ window.sakedoApi = {
 	detectFromImage,
 	saveScannedItems,
 	getFridgeItems,
+	suggestRecipes,
 	updateFridgeItem,
 	adjustFridgeItem,
 	deleteFridgeItem,
