@@ -118,7 +118,30 @@ async function updateHomeStats() {
 
 	const nutritionLegendItems = document.querySelectorAll(".nutrition-chart-card .leg-item");
 
+	const emitStats = (counts, usedPercent, totalCapacity) => {
+		document.dispatchEvent(
+			new CustomEvent("homeStatsUpdated", {
+				detail: {
+					counts,
+					usedPercent,
+					totalCapacity
+				}
+			})
+		);
+	};
+
 	const resetDashboard = () => {
+		const emptyCounts = {
+			tulanh: 0,
+			ngandong: 0,
+			nganlanh: 0,
+			expiring: 0,
+			total: 0,
+			protein: 0,
+			veggies: 0,
+			carbs: 0
+		};
+
 		fridgeCountEls.forEach((el) => (el.textContent = "00"));
 		freezerCountEls.forEach((el) => (el.textContent = "00"));
 		pantryCountEls.forEach((el) => (el.textContent = "00"));
@@ -132,6 +155,8 @@ async function updateHomeStats() {
 			nutritionLegendItems[1].innerHTML = '<span class="dot c-teal"></span> 0 <br /><small data-i18n="db-veggies">Rau củ</small>';
 			nutritionLegendItems[2].innerHTML = '<span class="dot c-pink"></span> 0 <br /><small data-i18n="db-carbs">Tinh bột/ Gia vị</small>';
 		}
+
+		emitStats(emptyCounts, 0, 0);
 	};
 
 	const auth = window.sakedoApi.getStoredAuth();
@@ -186,6 +211,8 @@ async function updateHomeStats() {
 			nutritionLegendItems[1].innerHTML = `<span class="dot c-teal"></span> ${counts.veggies} <br /><small data-i18n="db-veggies">Rau củ</small>`;
 			nutritionLegendItems[2].innerHTML = `<span class="dot c-pink"></span> ${counts.carbs} <br /><small data-i18n="db-carbs">Tinh bột/ Gia vị</small>`;
 		}
+
+		emitStats(counts, usedPercent, totalCapacity);
 	} catch (error) {
 		resetDashboard();
 	}
