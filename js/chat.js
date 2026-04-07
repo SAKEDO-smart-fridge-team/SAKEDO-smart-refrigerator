@@ -219,8 +219,68 @@ const fetchAiSuggestions = async (items) => {
     const response = await window.sakedoApi.suggestRecipes({ items });
     return Array.isArray(response?.recipes) ? response.recipes : [];
   } catch (error) {
-    return [];
+    return { recipes: [], error };
   }
+};
+
+const setChatState = (state) => {
+  const welcomeState = document.getElementById("state-welcome");
+  const loadingState = document.getElementById("state-loading");
+  const foodState = document.getElementById("state-food-suggestion");
+  const btnRecipe = document.querySelector(".btn-recipe");
+  const btnMissing = document.querySelector(".btn-missing");
+
+  if (!welcomeState || !loadingState || !foodState || !btnRecipe) return;
+
+  welcomeState.classList.add("hidden");
+  loadingState.classList.add("hidden");
+  foodState.classList.add("hidden");
+
+  if (btnMissing) {
+    btnMissing.classList.add("hidden");
+    btnMissing.setAttribute("disabled", "disabled");
+  }
+
+  if (state === "loading") {
+    loadingState.classList.remove("hidden");
+    btnRecipe.setAttribute("disabled", "disabled");
+    return;
+  }
+
+  if (state === "suggestion") {
+    foodState.classList.remove("hidden");
+    btnRecipe.removeAttribute("disabled");
+    return;
+  }
+
+  welcomeState.classList.remove("hidden");
+  btnRecipe.setAttribute("disabled", "disabled");
+};
+
+const updateMissingCta = (recipe) => {
+  const btnMissing = document.querySelector(".btn-missing");
+  const missingText = document.getElementById("missing-cta-text");
+  if (!btnMissing || !missingText) return;
+
+  const missingList = recipe?.ingredients?.missing || [];
+  const missingCount = missingList.length;
+
+  if (missingCount <= 0) {
+    btnMissing.classList.add("hidden");
+    btnMissing.setAttribute("disabled", "disabled");
+    btnMissing.removeAttribute("data-query");
+    return;
+  }
+
+  missingText.textContent = `Cần mua ${missingCount} thứ`;
+  btnMissing.classList.remove("hidden");
+  btnMissing.removeAttribute("disabled");
+
+  const keyword = missingList
+    .map((item) => (item?.name || "").trim())
+    .filter(Boolean)
+    .join(" ");
+  btnMissing.dataset.query = keyword;
 };
 
 const renderSuggestion = (index) => {
@@ -228,36 +288,38 @@ const renderSuggestion = (index) => {
   const foodState = document.getElementById("state-food-suggestion");
   const foodImage = document.getElementById("food-preview-img");
   const foodTitle = document.getElementById("food-preview-title");
+  const availabilityBadge = document.getElementById("food-availability-badge");
 
   if (!foodState || !foodImage || !foodTitle) return;
 
   const safeIndex = ((index % aiSuggestedFoods.length) + aiSuggestedFoods.length) % aiSuggestedFoods.length;
+  const recipe = aiSuggestedFoods[safeIndex];
   foodState.dataset.currentIndex = safeIndex;
+
+  const have = recipe?.ingredients?.available?.length || 0;
+  const missing = recipe?.ingredients?.missing?.length || 0;
+  const total = have + missing;
+  if (availabilityBadge) {
+    if (total > 0) {
+      availabilityBadge.textContent = `${have}/${total} nguyên liệu có sẵn`;
+      availabilityBadge.classList.remove("hidden");
+    } else {
+      availabilityBadge.classList.add("hidden");
+    }
+  }
+
+  updateMissingCta(recipe);
 
   foodImage.style.opacity = "0";
   setTimeout(() => {
-    foodImage.src = aiSuggestedFoods[safeIndex].img;
-    foodTitle.innerText = aiSuggestedFoods[safeIndex].name;
+    foodImage.src = recipe.img;
+    foodTitle.innerText = recipe.name;
     foodImage.style.opacity = "1";
   }, 150);
 };
 
 const toggleSuggestionState = (showSuggestions) => {
-  const welcomeState = document.getElementById("state-welcome");
-  const foodState = document.getElementById("state-food-suggestion");
-  const btnRecipe = document.querySelector(".btn-recipe");
-
-  if (!welcomeState || !foodState || !btnRecipe) return;
-
-  if (showSuggestions) {
-    welcomeState.classList.add("hidden");
-    foodState.classList.remove("hidden");
-    btnRecipe.removeAttribute("disabled");
-  } else {
-    welcomeState.classList.remove("hidden");
-    foodState.classList.add("hidden");
-    btnRecipe.setAttribute("disabled", "disabled");
-  }
+  setChatState(showSuggestions ? "suggestion" : "welcome");
 };
 
 const loadFridgeItems = async () => {
@@ -272,10 +334,13 @@ const loadFridgeItems = async () => {
 };
 
 const initAiSuggestions = async ({ showToast = false } = {}) => {
+  setChatState("loading");
   cachedFridgeItems = await loadFridgeItems();
 
   // Thử gọi AI trước
-  const aiResults = await fetchAiSuggestions(cachedFridgeItems);
+  const aiResponse = await fetchAiSuggestions(cachedFridgeItems);
+  const aiResults = Array.isArray(aiResponse) ? aiResponse : aiResponse?.recipes || [];
+  const aiError = Array.isArray(aiResponse) ? null : aiResponse?.error;
 
   if (aiResults.length) {
     // ✅ AI thành công
@@ -284,11 +349,17 @@ const initAiSuggestions = async ({ showToast = false } = {}) => {
     // ✅ Fallback: dùng logic local với RECIPE_TEMPLATES
     aiSuggestedFoods = buildSuggestions(cachedFridgeItems);
     if (showToast && typeof window.showToast === "function") {
-      window.showToast("Đang dùng gợi ý thông minh từ tủ lạnh của bạn 🥘", "info");
+      const message = aiError
+        ? "Không thể kết nối AI (API key hoặc mạng). Đang dùng gợi ý từ tủ lạnh của bạn."
+        : "Đang dùng gợi ý thông minh từ tủ lạnh của bạn 🥘";
+			window.showToast(message, "info");
     }
   } else {
     // Tủ lạnh trống
     aiSuggestedFoods = [];
+    if (showToast && typeof window.showToast === "function") {
+      window.showToast("Tủ lạnh đang trống rồi. Bạn thêm vài món vào nhé, Chè sẽ gợi ý ngay!", "info");
+    }
   }
 
   if (!aiSuggestedFoods.length) {
@@ -329,6 +400,16 @@ document.addEventListener("click", function (e) {
       foodTitle.innerText = aiSuggestedFoods[currentIdx].name;
       foodImage.style.opacity = "1";
     }, 150);
+  }
+
+  if (e.target.closest(".btn-missing")) {
+    const btnMissing = e.target.closest(".btn-missing");
+    const query = (btnMissing?.dataset?.query || "").trim();
+    if (!query) return;
+
+    const shoppingQuery = `mua ${query}`;
+    const shoppingUrl = `https://www.google.com/search?q=${encodeURIComponent(shoppingQuery)}`;
+    window.open(shoppingUrl, "_blank", "noopener,noreferrer");
   }
 
   // Xử lý báo thao tác Công thức hoặc nhấn vào hình ảnh món ăn

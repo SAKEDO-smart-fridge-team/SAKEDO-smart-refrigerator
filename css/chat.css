@@ -126,10 +126,18 @@
 .ai-card-footer {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   gap: 20px;
   margin-top: auto;
   padding-top: 30px;
+}
+
+.recipe-action-group {
+  flex: 1;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .btn-recipe {
@@ -137,8 +145,7 @@
   border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 16px 20px;
-  flex: 1; /* Chiếm tối đa phần trống như thiết kế */
-  max-width: 450px; /* Giới hạn để nút không bị quá dài trên màn to */
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,6 +191,34 @@
   box-shadow: 0 6px 20px rgba(155, 208, 232, 0.5);
 }
 
+.btn-missing {
+  background: #fff8ee;
+  border: 1px solid #f1d7b3;
+  border-radius: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #8d5f24;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-missing:hover {
+  background: #ffeecf;
+  transform: translateY(-1px);
+}
+
+.btn-missing:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ================================ */
 /* NEW SLIDER & FOOD STATES         */
 /* ================================ */
@@ -197,6 +232,57 @@
 
 .state-container.hidden {
   display: none !important;
+}
+
+#state-loading {
+  gap: 14px;
+}
+
+.loading-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #5d7f8f;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.ai-avatar-bounce {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  animation: bounce 0.8s ease-in-out infinite;
+}
+
+.loading-dots::after {
+  content: "...";
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: dots 1s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75%,
+  100% {
+    content: "...";
+  }
 }
 
 #state-food-suggestion {
@@ -246,6 +332,26 @@
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s ease;
+}
+
+.food-availability-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  background: rgba(19, 60, 42, 0.86);
+  color: #d7ffe9;
+  border: 1px solid rgba(215, 255, 233, 0.26);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.food-availability-badge.hidden,
+.btn-missing.hidden {
+  display: none !important;
 }
 
 .food-overlay {

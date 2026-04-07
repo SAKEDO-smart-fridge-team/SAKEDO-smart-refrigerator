@@ -11,10 +11,10 @@
         </div>
       </div>
       <div class="ai-card-actions">
-        <button class="btn-icon">
+        <button class="btn-icon" type="button" title="Lịch sử gợi ý" aria-label="Lịch sử gợi ý">
           <i class="fa-solid fa-clock-rotate-left"></i>
         </button>
-        <button class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+        <button class="btn-icon" type="button" title="Đóng" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
 
@@ -28,11 +28,18 @@
         </p>
       </div>
 
+      <!-- Trạng thái loading khi chờ AI -->
+      <div id="state-loading" class="state-container hidden">
+        <img src="assets/img/Chè.png" alt="Mr. Chè" class="ai-avatar-bounce" />
+        <p class="loading-text">Mr. Chè đang nghĩ món<span class="loading-dots"></span></p>
+      </div>
+
       <!-- Trạng thái hiện món ăn -->
       <div id="state-food-suggestion" class="state-container hidden" data-current-index="0">
-        <button class="btn-arrow left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="btn-arrow left" type="button" title="Món trước" aria-label="Món trước"><i class="fa-solid fa-chevron-left"></i></button>
         <div class="food-card-preview">
           <img id="food-preview-img" src="assets/img/trungchien.png" alt="Food" />
+          <div id="food-availability-badge" class="food-availability-badge hidden">0/0 nguyên liệu có sẵn</div>
           <div class="food-overlay">
             <h4 id="food-preview-title">Trứng chiên cà</h4>
             <div class="food-icon-circle">
@@ -40,15 +47,21 @@
             </div>
           </div>
         </div>
-        <button class="btn-arrow right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="btn-arrow right" type="button" title="Món tiếp theo" aria-label="Món tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
       </div>
     </div>
 
     <div class="ai-card-footer">
-      <button class="btn-recipe" disabled>
-        <i class="fa-regular fa-file-lines"></i> <span data-i18n="chat-recipe-btn">Công thức</span>
-      </button>
-      <button class="btn-refresh"><i class="fa-solid fa-rotate"></i></button>
+      <div class="recipe-action-group">
+        <button class="btn-recipe" disabled>
+          <i class="fa-regular fa-file-lines"></i> <span data-i18n="chat-recipe-btn">Công thức</span>
+        </button>
+        <button class="btn-missing hidden" disabled>
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span id="missing-cta-text">Cần mua 0 thứ</span>
+        </button>
+      </div>
+      <button class="btn-refresh" type="button" title="Làm mới gợi ý" aria-label="Làm mới gợi ý"><i class="fa-solid fa-rotate"></i></button>
     </div>
   </div>
 </section>
