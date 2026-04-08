@@ -16,6 +16,12 @@
   const manualExpiryInput = document.getElementById("manual-item-expiry");
   const manualQtyInput = document.getElementById("manual-item-quantity");
   const manualNoteInput = document.getElementById("manual-item-note");
+  const manualImageInput = document.getElementById("manual-item-image");
+  const manualImagePreview = document.getElementById("manual-image-preview");
+  const manualImagePreviewImg = document.getElementById("manual-image-preview-img");
+  const manualImagePreviewText = document.getElementById("manual-image-preview-text");
+  const btnManualImage = document.getElementById("btn-manual-image");
+  const btnManualImageClear = document.getElementById("btn-manual-image-clear");
   const manualLocationBtns = document.querySelectorAll("#manual-location-options .location-btn");
   const manualCategoryBtns = document.querySelectorAll("#manual-category-options .category-btn");
   const manualStatusEl = document.getElementById("manual-status");
@@ -23,6 +29,7 @@
 
   let stream = null;
   let selectedFile = null;
+  let manualSelectedFile = null;
 
   function setStatus(message, isError = false) {
     if (!statusEl) return;
@@ -168,8 +175,55 @@
     if (manualNameInput) manualNameInput.value = "";
     if (manualQtyInput) manualQtyInput.value = "1";
     if (manualNoteInput) manualNoteInput.value = "";
+    manualSelectedFile = null;
+    if (manualImageInput) manualImageInput.value = "";
+    if (manualImagePreviewImg) manualImagePreviewImg.src = "";
+    if (manualImagePreviewText) manualImagePreviewText.textContent = "Chưa có ảnh, sẽ dùng ảnh theo danh mục";
+    manualImagePreview?.classList.remove("has-image");
     manualLocationBtns.forEach((btn) => btn.classList.remove("active"));
     manualCategoryBtns.forEach((btn) => btn.classList.remove("active"));
+  }
+
+  function getCategoryFallbackImage(category) {
+    const mapping = {
+      milk: "assets/images/milk.png",
+      thit: "assets/images/thit.png",
+      traicay: "assets/images/traicay.png",
+      douong: "assets/images/douong.png",
+      khac: "assets/images/khac.png"
+    };
+    return mapping[category] || mapping.khac;
+  }
+
+  function handleManualImageChange(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setManualStatus("File tải lên phải là ảnh.", true);
+      return;
+    }
+
+    manualSelectedFile = file;
+    if (manualImagePreviewImg) {
+      manualImagePreviewImg.src = URL.createObjectURL(file);
+    }
+    if (manualImagePreviewText) {
+      manualImagePreviewText.textContent = file.name;
+    }
+    manualImagePreview?.classList.add("has-image");
+    setManualStatus("Đã chọn ảnh sản phẩm.");
+  }
+
+  async function uploadManualImageIfNeeded() {
+    if (!manualSelectedFile) return "";
+
+    if (!window.sakedoApi?.uploadManualImage) {
+      throw new Error("Thiếu API upload ảnh.");
+    }
+
+    const response = await window.sakedoApi.uploadManualImage(manualSelectedFile);
+    return response?.image_url || "";
   }
 
   async function submitManualItem() {
@@ -212,6 +266,8 @@
 
     try {
       setManualStatus("Đang lưu thực phẩm vào tủ...");
+      const uploadedImageUrl = await uploadManualImageIfNeeded();
+      const categoryFallbackImage = getCategoryFallbackImage(category);
       await window.sakedoApi.saveScannedItems({
         items: [
           {
@@ -220,7 +276,8 @@
             expiry_date: expiryDate,
             location,
             category,
-            note
+            note,
+            image_url: uploadedImageUrl || categoryFallbackImage
           }
         ]
       });
@@ -253,6 +310,16 @@
   });
   btnGoResult?.addEventListener("click", goToResult);
   fileInput?.addEventListener("change", handleUpload);
+  btnManualImage?.addEventListener("click", () => manualImageInput?.click());
+  btnManualImageClear?.addEventListener("click", () => {
+    manualSelectedFile = null;
+    if (manualImageInput) manualImageInput.value = "";
+    if (manualImagePreviewImg) manualImagePreviewImg.src = "";
+    if (manualImagePreviewText) manualImagePreviewText.textContent = "Chưa có ảnh, sẽ dùng ảnh theo danh mục";
+    manualImagePreview?.classList.remove("has-image");
+    setManualStatus("Đã xóa ảnh sản phẩm.");
+  });
+  manualImageInput?.addEventListener("change", handleManualImageChange);
 
   const today = new Date();
   const yyyy = today.getFullYear();

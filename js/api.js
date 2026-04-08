@@ -82,6 +82,16 @@ function detectFromImage(file) {
 	});
 }
 
+function uploadManualImage(file) {
+	const formData = new FormData();
+	formData.append("file", file);
+
+	return apiRequest("/api/uploads/manual-image", {
+		method: "POST",
+		body: formData
+	});
+}
+
 function saveScannedItems(payload) {
 	return apiRequest("/api/fridge/items/bulk", {
 		method: "POST",
@@ -173,6 +183,7 @@ window.sakedoApi = {
 	forgotPassword,
 	resetPassword,
 	detectFromImage,
+	uploadManualImage,
 	saveScannedItems,
 	getFridgeItems,
 	suggestRecipes,

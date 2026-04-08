@@ -1,10 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
+from config import BASE_DIR
 from database import close_db, connect_db
 from routes import auth, config, fridge, inference, recipes
 
 app = FastAPI(title="Sakedo Smart Fridge API")
+
+uploads_dir = BASE_DIR / "uploads"
+uploads_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
 # Setup CORS
 app.add_middleware(

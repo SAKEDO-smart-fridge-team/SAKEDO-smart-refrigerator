@@ -1,14 +1,17 @@
 from datetime import datetime
+from pathlib import Path
+from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
 
-from config import GOOGLE_CLIENT_ID
+from config import BASE_DIR, GOOGLE_CLIENT_ID
 from database import get_db
 from models import FoodImageMappingBulkRequest, FoodImageMappingResponse
 from services.food_image_service import normalize_label_key
 from utils.auth import get_current_user_id
 
 router = APIRouter()
+UPLOADS_DIR = BASE_DIR / "uploads" / "manual-images"
 
 
 @router.get("/api/config/public")
@@ -89,4 +92,44 @@ async def save_food_image_mappings(
         "message": "Đã lưu mapping ảnh thực phẩm.",
         "total_processed": len(payload.items),
         "inserted_or_updated": upserted_count,
+    }
+
+
+@router.post("/api/uploads/manual-image")
+async def upload_manual_image(
+    request: Request,
+    file: UploadFile = File(...),
+    user_id: str = Depends(get_current_user_id),
+):
+    _ = user_id
+
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File tải lên phải là ảnh.",
+        )
+
+    file_bytes = await file.read()
+    if not file_bytes:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ảnh rỗng hoặc không đọc được.",
+        )
+
+    suffix = Path(file.filename or "upload.jpg").suffix.lower()
+    if suffix not in {".jpg", ".jpeg", ".png", ".webp"}:
+        suffix = ".jpg"
+
+    upload_dir = UPLOADS_DIR / user_id
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = f"{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{uuid4().hex}{suffix}"
+    file_path = upload_dir / filename
+    file_path.write_bytes(file_bytes)
+
+    public_url = f"{str(request.base_url).rstrip('/')}/uploads/manual-images/{user_id}/{filename}"
+
+    return {
+        "message": "Đã tải ảnh lên thành công.",
+        "image_url": public_url,
     }
