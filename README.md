@@ -1,5 +1,10 @@
 # SAKEDO Smart Refrigerator
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
 Nền tảng quản lý thực phẩm trong tủ lạnh theo thời gian thực, kết hợp nhận diện ảnh bằng YOLO và gợi ý công thức nấu ăn bằng AI.
 
 ## 1. Giới thiệu
@@ -72,9 +77,6 @@ SAKEDO-smart-refrigerator/
 │  └─ model/best.pt                # YOLO model
 └─ README.md
 ```
-
-Lưu ý: thư mục client, server, shared hiện đang trống.
-
 ## 5. Yêu cầu hệ thống
 
 - Python 3.10+ (khuyên dùng 3.11).
@@ -88,7 +90,7 @@ Lưu ý: thư mục client, server, shared hiện đang trống.
 ### Bước 1: Clone và vào thư mục dự án
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/SAKEDO-smart-fridge-team/SAKEDO-smart-refrigerator.git
 cd SAKEDO-smart-refrigerator
 ```
 
@@ -240,11 +242,10 @@ Kết quả:
 - Bổ sung test tự động (unit + integration).
 - Thêm Docker Compose cho môi trường local.
 - Đồng bộ tốt hơn giữa trạng thái frontend và dữ liệu backend.
-
----
-
-Nếu bạn muốn, mình có thể tiếp tục bổ sung:
-
-- README tiếng Anh song ngữ.
-- Sơ đồ kiến trúc hệ thống (frontend-backend-database-AI).
-- Hướng dẫn deploy nhanh lên VPS hoặc Render/Railway.
+## 13. Nhóm phát triển
+| Tên | GIthub |
+|Tôn Hoàng Nhớ|
+|Dương Thế Khải|
+| Nguyễn Văn Trường |
+| Huỳnh Lê Khả Như |
+| Tống Nhật Thúy |
