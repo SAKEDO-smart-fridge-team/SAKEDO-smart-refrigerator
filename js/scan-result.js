@@ -38,9 +38,22 @@
         name: String(item.name).trim(),
         quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1,
         confidence: Number(item.confidence) || 0,
+        category: item.category || getCategoryByName(String(item.name).trim()),
+        image_url: item.image_url || "",
         expiry_date: getDefaultExpiry(),
         selected: true
       }));
+  }
+
+  function getFallbackImageByCategory(category) {
+    const mapping = {
+      milk: "assets/images/milk.png",
+      thit: "assets/images/thit.png",
+      traicay: "assets/images/traicay.png",
+      douong: "assets/images/douong.png",
+      khac: "assets/images/khac.png"
+    };
+    return mapping[category] || mapping.khac;
   }
 
   function getCategoryByName(name) {
@@ -83,8 +96,8 @@
           <span class="checkmark"></span>
         </label>
 
-        <div class="result-thumbnail text-thumb">
-          <i class="fa-solid fa-box-open"></i>
+        <div class="result-thumbnail">
+          <img src="${item.image_url || getFallbackImageByCategory(item.category)}" alt="${item.name}" onerror="this.onerror=null;this.src='assets/images/khac.png';" />
         </div>
 
         <div class="result-main">
@@ -140,7 +153,8 @@
         quantity: item.quantity,
         expiry_date: item.expiry_date,
         location: "tulanh",
-        category: item.category || getCategoryByName(item.name)
+        category: item.category || getCategoryByName(item.name),
+        image_url: item.image_url || getFallbackImageByCategory(item.category || getCategoryByName(item.name))
       }))
     };
 

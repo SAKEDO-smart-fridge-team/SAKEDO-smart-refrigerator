@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from database import get_db
 from models import FridgeBulkCreateRequest, FridgeItemAdjustRequest, FridgeItemResponse, FridgeItemUpdate
+from services.food_image_service import resolve_image_url_for_label
 from utils.auth import get_current_user_id
 
 router = APIRouter()
@@ -42,6 +43,14 @@ async def add_items_to_fridge(
         if not name:
             continue
 
+        image_url = await resolve_image_url_for_label(
+            db,
+            name,
+            item.category,
+        )
+        if item.image_url and item.image_url.strip():
+            image_url = item.image_url.strip()
+
         filter_query = {
             "user_id": user_id,
             "name": name,
@@ -56,6 +65,7 @@ async def add_items_to_fridge(
                 "$set": {
                     "category": item.category,
                     "note": item.note,
+                    "image_url": image_url,
                     "updated_at": now,
                 },
                 "$setOnInsert": {
@@ -99,6 +109,7 @@ async def get_fridge_items(
                 location=doc.get("location", "tulanh"),
                 category=doc.get("category", "khac"),
                 note=doc.get("note"),
+                image_url=doc.get("image_url"),
                 created_at=doc.get("created_at", datetime.utcnow()),
                 updated_at=doc.get("updated_at", datetime.utcnow()),
             )
@@ -124,10 +135,17 @@ async def update_fridge_item(
         )
 
     update_fields = {}
-    for field_name in ("name", "expiry_date", "location", "category", "note"):
+    for field_name in ("name", "expiry_date", "location", "category", "note", "image_url"):
         value = getattr(payload, field_name)
         if value is not None:
             update_fields[field_name] = value.strip() if isinstance(value, str) else value
+
+    # If client updates name/category but does not send image_url, refresh image by label mapping.
+    has_name_or_category_change = "name" in update_fields or "category" in update_fields
+    if has_name_or_category_change and "image_url" not in update_fields:
+        resolved_name = update_fields.get("name", str(existing_item.get("name") or ""))
+        resolved_category = update_fields.get("category", str(existing_item.get("category") or "khac"))
+        update_fields["image_url"] = await resolve_image_url_for_label(db, resolved_name, resolved_category)
 
     if payload.quantity is not None:
         update_fields["quantity"] = max(1, int(payload.quantity))

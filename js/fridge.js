@@ -37,11 +37,22 @@ function tabToLocation(tab) {
   return "all";
 }
 
+function getFallbackImageByCategory(category) {
+  const mapping = {
+    milk: "assets/images/milk.png",
+    thit: "assets/images/thit.png",
+    traicay: "assets/images/traicay.png",
+    douong: "assets/images/douong.png",
+    khac: "assets/images/khac.png"
+  };
+  return mapping[(category || "khac").toLowerCase()] || mapping.khac;
+}
+
 function normalizeItems(items) {
   return (items || []).map((item) => ({
     id: item.id,
     name: item.name,
-    img: "assets/images/khac.png",
+    img: item.image_url || getFallbackImageByCategory(item.category),
     expiryDate: item.expiry_date || null,
     quantity: Number(item.quantity) || 1,
     location: item.location || "tulanh",
@@ -139,7 +150,7 @@ function renderFridgeList(category = "all") {
           </svg>
         </div>
         <div class="item-img">
-          <img src="${item.img}" alt="${item.name}">
+          <img src="${item.img}" alt="${item.name}" onerror="this.onerror=null;this.src='assets/images/khac.png';">
         </div>
         <div class="item-info">
           <h3>${item.name}</h3>

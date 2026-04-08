@@ -484,15 +484,47 @@ body.dark-theme .btn-done {
   display: none;
 }
 
+.capture-inside-btn {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(16, 25, 35, 0.74);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  z-index: 4;
+}
+
+.capture-inside-btn i {
+  font-size: 1.05rem;
+}
+
+.camera-preview-wrap.is-live .capture-inside-btn {
+  display: inline-flex;
+}
+
+.camera-preview-wrap.has-shot .capture-inside-btn {
+  display: none;
+}
+
 .scan-toolbar {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
   gap: 10px;
   margin-top: 18px;
 }
 
 .scan-btn {
-  width: 100%;
+  width: 170px;
   min-height: 52px;
   border-radius: 12px;
   border: 1px solid #d7e0e8;
@@ -505,6 +537,7 @@ body.dark-theme .btn-done {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: center;
 }
 
 .scan-btn.primary {
@@ -580,7 +613,12 @@ body.dark-theme .btn-done {
 
 @media (max-width: 900px) {
   .scan-toolbar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: center;
+  }
+
+  .scan-btn {
+    width: calc(50% - 8px);
+    min-width: 150px;
   }
 }
 
@@ -591,6 +629,10 @@ body.dark-theme .scan-workspace-card {
 body.dark-theme .camera-preview-wrap {
   border-color: #47566b;
   background: radial-gradient(circle at top, #2f3849 0%, #1f2734 100%);
+}
+
+body.dark-theme .capture-inside-btn {
+  background: rgba(12, 16, 24, 0.78);
 }
 
 body.dark-theme .scan-btn {

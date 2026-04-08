@@ -44,6 +44,7 @@ class DetectedItem(BaseModel):
     quantity: int
     confidence: float
     category: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class ScanDetectResponse(BaseModel):
@@ -57,6 +58,7 @@ class FridgeItemCreate(BaseModel):
     location: str = "tulanh"
     category: str = "khac"
     note: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class FridgeBulkCreateRequest(BaseModel):
@@ -70,6 +72,7 @@ class FridgeItemUpdate(BaseModel):
     location: Optional[str] = None
     category: Optional[str] = None
     note: Optional[str] = None
+    image_url: Optional[str] = None
 
 
 class FridgeItemAdjustRequest(BaseModel):
@@ -86,6 +89,7 @@ class FridgeItemResponse(BaseModel):
     location: str
     category: str
     note: Optional[str] = None
+    image_url: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
@@ -115,3 +119,20 @@ class RecipeSuggestion(BaseModel):
 
 class RecipeSuggestResponse(BaseModel):
     recipes: list[RecipeSuggestion]
+
+
+class FoodImageMappingCreate(BaseModel):
+    label: str
+    image_url: str
+    aliases: list[str] = []
+
+
+class FoodImageMappingBulkRequest(BaseModel):
+    items: list[FoodImageMappingCreate]
+
+
+class FoodImageMappingResponse(BaseModel):
+    label: str
+    label_key: str
+    image_url: str
+    aliases: list[str] = []
