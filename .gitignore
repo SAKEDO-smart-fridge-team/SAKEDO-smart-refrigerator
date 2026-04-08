@@ -43,6 +43,7 @@ logs/
 *.db
 *.pid
 *.seed
+backend/uploads/
 
 # Node/frontend (future-proof)
 node_modules/
