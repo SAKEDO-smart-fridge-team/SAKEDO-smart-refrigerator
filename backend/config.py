@@ -26,6 +26,12 @@ SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", os.getenv("SMTP_USERNAME", "
 SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "Sakedo Smart Fridge").strip()
 SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").strip().lower() in {"1", "true", "yes", "on"}
 
+# Web Push
+PUSH_ENABLED: bool = os.getenv("PUSH_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"}
+VAPID_PUBLIC_KEY: str = os.getenv("VAPID_PUBLIC_KEY", "").strip()
+VAPID_PRIVATE_KEY: str = os.getenv("VAPID_PRIVATE_KEY", "").strip()
+VAPID_SUBJECT: str = os.getenv("VAPID_SUBJECT", "mailto:support@sakedo.local").strip()
+
 # Expiry reminder email scheduler
 EXPIRY_ALERT_ENABLED: bool = os.getenv("EXPIRY_ALERT_ENABLED", "false").strip().lower() in {
     "1",

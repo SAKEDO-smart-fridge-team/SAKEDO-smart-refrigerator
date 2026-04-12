@@ -6,6 +6,7 @@ from pymongo import ASCENDING
 from pymongo.errors import DuplicateKeyError
 
 from utils.email import send_expiry_alert_email
+from services.push_service import send_push_to_user
 
 _INDEX_READY = False
 
@@ -95,6 +96,7 @@ async def process_expiry_alerts(db, days_threshold: int = 3) -> dict:
         return {
             "users_scanned": 0,
             "emails_sent": 0,
+            "push_sent": 0,
             "items_in_email": 0,
             "skipped_already_sent": 0,
         }
@@ -104,27 +106,35 @@ async def process_expiry_alerts(db, days_threshold: int = 3) -> dict:
         return {
             "users_scanned": 0,
             "emails_sent": 0,
+            "push_sent": 0,
             "items_in_email": 0,
             "skipped_already_sent": 0,
         }
 
-    users = await db.users.find(
-        {
-            "_id": {"$in": user_ids},
-            "settings.email_notification": True,
-            "email": {"$exists": True, "$type": "string", "$ne": ""},
-        }
-    ).to_list(length=2000)
+    users = await db.users.find({"_id": {"$in": user_ids}}).to_list(length=2000)
 
     users_by_id = {str(user["_id"]): user for user in users}
 
     emails_sent = 0
+    push_sent = 0
     items_in_email = 0
     skipped_already_sent = 0
 
     for user_id, expiring_items in grouped_items.items():
         user_doc = users_by_id.get(user_id)
         if not user_doc:
+            continue
+
+        settings = user_doc.get("settings") or {}
+        notif_types = settings.get("notification_types") or {}
+
+        expiry_alert_enabled = bool(notif_types.get("expiry_alert", True))
+        if not expiry_alert_enabled:
+            continue
+
+        email_enabled = bool(settings.get("email_notification", True)) and bool(user_doc.get("email"))
+        push_enabled = bool(settings.get("push_notification", False))
+        if not email_enabled and not push_enabled:
             continue
 
         to_send: list[dict] = []
@@ -145,20 +155,46 @@ async def process_expiry_alerts(db, days_threshold: int = 3) -> dict:
         if not to_send:
             continue
 
-        try:
-            await run_in_threadpool(
-                send_expiry_alert_email,
-                user_doc.get("email", "").strip(),
-                user_doc.get("full_name", "").strip(),
-                to_send,
-                days_threshold,
-            )
-        except Exception as exc:
-            print(f"[EXPIRY ALERT] Gui email that bai cho user {user_id}: {exc}")
-            continue
+        sent_any_channel = False
 
-        emails_sent += 1
-        items_in_email += len(to_send)
+        if email_enabled:
+            try:
+                await run_in_threadpool(
+                    send_expiry_alert_email,
+                    user_doc.get("email", "").strip(),
+                    user_doc.get("full_name", "").strip(),
+                    to_send,
+                    days_threshold,
+                )
+                emails_sent += 1
+                items_in_email += len(to_send)
+                sent_any_channel = True
+            except Exception as exc:
+                print(f"[EXPIRY ALERT] Gui email that bai cho user {user_id}: {exc}")
+
+        if push_enabled:
+            nearest_item = min(to_send, key=lambda item: item["days_left"])
+            title = "Thuc pham sap het han"
+            body = (
+                f"{nearest_item['name']} còn {nearest_item['days_left']} ngay. "
+                f"Ban co tong cong {len(to_send)} mon can uu tien dung."
+            )
+            push_result = await send_push_to_user(
+                db,
+                user_id,
+                title,
+                body,
+                {
+                    "type": "expiry_alert",
+                    "items": to_send,
+                },
+            )
+            if push_result.get("sent", 0) > 0:
+                push_sent += int(push_result.get("sent", 0))
+                sent_any_channel = True
+
+        if not sent_any_channel:
+            continue
 
         for item in to_send:
             try:
@@ -180,6 +216,7 @@ async def process_expiry_alerts(db, days_threshold: int = 3) -> dict:
     return {
         "users_scanned": len(grouped_items),
         "emails_sent": emails_sent,
+        "push_sent": push_sent,
         "items_in_email": items_in_email,
         "skipped_already_sent": skipped_already_sent,
     }

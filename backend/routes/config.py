@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
 
-from config import BASE_DIR, GOOGLE_CLIENT_ID
+from config import BASE_DIR, GOOGLE_CLIENT_ID, PUSH_ENABLED, VAPID_PUBLIC_KEY
 from database import get_db
 from models import FoodImageMappingBulkRequest, FoodImageMappingResponse
 from services.food_image_service import normalize_label_key
@@ -17,7 +17,11 @@ UPLOADS_DIR = BASE_DIR / "uploads" / "manual-images"
 @router.get("/api/config/public")
 async def get_public_config():
     """Trả về các config công khai cho Frontend (ví dụ: Google Client ID)."""
-    return {"google_client_id": GOOGLE_CLIENT_ID}
+    return {
+        "google_client_id": GOOGLE_CLIENT_ID,
+        "push_enabled": PUSH_ENABLED and bool(VAPID_PUBLIC_KEY),
+        "vapid_public_key": VAPID_PUBLIC_KEY,
+    }
 
 
 @router.get("/api/config/food-images", response_model=list[FoodImageMappingResponse])

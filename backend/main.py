@@ -12,7 +12,7 @@ from config import (
     EXPIRY_ALERT_ENABLED,
 )
 from database import close_db, connect_db, get_db
-from routes import auth, config, fridge, inference, recipes
+from routes import auth, config, fridge, inference, notifications, recipes
 from services.expiry_alert_service import process_expiry_alerts
 
 app = FastAPI(title="Sakedo Smart Fridge API")
@@ -62,10 +62,11 @@ async def _run_expiry_alert_scheduler() -> None:
     while True:
         try:
             summary = await process_expiry_alerts(get_db(), EXPIRY_ALERT_DAYS)
-            if summary["emails_sent"] > 0:
+            if summary["emails_sent"] > 0 or summary["push_sent"] > 0:
                 print(
                     "[EXPIRY ALERT] Sent "
                     f"{summary['emails_sent']} email(s), "
+                    f"{summary['push_sent']} push(es), "
                     f"{summary['items_in_email']} item(s)."
                 )
         except Exception as exc:
@@ -80,6 +81,7 @@ app.include_router(auth.router, tags=["Authentication"])
 app.include_router(inference.router, tags=["Inference"])
 app.include_router(fridge.router, tags=["Fridge"])
 app.include_router(recipes.router, tags=["Recipes"])
+app.include_router(notifications.router, tags=["Notifications"])
 
 
 @app.get("/", tags=["Root"])

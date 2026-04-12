@@ -152,6 +152,13 @@ Nếu chạy frontend ở port khác, hãy cập nhật FRONTEND_BASE_URL trong 
 | FRONTEND_BASE_URL | URL frontend dùng trong link reset password |
 | SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD | SMTP để gửi email |
 | SMTP_FROM_EMAIL, SMTP_FROM_NAME, SMTP_USE_TLS | Thông tin người gửi email |
+| PUSH_ENABLED | Bật/tắt kênh Web Push |
+| VAPID_PUBLIC_KEY | Public key để frontend đăng ký Push Subscription |
+| VAPID_PRIVATE_KEY | Private key để backend gửi Push |
+| VAPID_SUBJECT | Subject cho VAPID claims, ví dụ mailto:support@domain.com |
+| EXPIRY_ALERT_ENABLED | Bật/tắt gửi email nhắc thực phẩm sắp hết hạn |
+| EXPIRY_ALERT_DAYS | Số ngày còn lại để được tính là sắp hết hạn (mặc định 3) |
+| EXPIRY_ALERT_CHECK_INTERVAL_MINUTES | Chu kỳ quét và gửi email nhắc hạn (phút) |
 | PASSWORD_RESET_RETURN_LINK | true để trả về reset_url khi test local |
 | OPENROUTER_API_KEY | API key dùng gợi ý công thức |
 | OPENROUTER_MODEL | Model OpenRouter (mặc định openai/gpt-oss-120b:free) |
@@ -188,6 +195,13 @@ Kết quả:
 - GET /api/config/food-images
 - POST /api/config/food-images/bulk
 - POST /api/uploads/manual-image
+
+### Notifications
+
+- GET /api/users/me/settings
+- PATCH /api/users/me/settings
+- POST /api/push/subscribe
+- POST /api/push/unsubscribe
 
 ### Inference
 

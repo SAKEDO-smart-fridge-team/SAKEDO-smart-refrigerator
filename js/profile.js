@@ -3,6 +3,131 @@
 // Sử dụng Event Delegation để không bị lỗi khi chuyển trang
 // ==========================================
 
+let profileSettingsState = {
+  email_notification: true,
+  push_notification: false,
+  notification_types: {
+    expiry_alert: true,
+    recipe_suggestion: true
+  }
+};
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; i++) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+
+  return outputArray;
+}
+
+async function getOrRegisterServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    throw new Error("Trình duyệt chưa hỗ trợ Service Worker.");
+  }
+
+  const registration = await navigator.serviceWorker.register("/sw.js");
+  await navigator.serviceWorker.ready;
+  return registration;
+}
+
+function applySettingsToUI(settings) {
+  const emailToggle = document.getElementById("setting-email-notif");
+  const pushToggle = document.getElementById("setting-push-notif");
+  const expiryToggle = document.getElementById("setting-expiry-alert");
+  const recipeToggle = document.getElementById("setting-recipe-suggestion");
+
+  if (emailToggle) emailToggle.checked = Boolean(settings.email_notification);
+  if (pushToggle) pushToggle.checked = Boolean(settings.push_notification);
+  if (expiryToggle) expiryToggle.checked = Boolean(settings.notification_types?.expiry_alert);
+  if (recipeToggle) recipeToggle.checked = Boolean(settings.notification_types?.recipe_suggestion);
+}
+
+async function loadUserSettings() {
+  if (!window.sakedoApi?.getStoredAuth()?.access_token) return;
+
+  try {
+    const settings = await window.sakedoApi.getUserSettings();
+    profileSettingsState = {
+      email_notification: Boolean(settings?.email_notification),
+      push_notification: Boolean(settings?.push_notification),
+      notification_types: {
+        expiry_alert: Boolean(settings?.notification_types?.expiry_alert),
+        recipe_suggestion: Boolean(settings?.notification_types?.recipe_suggestion)
+      }
+    };
+    applySettingsToUI(profileSettingsState);
+  } catch (error) {
+    showToast(error.message || "Không tải được cài đặt thông báo", "error");
+  }
+}
+
+async function subscribePushFlow() {
+  if (!("Notification" in window) || !("PushManager" in window)) {
+    throw new Error("Trình duyệt chưa hỗ trợ thông báo đẩy.");
+  }
+
+  const config = await window.sakedoApi.getPublicConfig();
+  if (!config?.push_enabled || !config?.vapid_public_key) {
+    throw new Error("Push notification chưa được cấu hình ở server.");
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission !== "granted") {
+    throw new Error("Bạn chưa cấp quyền nhận thông báo đẩy.");
+  }
+
+  const registration = await getOrRegisterServiceWorker();
+  let subscription = await registration.pushManager.getSubscription();
+
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(config.vapid_public_key)
+    });
+  }
+
+  await window.sakedoApi.subscribePush({ subscription: subscription.toJSON() });
+}
+
+async function unsubscribePushFlow() {
+  const registration = await navigator.serviceWorker.getRegistration("/");
+  const subscription = registration ? await registration.pushManager.getSubscription() : null;
+
+  if (subscription) {
+    await window.sakedoApi.unsubscribePush({ subscription: subscription.toJSON() });
+    await subscription.unsubscribe();
+  }
+}
+
+async function updateSettingsWithPatch(patch) {
+  const updatedSettings = {
+    email_notification: patch.email_notification ?? profileSettingsState.email_notification,
+    push_notification: patch.push_notification ?? profileSettingsState.push_notification,
+    notification_types: {
+      expiry_alert:
+        patch.notification_types?.expiry_alert ?? profileSettingsState.notification_types.expiry_alert,
+      recipe_suggestion:
+        patch.notification_types?.recipe_suggestion ?? profileSettingsState.notification_types.recipe_suggestion
+    }
+  };
+
+  const saved = await window.sakedoApi.updateUserSettings(updatedSettings);
+  profileSettingsState = {
+    email_notification: Boolean(saved?.email_notification),
+    push_notification: Boolean(saved?.push_notification),
+    notification_types: {
+      expiry_alert: Boolean(saved?.notification_types?.expiry_alert),
+      recipe_suggestion: Boolean(saved?.notification_types?.recipe_suggestion)
+    }
+  };
+  applySettingsToUI(profileSettingsState);
+}
+
 // Hàm hiển thị Toast Notification
 window.showToast = function (message, type = "success") {
   const toastContainer = document.getElementById("toast-container");
@@ -190,8 +315,61 @@ document.addEventListener("click", function (e) {
 // Sự kiện đổi ảnh (change event không bubble theo click, nên dùng change)
 document.addEventListener("change", function (e) {
   // Bật/tắt các công tắc cài đặt
-  if (e.target.closest(".switch input[type='checkbox']")) {
-    showToast("Đã lưu cài đặt mới");
+  if (e.target.id === "setting-email-notif") {
+    updateSettingsWithPatch({ email_notification: e.target.checked })
+      .then(() => showToast("Đã lưu cài đặt Email"))
+      .catch((error) => {
+        e.target.checked = !e.target.checked;
+        showToast(error.message || "Không thể lưu cài đặt", "error");
+      });
+    return;
+  }
+
+  if (e.target.id === "setting-expiry-alert") {
+    updateSettingsWithPatch({
+      notification_types: {
+        expiry_alert: e.target.checked
+      }
+    })
+      .then(() => showToast("Đã lưu loại thông báo"))
+      .catch((error) => {
+        e.target.checked = !e.target.checked;
+        showToast(error.message || "Không thể lưu cài đặt", "error");
+      });
+    return;
+  }
+
+  if (e.target.id === "setting-recipe-suggestion") {
+    updateSettingsWithPatch({
+      notification_types: {
+        recipe_suggestion: e.target.checked
+      }
+    })
+      .then(() => showToast("Đã lưu loại thông báo"))
+      .catch((error) => {
+        e.target.checked = !e.target.checked;
+        showToast(error.message || "Không thể lưu cài đặt", "error");
+      });
+    return;
+  }
+
+  if (e.target.id === "setting-push-notif") {
+    const nextState = e.target.checked;
+
+    (async () => {
+      if (nextState) {
+        await subscribePushFlow();
+      } else {
+        await unsubscribePushFlow();
+      }
+
+      await updateSettingsWithPatch({ push_notification: nextState });
+      showToast(nextState ? "Đã bật thông báo đẩy" : "Đã tắt thông báo đẩy");
+    })().catch((error) => {
+      e.target.checked = !nextState;
+      showToast(error.message || "Không thể cập nhật thông báo đẩy", "error");
+    });
+    return;
   }
 
   // Đổi avatar preview
@@ -270,6 +448,7 @@ function loadUserProfile() {
 document.addEventListener("pageChanged", function (e) {
   if (e.detail.page === "profile") {
     loadUserProfile();
+    loadUserSettings();
   }
 });
 
@@ -277,5 +456,6 @@ document.addEventListener("pageChanged", function (e) {
 document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".profile-container")) {
     loadUserProfile();
+    loadUserSettings();
   }
 });

@@ -27,6 +27,39 @@ class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
 
+
+class NotificationTypeSettings(BaseModel):
+    expiry_alert: bool = True
+    recipe_suggestion: bool = True
+
+
+class UserSettingsResponse(BaseModel):
+    email_notification: bool = True
+    push_notification: bool = False
+    notification_types: NotificationTypeSettings = NotificationTypeSettings()
+    theme: str = "light"
+
+
+class UserSettingsUpdate(BaseModel):
+    email_notification: Optional[bool] = None
+    push_notification: Optional[bool] = None
+    notification_types: Optional[NotificationTypeSettings] = None
+    theme: Optional[str] = None
+
+
+class PushSubscriptionKeys(BaseModel):
+    p256dh: str
+    auth: str
+
+
+class PushSubscriptionPayload(BaseModel):
+    endpoint: str
+    keys: PushSubscriptionKeys
+
+
+class PushSubscribeRequest(BaseModel):
+    subscription: PushSubscriptionPayload
+
 # Khuôn mẫu dữ liệu trả về cho Frontend (không trả về password)
 class UserResponse(BaseModel):
     id: str

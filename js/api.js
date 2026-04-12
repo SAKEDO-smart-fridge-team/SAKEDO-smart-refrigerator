@@ -176,6 +176,33 @@ function clearAuth() {
 	localStorage.removeItem("sakedo_auth");
 }
 
+function getUserSettings() {
+	return apiRequest("/api/users/me/settings", {
+		method: "GET"
+	});
+}
+
+function updateUserSettings(payload) {
+	return apiRequest("/api/users/me/settings", {
+		method: "PATCH",
+		body: JSON.stringify(payload)
+	});
+}
+
+function subscribePush(payload) {
+	return apiRequest("/api/push/subscribe", {
+		method: "POST",
+		body: JSON.stringify(payload)
+	});
+}
+
+function unsubscribePush(payload) {
+	return apiRequest("/api/push/unsubscribe", {
+		method: "POST",
+		body: JSON.stringify(payload)
+	});
+}
+
 window.sakedoApi = {
 	registerUser,
 	loginUser,
@@ -195,6 +222,10 @@ window.sakedoApi = {
 	getStoredAuth,
 	saveAuth,
 	clearAuth,
+	getUserSettings,
+	updateUserSettings,
+	subscribePush,
+	unsubscribePush,
 	API_BASE_URL,
 	GOOGLE_CLIENT_ID
 };

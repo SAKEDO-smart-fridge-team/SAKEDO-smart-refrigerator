@@ -48,7 +48,15 @@ async def register_user(user: UserRegister, db=Depends(get_db)):
         "email": user.email,
         "phone": user.phone,
         "password_hash": hashed_password,
-        "settings": {"email_notification": True, "theme": "light"},
+        "settings": {
+            "email_notification": True,
+            "push_notification": False,
+            "notification_types": {
+                "expiry_alert": True,
+                "recipe_suggestion": True,
+            },
+            "theme": "light",
+        },
     }
 
     new_user = await db.users.insert_one(user_dict)
@@ -124,7 +132,15 @@ async def login_user_google(payload: GoogleLoginRequest, db=Depends(get_db)):
             "phone": "",
             "password_hash": None,
             "auth_provider": "google",
-            "settings": {"email_notification": True, "theme": "light"},
+            "settings": {
+                "email_notification": True,
+                "push_notification": False,
+                "notification_types": {
+                    "expiry_alert": True,
+                    "recipe_suggestion": True,
+                },
+                "theme": "light",
+            },
         }
         new_user = await db.users.insert_one(user_dict)
         user_id = str(new_user.inserted_id)
