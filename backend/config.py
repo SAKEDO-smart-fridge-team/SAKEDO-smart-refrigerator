@@ -26,6 +26,16 @@ SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", os.getenv("SMTP_USERNAME", "
 SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "Sakedo Smart Fridge").strip()
 SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").strip().lower() in {"1", "true", "yes", "on"}
 
+# Expiry reminder email scheduler
+EXPIRY_ALERT_ENABLED: bool = os.getenv("EXPIRY_ALERT_ENABLED", "false").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+EXPIRY_ALERT_DAYS: int = max(0, int(os.getenv("EXPIRY_ALERT_DAYS", "3")))
+EXPIRY_ALERT_CHECK_INTERVAL_MINUTES: int = max(1, int(os.getenv("EXPIRY_ALERT_CHECK_INTERVAL_MINUTES", "60")))
+
 PASSWORD_RESET_RETURN_LINK: bool = (
     os.getenv("PASSWORD_RESET_RETURN_LINK", "false").strip().lower() in {"1", "true", "yes", "on"}
 )
