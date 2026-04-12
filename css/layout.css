@@ -63,14 +63,16 @@ body {
   padding: 30px 0;
   transition: all var(--transition-smooth);
   z-index: 1000;
-  filter: drop-shadow(10px 0 30px rgba(0, 0, 0, 0.05));
+  /* box-shadow thay vì filter: drop-shadow để tránh clip overflow (camera-bulge) */
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.07);
   position: relative;
+  overflow: visible;
 }
 
 .sidebar:hover {
   width: 210px;
   background-color: var(--primary-blue);
-  /* Main blue when expanded as requested */
+  box-shadow: 12px 0 35px rgba(181, 218, 236, 0.40);
 }
 
 /* ========================================= */
@@ -111,11 +113,9 @@ body {
   gap: 15px;
   width: 100%;
   overflow-y: visible;
-  /* Prevent clipping of the camera bulge */
   overflow-x: visible;
 }
 
-/* Ẩn thanh cuộn của menu cho đẹp */
 .nav-menu::-webkit-scrollbar {
   display: none;
 }
@@ -124,32 +124,32 @@ body {
   display: flex;
   align-items: center;
   padding: 15px 25px;
-  /* Spaciously balanced */
   margin: 4px 10px;
-  /* Room for pill effect */
   cursor: pointer;
   position: relative;
   color: #777;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 35px;
-  /* Rounded pill look */
   flex-shrink: 0;
+}
+
+.nav-item:not(.active):hover {
+  color: var(--primary-blue-alt);
+  background: rgba(181, 218, 236, 0.25);
+  transform: translateX(2px);
 }
 
 .nav-item.active {
   background: white;
-  /* Pill background */
   color: var(--primary-blue-alt);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* Premium depth */
+  box-shadow: 0 4px 18px rgba(75, 159, 179, 0.20), 0 2px 8px rgba(0, 0, 0, 0.06);
+  transform: translateX(3px);
 }
 
-/* Left Indicator Bar for Active Item */
 .nav-item.active::before {
   content: "";
   position: absolute;
   left: -10px;
-  /* Shift to the very edge of the pill */
   top: 50%;
   transform: translateY(-50%);
   width: 4px;
@@ -173,18 +173,15 @@ body {
   width: 22px;
   height: 22px;
   stroke: currentColor;
-  /* Inherit color from parent i */
   transition: stroke 0.3s ease;
 }
 
-/* SVG icon specific tweaks if needed */
 .nav-item i svg path {
   transition: stroke 0.3s ease;
 }
 
 .nav-label {
   margin-left: 15px;
-  /* Tighter gap for better grouping */
   font-size: 15px;
   font-weight: 500;
   opacity: 0;
@@ -200,55 +197,65 @@ body {
 /* 5. CAMERA BUTTON                          */
 /* ========================================= */
 .camera-btn {
-  position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
-  height: 55px;
+  padding: 15px 25px;
+  margin: 4px 10px;
+  width: auto;
+  height: auto;
   cursor: pointer;
-  margin: 5px 0;
   flex-shrink: 0;
-  /* Đã thêm */
+  border-radius: 35px;
+  color: #777;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.camera-btn:hover {
+  color: var(--primary-blue-alt);
+  background: rgba(181, 218, 236, 0.25);
+  transform: translateX(2px);
+}
+
+/* ── Camera-bulge: position:fixed để không bị clip bởi bất kỳ stacking context nào ── */
 .camera-bulge {
-  position: absolute;
-  right: -35px;
-  /* Stick out more to form a semi-circle */
-  top: 50%;
-  transform: translateY(-50%);
+  position: fixed;
+  /* left & top được set bởi JS (updateCameraBulge) */
+  transform: translate(-50%, -50%);
   width: 70px;
   height: 70px;
-  background-color: var(--sidebar-bg);
+  background-color: #ffffff;
   border-radius: 50%;
+  border: 2px solid rgba(75, 159, 179, 0.35);
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all var(--transition-smooth);
-  z-index: 5;
-  box-shadow: 10px 0 20px rgba(0, 0, 0, 0.03);
-  /* Subtle depth */
+  cursor: pointer;
+  z-index: 2000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.10);
+  animation: cameraGlow 2.5s ease-in-out infinite;
+  transition: box-shadow var(--transition-smooth), border-color var(--transition-smooth);
 }
 
-.sidebar:hover .camera-bulge {
-  background-color: var(--primary-blue);
-  /* Sync with sidebar hover background */
+.camera-bulge:hover {
+  border: 2px solid rgba(75, 159, 179, 0.55);
+  box-shadow: 0 6px 22px rgba(75, 159, 179, 0.45);
+  animation: none;
 }
 
 .camera-bulge i {
-  font-size: 22px;
-  color: #555;
+  color: var(--primary-blue-alt);
+  transition: color var(--transition-smooth), transform var(--transition-smooth);
+  pointer-events: none;
 }
 
-.sidebar:hover .camera-bulge i {
-  color: #333;
+.camera-bulge:hover i {
+  color: #2a6a88;
+  transform: scale(1.1);
 }
 
-.camera-btn .nav-label {
-  position: absolute;
-  left: 70px;
-  margin-left: 0;
-}
+
+
+/* Camera-btn active state bị loại bỏ để tránh half-teal bug */
 
 /* ========================================= */
 /* 6. MODE SWITCH                            */
@@ -260,19 +267,21 @@ body {
   justify-content: center;
   padding-bottom: 30px;
   opacity: 1 !important;
-  /* Always visible */
 }
 
 .mode-switch {
   cursor: pointer;
   font-size: 20px;
   color: #555;
-  transition: 0.3s;
+  transition: all 0.3s var(--ease-bounce);
+  padding: 8px;
+  border-radius: 50%;
 }
 
 .mode-switch:hover {
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(20deg);
   color: var(--primary-blue-alt);
+  background: rgba(75, 159, 179, 0.12);
 }
 
 /* ========================================= */
@@ -288,14 +297,21 @@ body {
 .topbar {
   height: 110px;
   width: calc(100% - 50px);
-  background-color: var(--primary-blue);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #9ecfe8 50%, var(--primary-blue) 100%);
+  background-size: 200% 200%;
+  animation: shimmer 6s ease infinite;
   margin: 20px auto;
   border-radius: 45px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 10%;
-  box-shadow: 0 8px 25px rgba(181, 218, 236, 0.4);
+  box-shadow: 0 8px 30px rgba(181, 218, 236, 0.45);
+  transition: box-shadow 0.3s ease;
+}
+
+.topbar:hover {
+  box-shadow: 0 12px 40px rgba(181, 218, 236, 0.60);
 }
 
 .user-profile {
@@ -312,6 +328,12 @@ body {
   border-radius: 50%;
   border: 3px solid white;
   object-fit: cover;
+  animation: pulseRing 2.5s ease-out infinite;
+  transition: transform 0.3s var(--ease-bounce);
+}
+
+.user-avatar:hover {
+  transform: scale(1.08);
 }
 
 .welcome p {
@@ -334,6 +356,13 @@ body {
   display: flex;
   align-items: center;
   padding: 5px 8px 5px 20px;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.search-container:focus-within {
+  box-shadow: 0 4px 20px rgba(75, 159, 179, 0.25);
+  transform: scaleX(1.01);
 }
 
 .search-container input {
@@ -342,6 +371,7 @@ body {
   outline: none;
   font-size: 15px;
   color: #444;
+  font-family: var(--font-family-main);
 }
 
 .btn-search {
@@ -352,11 +382,19 @@ body {
   border-radius: 25px;
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.25s var(--ease-bounce);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-search:hover {
-  background: #96cfe8;
+  background: var(--primary-blue-alt);
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(75, 159, 179, 0.4);
+}
+
+.btn-search:active {
+  transform: scale(0.96);
 }
 
 .btn-noti {
@@ -375,6 +413,10 @@ body {
   flex: 1;
   padding: 10px 40px 30px 40px;
   overflow-y: auto;
+}
+
+#app-root.page-entering {
+  animation: pageEnter 0.35s var(--ease-smooth) both;
 }
 
 #app-root::-webkit-scrollbar {
@@ -467,6 +509,24 @@ body.dark-theme .sidebar {
   background-color: var(--sidebar-bg);
 }
 
+body.dark-theme .camera-bulge {
+  background-color: #2a3a52;
+  border: 2px solid rgba(92, 156, 230, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .camera-bulge i {
+  color: #7eb8d4;
+}
+
+body.dark-theme .camera-bulge:hover {
+  background-color: #2a3a52;
+  border-color: rgba(92, 156, 230, 0.55);
+  box-shadow: 0 6px 22px rgba(92, 156, 230, 0.3);
+}
+
+/* dark-theme camera-btn active state bị loại bỏ để tránh half-teal bug */
+
 body.dark-theme .topbar {
   background-color: var(--sidebar-bg);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -500,17 +560,9 @@ body.dark-theme .sidebar:hover {
   background-color: #1a1d2b;
 }
 
-body.dark-theme .sidebar:hover .camera-bulge {
-  background-color: #1a1d2b;
-}
-
 body.dark-theme .welcome p,
 body.dark-theme .welcome span {
   color: var(--text-main);
-}
-
-body.dark-theme .camera-bulge {
-  background-color: var(--sidebar-bg);
 }
 
 /* Đổi màu nút gạt khi ở dark mode */

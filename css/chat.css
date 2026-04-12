@@ -3,35 +3,23 @@
 .ai-chat-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  height: 100%; /* Đảm bảo wrapper lớn full */
-  padding: 40px;
-  animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  min-height: 100%;
+  padding: 20px 40px 40px;
+  animation: fadeInUp 0.4s var(--ease-smooth) both;
 }
 
 .ai-suggest-card {
   background-color: var(--bg-card);
-  border-radius: 35px;
+  border-radius: 28px;
   width: 100%;
-  max-width: 850px;
-  min-height: 520px;
+  max-width: 860px;
+  min-height: 540px;
   display: flex;
   flex-direction: column;
-  padding: 35px 50px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
-  margin-top: 20px;
+  padding: 32px 44px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border-color);
 }
 
@@ -39,9 +27,10 @@
 .ai-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; /* Căn đáy toàn bộ header */
-  padding-bottom: 15px; /* Giảm khoảng cách tới đường viền */
-  border-bottom: 3px solid var(--border-color);
+  align-items: flex-end;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 6px;
 }
 
 .ai-chef-info {
@@ -66,12 +55,13 @@
   margin: 0 0 5px 0;
 }
 
-.ai-text p {
+.ai-subtitle-text {
   color: #8da4b1;
-  font-size: 15px;
+  font-size: 14px;
   margin: 0;
-  font-weight: 600;
-  padding-bottom: 5px; /* Nâng khoảng cách chữ so với viền một chút */
+  font-weight: 500;
+  padding-bottom: 4px;
+  transition: color 0.3s ease;
 }
 
 /* ACTIONS IN HEADER */
@@ -404,4 +394,330 @@
 .btn-recipe:disabled:hover {
   transform: none;
   background: #fdfdfd;
+}
+
+/* ================================================== */
+/* MODE SELECTOR                                      */
+/* ================================================== */
+
+#state-mode-select {
+  padding: 10px 0 6px;
+  gap: 0;
+  align-items: stretch;
+}
+
+.mode-header {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.mode-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.mode-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+.mode-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card-pure);
+  border: 1.5px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px 18px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s var(--ease-bounce);
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-chip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: inherit;
+}
+
+.mode-chip:hover {
+  border-color: var(--primary-blue-alt);
+  box-shadow: 0 6px 20px rgba(75, 159, 179, 0.18);
+  transform: translateY(-3px);
+}
+
+.mode-chip:active {
+  transform: translateY(-1px);
+}
+
+.mode-chip.selected {
+  border-color: var(--primary-blue-alt);
+  background: linear-gradient(135deg, #e8f4fb 0%, #f0f9ff 100%);
+  box-shadow: 0 6px 20px rgba(75, 159, 179, 0.25);
+}
+
+.mode-chip-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.3s var(--ease-bounce);
+}
+
+.mode-chip:hover .mode-chip-icon {
+  transform: scale(1.2) rotate(-5deg);
+}
+
+.mode-chip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mode-chip-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.mode-chip-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Notification badge on mode chip (e.g., expiring count) */
+.mode-chip-badge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: #f97316;
+  color: white;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  min-width: 18px;
+  text-align: center;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ================================================== */
+/* FOOD SUGGESTION STATE – improvements               */
+/* ================================================== */
+
+.food-card-preview img {
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-smooth);
+}
+
+/* Mode badge on food card */
+.food-mode-badge {
+  position: absolute;
+  bottom: 72px;
+  right: 14px;
+  z-index: 3;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+.food-mode-badge.hidden {
+  display: none;
+}
+
+/* Counter (1/3) on food card */
+.food-card-counter {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Availability badge full = all ingredients present */
+.food-availability-badge.badge-full {
+  background: rgba(16, 185, 129, 0.88);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ================================================== */
+/* EMPTY STATE                                        */
+/* ================================================== */
+
+#state-empty {
+  gap: 12px;
+  padding: 30px 20px;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.empty-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.btn-change-mode {
+  background: var(--primary-blue);
+  color: #2d6070;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.25s var(--ease-bounce);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-change-mode:hover {
+  background: #9bd0e8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(155, 208, 232, 0.45);
+}
+
+/* ================================================== */
+/* REFRESH BUTTON – enhanced                          */
+/* ================================================== */
+
+.btn-refresh {
+  transition: all 0.3s var(--ease-bounce), transform 0.4s ease !important;
+}
+
+/* ================================================== */
+/* DARK THEME OVERRIDES                               */
+/* ================================================== */
+
+body.dark-theme .mode-chip {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .mode-chip:hover,
+body.dark-theme .mode-chip.selected {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--primary-blue);
+}
+
+body.dark-theme .mode-chip-label {
+  color: var(--text-main);
+}
+
+body.dark-theme .mode-chip-desc {
+  color: var(--text-muted);
+}
+
+/* Recipe count indicator on mode chip */
+.mode-chip-count {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.mode-chip-count.has-match {
+  color: #10b981;
+  font-weight: 700;
+}
+
+body.dark-theme .mode-chip-count {
+  color: var(--text-muted);
+}
+
+body.dark-theme .mode-chip-count.has-match {
+  color: #34d399;
+}
+
+/* Food overlay layout: title + preptime on the left */
+.food-overlay-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.food-overlay-info h4 {
+  color: white;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Override the older rule that targets .food-overlay h4 directly */
+.food-overlay h4 {
+  margin: 0;
+}
+
+.food-preptime {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.38);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: fit-content;
+  backdrop-filter: blur(4px);
+}
+
+.food-preptime.hidden {
+  display: none !important;
 }

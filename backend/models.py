@@ -55,7 +55,7 @@ class FridgeItemCreate(BaseModel):
     name: str
     quantity: int = 1
     expiry_date: Optional[str] = None
-    location: str = "tulanh"
+    location: str = "ngandong"
     category: str = "khac"
     note: Optional[str] = None
     image_url: Optional[str] = None
@@ -115,6 +115,8 @@ class RecipeSuggestion(BaseModel):
     img: str
     ingredients: RecipeIngredients
     steps: list[RecipeStep]
+    prepTime: Optional[int] = None
+    tags: Optional[list[str]] = None
 
 
 class RecipeSuggestResponse(BaseModel):

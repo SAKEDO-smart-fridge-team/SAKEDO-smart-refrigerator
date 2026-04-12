@@ -27,9 +27,38 @@
   const manualStatusEl = document.getElementById("manual-status");
   const btnManualAdd = document.getElementById("btn-manual-add");
 
+  const step1 = document.getElementById("step-1");
+  const step2 = document.getElementById("step-2");
+  const step3 = document.getElementById("step-3");
+
   let stream = null;
   let selectedFile = null;
   let manualSelectedFile = null;
+  let currentPreviewUrl = null;
+  let currentManualPreviewUrl = null;
+
+  function setPreviewSrc(imgEl, file) {
+    if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
+    currentPreviewUrl = URL.createObjectURL(file);
+    imgEl.src = currentPreviewUrl;
+  }
+
+  function setManualPreviewSrc(imgEl, file) {
+    if (currentManualPreviewUrl) URL.revokeObjectURL(currentManualPreviewUrl);
+    currentManualPreviewUrl = URL.createObjectURL(file);
+    imgEl.src = currentManualPreviewUrl;
+  }
+
+  // ── Step indicator ────────────────────────────────────────────────────────
+  function setSteps(active) {
+    // active: 1 | 2 | 3
+    [step1, step2, step3].forEach((el, i) => {
+      if (!el) return;
+      const num = i + 1;
+      el.classList.toggle("active", num === active);
+      el.classList.toggle("done", num < active);
+    });
+  }
 
   function setStatus(message, isError = false) {
     if (!statusEl) return;
@@ -69,6 +98,7 @@
 
   function clearShot() {
     selectedFile = null;
+    if (currentPreviewUrl) { URL.revokeObjectURL(currentPreviewUrl); currentPreviewUrl = null; }
     if (previewEl) {
       previewEl.src = "";
     }
@@ -86,7 +116,8 @@
       stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       videoEl.srcObject = stream;
       previewWrap?.classList.add("is-live");
-      setStatus("Camera đã sẵn sàng. Hãy bấm Chụp ảnh.");
+      setSteps(2);
+      setStatus("Camera đã sẵn sàng. Hãy bấm nút chụp ảnh.");
     } catch (error) {
       setStatus("Không thể mở camera. Hãy cho phép quyền truy cập hoặc tải ảnh lên.", true);
     }
@@ -115,10 +146,11 @@
     }
 
     selectedFile = blobToFile(blob, `camera-${Date.now()}.jpg`);
-    previewEl.src = URL.createObjectURL(blob);
+    setPreviewSrc(previewEl, blob);
     previewWrap?.classList.add("has-shot");
     await stopCamera();
-    setStatus("Đã chụp ảnh. Bấm Nhận diện để phân tích.");
+    setSteps(3);
+    setStatus("Đã chụp ảnh. Bấm Nhận diện AI để phân tích.");
   }
 
   function handleUpload(event) {
@@ -132,9 +164,10 @@
 
     stopCamera();
     selectedFile = file;
-    previewEl.src = URL.createObjectURL(file);
+    setPreviewSrc(previewEl, file);
     previewWrap?.classList.add("has-shot");
-    setStatus("Đã chọn ảnh. Bấm Nhận diện để phân tích.");
+    setSteps(3);
+    setStatus("Đã chọn ảnh. Bấm Nhận diện AI để phân tích.");
   }
 
   async function runDetection() {
@@ -176,6 +209,7 @@
     if (manualQtyInput) manualQtyInput.value = "1";
     if (manualNoteInput) manualNoteInput.value = "";
     manualSelectedFile = null;
+    if (currentManualPreviewUrl) { URL.revokeObjectURL(currentManualPreviewUrl); currentManualPreviewUrl = null; }
     if (manualImageInput) manualImageInput.value = "";
     if (manualImagePreviewImg) manualImagePreviewImg.src = "";
     if (manualImagePreviewText) manualImagePreviewText.textContent = "Chưa có ảnh, sẽ dùng ảnh theo danh mục";
@@ -206,7 +240,7 @@
 
     manualSelectedFile = file;
     if (manualImagePreviewImg) {
-      manualImagePreviewImg.src = URL.createObjectURL(file);
+      setManualPreviewSrc(manualImagePreviewImg, file);
     }
     if (manualImagePreviewText) {
       manualImagePreviewText.textContent = file.name;
@@ -307,6 +341,7 @@
   btnReset?.addEventListener("click", () => {
     stopCamera();
     clearShot();
+    setSteps(1);
   });
   btnGoResult?.addEventListener("click", goToResult);
   fileInput?.addEventListener("change", handleUpload);

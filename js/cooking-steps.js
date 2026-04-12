@@ -1,50 +1,105 @@
 // js/cooking-steps.js
 
-function finishCooking() {
-  // 1. Lấy thông tin món ăn hiện tại
+/**
+ * Chuẩn hoá chuỗi để so sánh tên nguyên liệu:
+ * bỏ dấu, lowercase, trim khoảng trắng thừa.
+ */
+function normalizeCookingName(text) {
+  return (text || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Hoàn thành nấu ăn:
+ * 1. Lấy danh sách nguyên liệu "có sẵn" từ công thức
+ * 2. Fetch tủ lạnh thực tế từ API
+ * 3. Map từng nguyên liệu → item trong tủ lạnh (fuzzy match tên)
+ * 4. Gọi adjustFridgeItem API để trừ số lượng
+ * 5. Toast + navigate home
+ */
+async function finishCooking() {
   const savedData = localStorage.getItem("sakedo_selected_recipe");
-  if (savedData) {
-    try {
-      const recipe = JSON.parse(savedData);
-      
-      // 2. Lấy kho hàng hiện có (Nếu chưa có thì giả lập rỗng)
-      let inventory = JSON.parse(localStorage.getItem("sakedo_inventory") || "{}");
+  let recipe = null;
+  try { recipe = savedData ? JSON.parse(savedData) : null; } catch { recipe = null; }
 
-      // 3. Trừ nguyên liệu (chỉ trừ những nguyên liệu được đánh dấu là 'available')
-      if (recipe.ingredients && recipe.ingredients.available) {
-        recipe.ingredients.available.forEach(item => {
-          const name = item.name.trim();
-          const usedQty = parseQuantity(item.weight);
+  const availableIngredients = recipe?.ingredients?.available || [];
 
-          if (inventory[name]) {
-            const currentQty = parseQuantity(inventory[name].weight);
-            const unit = inventory[name].unit || extractUnit(item.weight);
-            const newQty = Math.max(0, currentQty - usedQty);
-            
-            if (newQty <= 0) {
-              delete inventory[name]; // Xóa hẳn món nếu hết sạch
-            } else {
-              inventory[name].weight = `${newQty}${unit}`;
-            }
-          }
-        });
-        
-        // Lưu lại kho mới
-        localStorage.setItem("sakedo_inventory", JSON.stringify(inventory));
+  // Nếu không đăng nhập hoặc không có nguyên liệu cần trừ → chuyển trang luôn
+  const isLoggedIn = window.sakedoApi?.getStoredAuth()?.access_token;
+  if (!isLoggedIn || !availableIngredients.length) {
+    if (typeof window.showToast === "function") {
+      window.showToast("Chúc mừng bạn đã hoàn thành món ăn!", "success");
+    }
+    _navigateHome();
+    return;
+  }
+
+  // Disable nút để tránh bấm 2 lần
+  const finishBtn = document.querySelector(".btn-finish-cooking, [onclick='finishCooking()']");
+  if (finishBtn) {
+    finishBtn.disabled = true;
+    finishBtn.textContent = "Đang cập nhật...";
+  }
+
+  try {
+    // Lấy danh sách thực phẩm hiện tại trong tủ từ server
+    const fridgeItems = await window.sakedoApi.getFridgeItems();
+
+    // Match từng nguyên liệu trong công thức với item trong tủ
+    const adjustCalls = [];
+
+    availableIngredients.forEach((ingredient) => {
+      const ingNorm = normalizeCookingName(ingredient.name);
+      const useQty = Math.max(1, parseQuantity(ingredient.weight) || 1);
+
+      // Tìm item trong tủ có tên gần khớp nhất
+      const matched = fridgeItems.find((fi) => {
+        const fiNorm = normalizeCookingName(fi.name);
+        return fiNorm.includes(ingNorm) || ingNorm.includes(fiNorm);
+      });
+
+      if (matched) {
+        const actualQty = Math.min(useQty, Number(matched.quantity) || 1);
+        adjustCalls.push(
+          window.sakedoApi
+            .adjustFridgeItem(matched.id, { action: "use", quantity: actualQty })
+            .catch((err) => {
+              console.warn(`Không thể trừ "${matched.name}":`, err.message);
+            })
+        );
       }
-    } catch (e) {
-      console.error("Lỗi khi cập nhật kho hàng:", e);
+    });
+
+    // Thực hiện tất cả điều chỉnh song song
+    await Promise.all(adjustCalls);
+
+    const updatedCount = adjustCalls.length;
+    if (typeof window.showToast === "function") {
+      window.showToast(
+        updatedCount > 0
+          ? `Chúc mừng! Đã cập nhật ${updatedCount} nguyên liệu trong tủ lạnh.`
+          : "Chúc mừng bạn đã hoàn thành món ăn!",
+        "success"
+      );
+    }
+  } catch (err) {
+    console.error("Lỗi cập nhật tủ lạnh:", err);
+    if (typeof window.showToast === "function") {
+      window.showToast("Hoàn thành món ăn! (Lỗi khi cập nhật tủ lạnh tự động)", "info");
     }
   }
 
-  // 4. Thông báo và chuyển hướng
-  if (typeof window.showToast === "function") {
-    window.showToast("Chúc mừng bạn đã hoàn thành món ăn! Đã cập nhật lại tủ lạnh.", "success");
-  }
+  _navigateHome();
+}
 
+function _navigateHome() {
   setTimeout(() => {
     if (typeof navigate === "function") {
-      navigate('home');
+      navigate("home", document.querySelector(".nav-item"));
     } else {
       window.location.href = "index.html";
     }
@@ -145,17 +200,8 @@ function initCookingStepsDetail() {
   renderCookingSteps(stepsToRender);
 }
 
-// Lắng nghe MutationObserver 
-const appRootSteps = document.getElementById("app-root");
-if (appRootSteps) {
-  const observer = new MutationObserver((mutations) => {
-    for (let m of mutations) {
-      if (m.addedNodes.length > 0) {
-        initCookingStepsDetail();
-      }
-    }
-  });
-  observer.observe(appRootSteps, { childList: true });
-} else {
-  document.addEventListener("DOMContentLoaded", initCookingStepsDetail);
-}
+document.addEventListener("pageChanged", (e) => {
+  if (e.detail.page === "cooking-steps") {
+    initCookingStepsDetail();
+  }
+});

@@ -2,17 +2,17 @@
 .dashboard-wrapper {
   padding: 10px 0px 40px 0px;
   background-color: transparent;
-  font-family: var(--font-family-main), 'Roboto Slab', serif;
+  font-family: var(--font-family-main), 'Inter', sans-serif;
   position: relative;
   width: 100%;
 }
 
 .section-title {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: var(--text-main);
   margin-bottom: 25px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 /* 1. STORAGE CARDS */
@@ -21,36 +21,52 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
 }
+
+/* Staggered entrance animation */
+.storage-cards .s-card:nth-child(1) { animation: fadeInUp 0.5s var(--ease-smooth) 0.05s both; }
+.storage-cards .s-card:nth-child(2) { animation: fadeInUp 0.5s var(--ease-smooth) 0.12s both; }
+.storage-cards .s-card:nth-child(3) { animation: fadeInUp 0.5s var(--ease-smooth) 0.19s both; }
+
 .s-card {
   width: 100%;
-  height: 110px;
-  border-radius: 14px;
-  padding: 15px 25px;
+  height: 115px;
+  border-radius: 18px;
+  padding: 18px 25px;
   color: #fff;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.28s var(--ease-bounce), box-shadow 0.28s ease;
 }
 .s-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.14);
+}
+.s-card:active {
+  transform: translateY(-2px) scale(1.005);
 }
 .s-card h3 {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
   z-index: 1;
   position: relative;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 .s-card .s-count {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 8px 0 0;
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 10px 0 0;
   z-index: 1;
   position: relative;
+  font-family: var(--font-family-display);
+  transition: transform 0.3s var(--ease-bounce);
+}
+
+.s-card:hover .s-count {
+  transform: scale(1.05);
 }
 
 /* Background gradients based on Figma Image 1 */
@@ -100,7 +116,7 @@
 
 /* 2. URGENT & STATS */
 .db-urgent {
-  margin-top: 45px;
+  margin-top: 40px;
 }
 .urgent-cards {
   display: flex;
@@ -110,7 +126,7 @@
 .u-card {
   width: calc((100% - 60px) / 3);
   height: 115px;
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -119,32 +135,51 @@
   cursor: pointer;
   position: relative;
   overflow: visible;
+  transition: transform 0.28s var(--ease-bounce), box-shadow 0.28s ease;
+  animation: fadeInUp 0.5s var(--ease-smooth) 0.25s both;
+}
+.u-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.10);
 }
 .u-card h4 {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 700;
   margin: 0;
-  letter-spacing: 0.3px;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 .u-card .u-count {
-  font-size: 2.2rem;
-  font-weight: 600;
-  margin: 5px 0 0;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin: 6px 0 0;
+  font-family: var(--font-family-display);
+  transition: transform 0.3s var(--ease-bounce);
+}
+.u-card:hover .u-count {
+  transform: scale(1.06);
 }
 
 .card-expiring {
-  background-color: #FCF4F4;
+  background: linear-gradient(135deg, #FFF0EE 0%, #FCF4F4 100%);
+  border: 1px solid rgba(241, 90, 66, 0.10);
 }
 .card-expiring h4, .card-expiring .u-count {
   color: #F15A42;
 }
+.card-expiring:hover {
+  box-shadow: 0 12px 30px rgba(241, 90, 66, 0.15);
+}
 
 .card-stats {
-  background-color: #F2F8F7;
+  background: linear-gradient(135deg, #F0FAF8 0%, #F2F8F7 100%);
+  border: 1px solid rgba(91, 155, 147, 0.10);
 }
 .card-stats h4, .card-stats .u-count {
   color: #5B9B93;
+}
+.card-stats:hover {
+  box-shadow: 0 12px 30px rgba(91, 155, 147, 0.15);
 }
 
 .u-icon-svg {
@@ -154,11 +189,18 @@
   width: 65px;
   height: 65px;
   background: transparent;
+  transition: transform 0.3s var(--ease-bounce);
 }
 .u-icon-svg svg {
   width: 100%;
   height: 100%;
   display: block;
+}
+.u-card:hover .u-icon-svg {
+  transform: scale(1.12) rotate(-5deg);
+}
+.card-expiring.has-expiring .u-icon-svg {
+  animation: float 2s ease-in-out infinite;
 }
 
 /* 3. CHARTS ROW */
@@ -166,13 +208,20 @@
   display: flex;
   gap: 30px;
   margin-top: 40px;
+  animation: fadeInUp 0.5s var(--ease-smooth) 0.32s both;
 }
 .chart-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 25px 30px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.chart-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
 }
 .nutrition-chart-card {
   flex: 0 0 320px;
@@ -345,6 +394,7 @@
 .full-chart {
   margin-top: 40px;
   margin-bottom: 50px;
+  animation: fadeInUp 0.5s var(--ease-smooth) 0.40s both;
 }
 .chart-header {
   display: flex;

@@ -1,260 +1,120 @@
-// js/chat.js
+﻿// js/chat.js  –  Mr. Chè AI suggestion engine
 
+// ─────────────────────────────────────────────
+// 1. STATE
+// ─────────────────────────────────────────────
 let aiSuggestedFoods = [];
 let cachedFridgeItems = [];
+let currentMode = null;
 
-const RECIPE_TEMPLATES = [
-  {
-    name: "Trứng chiên cà",
-    img: "assets/img/trungchien.png",
-    keywords: ["trung", "ca chua"],
-    required: ["trung", "ca chua", "hanh"],
-    steps: [
-      {
-        stepNumber: 1,
-        title: "SƠ CHẾ NGUYÊN LIỆU",
-        instructions: [
-          "Làm sạch trứng và cà chua, thái nhỏ cà chua.",
-          "Sơ chế hành lá, giữ lại phần đầu hành để phi thơm."
-        ]
-      },
-      {
-        stepNumber: 2,
-        title: "CHẾ BIẾN",
-        instructions: [
-          "Phi thơm hành, xào cà chua đến khi mềm.",
-          "Đổ trứng vào, đảo nhẹ đến khi trứng vừa chín tới."
-        ]
-      },
-      {
-        stepNumber: 3,
-        title: "HOÀN THIỆN",
-        instructions: ["Nêm nếm vừa ăn, rắc thêm hành lá và dùng nóng."]
-      }
-    ]
+// ─────────────────────────────────────────────
+// 2. MODE CONFIG
+// ─────────────────────────────────────────────
+const MODES = {
+  gan_het_han: {
+    label: "⏰ Gần hết hạn",
+    color: "#f97316",
+    bgColor: "#fff7ed",
+    subtitle: "Ưu tiên nguyên liệu sắp hết hạn"
   },
-  {
-    name: "Canh chua cá",
-    img: "assets/img/canhchua.png",
-    keywords: ["ca", "ca chua", "thom", "khom"],
-    required: ["ca", "ca chua", "khom"],
-    steps: [
-      {
-        stepNumber: 1,
-        title: "SƠ CHẾ",
-        instructions: [
-          "Sơ chế cá sạch sẽ, cắt khúc vừa ăn.",
-          "Cà chua và thơm rửa sạch, cắt miếng."
-        ]
-      },
-      {
-        stepNumber: 2,
-        title: "NẤU CANH",
-        instructions: [
-          "Nấu nước sôi, cho cá vào nấu chín.",
-          "Thêm cà chua và thơm, nêm nếm vừa miệng."
-        ]
-      },
-      {
-        stepNumber: 3,
-        title: "HOÀN THIỆN",
-        instructions: ["Nêm lại vị chua mặn ngọt, dùng nóng."]
-      }
-    ]
+  giam_can: {
+    label: "🥗 Giảm cân",
+    color: "#22c55e",
+    bgColor: "#f0fdf4",
+    subtitle: "Món ít calo, nhiều rau xanh"
   },
-  {
-    name: "Rau xào tỏi",
-    img: "assets/images/traicay.png",
-    keywords: ["rau", "cai", "bo xoi", "cai thia", "cai ngot"],
-    required: ["rau", "toi"],
-    steps: [
-      {
-        stepNumber: 1,
-        title: "SƠ CHẾ",
-        instructions: ["Rửa sạch rau, để ráo nước.", "Băm nhỏ tỏi."]
-      },
-      {
-        stepNumber: 2,
-        title: "XÀO",
-        instructions: ["Phi thơm tỏi, cho rau vào đảo nhanh tay.", "Nêm muối, hạt nêm vừa ăn."]
-      },
-      {
-        stepNumber: 3,
-        title: "HOÀN THIỆN",
-        instructions: ["Dùng nóng, rau giữ được độ giòn." ]
-      }
-    ]
-  }
-];
-
-const normalizeText = (value) =>
-  (value || "")
-    .toString()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
-
-const buildInventory = (items) => {
-  const normalized = items.map((item) => ({
-    name: item.name || "",
-    quantity: Number(item.quantity) || 1,
-    normalizedName: normalizeText(item.name)
-  }));
-
-  const keywordSet = new Set();
-  normalized.forEach((item) => {
-    item.normalizedName.split(/\s+/).forEach((token) => {
-      if (token) keywordSet.add(token);
-    });
-  });
-
-  return { normalized, keywordSet };
-};
-
-const formatWeight = (quantity) => `${quantity || 1} phần`;
-
-const buildIngredients = (items, requiredKeywords) => {
-  const available = [];
-  const missing = [];
-
-  const requiredSet = new Set(requiredKeywords.map((keyword) => normalizeText(keyword)));
-  const matchedKeywords = new Set();
-
-  items.forEach((item) => {
-    requiredSet.forEach((keyword) => {
-      if (item.normalizedName.includes(keyword)) {
-        matchedKeywords.add(keyword);
-        available.push({
-          name: item.name,
-          weight: formatWeight(item.quantity)
-        });
-      }
-    });
-  });
-
-  requiredSet.forEach((keyword) => {
-    if (!matchedKeywords.has(keyword)) {
-      missing.push({
-        name: keyword,
-        weight: "1 phần"
-      });
-    }
-  });
-
-  return { available, missing };
-};
-
-const buildFallbackSuggestion = (items) => {
-  const topItems = items.slice(0, 3);
-  const title = topItems.length
-    ? `Món từ ${topItems.map((item) => item.name).join(", ")}`
-    : "Món tổng hợp từ tủ lạnh";
-
-  return {
-    name: title,
-    img: "assets/images/khac.png",
-    ingredients: {
-      available: topItems.map((item) => ({
-        name: item.name,
-        weight: formatWeight(item.quantity)
-      })),
-      missing: []
-    },
-    steps: [
-      {
-        stepNumber: 1,
-        title: "SƠ CHẾ",
-        instructions: ["Sơ chế các nguyên liệu đang có, rửa sạch và thái vừa ăn."]
-      },
-      {
-        stepNumber: 2,
-        title: "CHẾ BIẾN",
-        instructions: ["Kết hợp các nguyên liệu theo kiểu xào hoặc nấu canh nhanh."]
-      },
-      {
-        stepNumber: 3,
-        title: "HOÀN THIỆN",
-        instructions: ["Nêm nếm vừa ăn và thưởng thức ngay khi còn nóng."]
-      }
-    ]
-  };
-};
-
-const buildSuggestions = (items) => {
-  const { normalized, keywordSet } = buildInventory(items);
-
-  const scoredTemplates = RECIPE_TEMPLATES.map((template) => {
-    const score = template.keywords.reduce((total, keyword) => {
-      return keywordSet.has(normalizeText(keyword)) ? total + 1 : total;
-    }, 0);
-
-    return { template, score };
-  })
-    .filter((entry) => entry.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  const suggestions = scoredTemplates.map(({ template }) => {
-    return {
-      name: template.name,
-      img: template.img,
-      ingredients: buildIngredients(normalized, template.required),
-      steps: template.steps
-    };
-  });
-
-  if (!suggestions.length && normalized.length) {
-    suggestions.push(buildFallbackSuggestion(normalized));
-  }
-
-  return suggestions;
-};
-
-const fetchAiSuggestions = async (items) => {
-  if (!window.sakedoApi) return [];
-  const auth = window.sakedoApi.getStoredAuth();
-  if (!auth?.access_token) return [];
-
-  try {
-    const response = await window.sakedoApi.suggestRecipes({ items });
-    return Array.isArray(response?.recipes) ? response.recipes : [];
-  } catch (error) {
-    return { recipes: [], error };
+  nau_nhanh: {
+    label: "⚡ Nấu nhanh",
+    color: "#eab308",
+    bgColor: "#fefce8",
+    subtitle: "Dưới 20 phút là xong"
+  },
+  tang_co: {
+    label: "💪 Bổ protein",
+    color: "#3b82f6",
+    bgColor: "#eff6ff",
+    subtitle: "Giàu đạm từ thịt, cá, trứng"
+  },
+  thuan_chay: {
+    label: "🌿 Thuần chay",
+    color: "#10b981",
+    bgColor: "#ecfdf5",
+    subtitle: "Không thịt, không hải sản"
+  },
+  ngau_nhien: {
+    label: "🎲 Ngẫu nhiên",
+    color: "#8b5cf6",
+    bgColor: "#f5f3ff",
+    subtitle: "Bất ngờ từ tủ lạnh của bạn"
   }
 };
+
+// ─────────────────────────────────────────────
+// 3. RECIPE DATABASE & ENGINE — từ recipe-engine.js (shared)
+// ─────────────────────────────────────────────
+// Lazy-init: đọc từ window.recipeEngine lúc cần, tránh crash khi script load
+// Dùng prefix _re_ để tránh conflict với các hàm cùng tên ở main.js, fridge.js...
+function _re() {
+  return window.recipeEngine || {};
+}
+function _re_templates()         { return _re().RECIPE_TEMPLATES || []; }
+function _re_buildInventory()    { return (_re().buildInventory || (() => ({ normalized: [], keywordSet: new Set() }))).apply(null, arguments); }
+function _re_getExpiringItems()  { return (_re().getExpiringItems || (() => [])).apply(null, arguments); }
+function _re_scoreTemplate()     { return (_re().scoreTemplate || (() => 0)).apply(null, arguments); }
+function _re_buildSuggestions()  { return (_re().buildSuggestionsByMode || (() => [])).apply(null, arguments); }
+
+// ─────────────────────────────────────────────
+// 6. UI STATE MANAGEMENT
+// ─────────────────────────────────────────────
 
 const setChatState = (state) => {
-  const welcomeState = document.getElementById("state-welcome");
-  const loadingState = document.getElementById("state-loading");
-  const foodState = document.getElementById("state-food-suggestion");
+  const stateIds = ["state-mode-select", "state-loading", "state-food-suggestion", "state-empty"];
+  stateIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
+  });
+
   const btnRecipe = document.querySelector(".btn-recipe");
   const btnMissing = document.querySelector(".btn-missing");
+  const btnRefresh = document.getElementById("btn-refresh-recipe");
+  const btnBack = document.getElementById("btn-back-mode");
+  const actionGroup = document.getElementById("recipe-action-group");
 
-  if (!welcomeState || !loadingState || !foodState || !btnRecipe) return;
+  if (btnMissing) { btnMissing.classList.add("hidden"); btnMissing.setAttribute("disabled", ""); }
+  if (btnRecipe) btnRecipe.setAttribute("disabled", "");
+  if (btnRefresh) btnRefresh.style.display = "none";
+  if (btnBack) btnBack.style.display = "none";
+  if (actionGroup) actionGroup.style.display = "none";
 
-  welcomeState.classList.add("hidden");
-  loadingState.classList.add("hidden");
-  foodState.classList.add("hidden");
+  const target = document.getElementById(`state-${state === "mode" ? "mode-select" : state === "food" ? "food-suggestion" : state === "empty" ? "empty" : "loading"}`);
+  if (target) target.classList.remove("hidden");
 
-  if (btnMissing) {
-    btnMissing.classList.add("hidden");
-    btnMissing.setAttribute("disabled", "disabled");
+  if (state === "food") {
+    if (btnRecipe) btnRecipe.removeAttribute("disabled");
+    if (btnRefresh) btnRefresh.style.display = "flex";
+    if (btnBack) btnBack.style.display = "flex";
+    if (actionGroup) actionGroup.style.display = "flex";
   }
-
-  if (state === "loading") {
-    loadingState.classList.remove("hidden");
-    btnRecipe.setAttribute("disabled", "disabled");
-    return;
+  if (state === "empty") {
+    if (btnBack) btnBack.style.display = "flex";
   }
+};
 
-  if (state === "suggestion") {
-    foodState.classList.remove("hidden");
-    btnRecipe.removeAttribute("disabled");
-    return;
-  }
+const updateSubtitle = (text) => {
+  const el = document.getElementById("ai-subtitle");
+  if (el) el.textContent = text;
+};
 
-  welcomeState.classList.remove("hidden");
-  btnRecipe.setAttribute("disabled", "disabled");
+const updateModeBadge = (mode) => {
+  const badge = document.getElementById("food-mode-badge");
+  if (!badge) return;
+  const cfg = MODES[mode];
+  if (!cfg) { badge.classList.add("hidden"); return; }
+  badge.textContent = cfg.label;
+  badge.style.background = cfg.bgColor;
+  badge.style.color = cfg.color;
+  badge.style.borderColor = cfg.color + "40";
+  badge.classList.remove("hidden");
 };
 
 const updateMissingCta = (recipe) => {
@@ -263,64 +123,83 @@ const updateMissingCta = (recipe) => {
   if (!btnMissing || !missingText) return;
 
   const missingList = recipe?.ingredients?.missing || [];
-  const missingCount = missingList.length;
-
-  if (missingCount <= 0) {
+  if (!missingList.length) {
     btnMissing.classList.add("hidden");
-    btnMissing.setAttribute("disabled", "disabled");
-    btnMissing.removeAttribute("data-query");
+    btnMissing.setAttribute("disabled", "");
     return;
   }
 
-  missingText.textContent = `Cần mua ${missingCount} thứ`;
+  missingText.textContent = `Cần mua ${missingList.length} nguyên liệu`;
   btnMissing.classList.remove("hidden");
   btnMissing.removeAttribute("disabled");
-
-  const keyword = missingList
-    .map((item) => (item?.name || "").trim())
-    .filter(Boolean)
-    .join(" ");
-  btnMissing.dataset.query = keyword;
+  btnMissing.dataset.query = missingList.map((i) => i.name).filter(Boolean).join(" ");
 };
 
 const renderSuggestion = (index) => {
   if (!aiSuggestedFoods.length) return;
+
   const foodState = document.getElementById("state-food-suggestion");
   const foodImage = document.getElementById("food-preview-img");
   const foodTitle = document.getElementById("food-preview-title");
-  const availabilityBadge = document.getElementById("food-availability-badge");
+  const availBadge = document.getElementById("food-availability-badge");
+  const counterCurrent = document.getElementById("food-counter-current");
+  const counterTotal = document.getElementById("food-counter-total");
+  const preptimeEl = document.getElementById("food-preptime");
+  const preptimeVal = document.getElementById("food-preptime-val");
 
   if (!foodState || !foodImage || !foodTitle) return;
 
-  const safeIndex = ((index % aiSuggestedFoods.length) + aiSuggestedFoods.length) % aiSuggestedFoods.length;
-  const recipe = aiSuggestedFoods[safeIndex];
-  foodState.dataset.currentIndex = safeIndex;
+  const safeIdx = ((index % aiSuggestedFoods.length) + aiSuggestedFoods.length) % aiSuggestedFoods.length;
+  const recipe = aiSuggestedFoods[safeIdx];
+  foodState.dataset.currentIndex = safeIdx;
 
+  // Availability badge
   const have = recipe?.ingredients?.available?.length || 0;
-  const missing = recipe?.ingredients?.missing?.length || 0;
-  const total = have + missing;
-  if (availabilityBadge) {
+  const lack = recipe?.ingredients?.missing?.length || 0;
+  const total = have + lack;
+  if (availBadge) {
     if (total > 0) {
-      availabilityBadge.textContent = `${have}/${total} nguyên liệu có sẵn`;
-      availabilityBadge.classList.remove("hidden");
+      availBadge.textContent = `${have}/${total} nguyên liệu có sẵn`;
+      availBadge.className = `food-availability-badge ${have === total ? "badge-full" : ""}`;
     } else {
-      availabilityBadge.classList.add("hidden");
+      availBadge.className = "food-availability-badge hidden";
     }
   }
 
-  updateMissingCta(recipe);
+  // Prep time badge
+  if (preptimeEl && preptimeVal) {
+    if (recipe.prepTime) {
+      preptimeVal.textContent = recipe.prepTime;
+      preptimeEl.classList.remove("hidden");
+    } else {
+      preptimeEl.classList.add("hidden");
+    }
+  }
 
+  // Mode badge
+  updateModeBadge(currentMode);
+
+  // Counter
+  if (counterCurrent) counterCurrent.textContent = safeIdx + 1;
+  if (counterTotal) counterTotal.textContent = aiSuggestedFoods.length;
+
+  // Animate swap
   foodImage.style.opacity = "0";
+  foodImage.style.transform = "scale(0.97)";
   setTimeout(() => {
-    foodImage.src = recipe.img;
+    foodImage.src = recipe.img || "assets/images/khac.png";
+    foodImage.onerror = () => { foodImage.src = "assets/images/khac.png"; };
     foodTitle.innerText = recipe.name;
     foodImage.style.opacity = "1";
-  }, 150);
+    foodImage.style.transform = "scale(1)";
+  }, 160);
+
+  updateMissingCta(recipe);
 };
 
-const toggleSuggestionState = (showSuggestions) => {
-  setChatState(showSuggestions ? "suggestion" : "welcome");
-};
+// ─────────────────────────────────────────────
+// 7. CORE LOGIC
+// ─────────────────────────────────────────────
 
 const loadFridgeItems = async () => {
   if (!window.sakedoApi) return [];
@@ -328,126 +207,237 @@ const loadFridgeItems = async () => {
   if (!auth?.access_token) return [];
   try {
     return await window.sakedoApi.getFridgeItems();
-  } catch (error) {
+  } catch {
     return [];
   }
 };
 
-const initAiSuggestions = async ({ showToast = false } = {}) => {
+// Cập nhật badge số món available cho từng mode chip
+const updateModeChipCounts = (items) => {
+  const { keywordSet } = items.length ? _re_buildInventory(items) : { keywordSet: new Set() };
+
+  document.querySelectorAll(".mode-chip[data-mode]").forEach((chip) => {
+    const mode = chip.dataset.mode;
+    if (!mode || mode === "gan_het_han" || mode === "ngau_nhien") return;
+
+    const filtered = _re_templates().filter((t) => t.tags && t.tags.includes(mode));
+    const availableCount = filtered.filter((t) => _re_scoreTemplate(t, keywordSet) > 0).length;
+
+    let countEl = chip.querySelector(".mode-chip-count");
+    if (!countEl) {
+      countEl = document.createElement("span");
+      countEl.className = "mode-chip-count";
+      const content = chip.querySelector(".mode-chip-content");
+      if (content) content.appendChild(countEl);
+    }
+    if (availableCount > 0) {
+      countEl.textContent = `${availableCount}/${filtered.length} món có sẵn`;
+      countEl.classList.add("has-match");
+      countEl.style.display = "";
+    } else {
+      countEl.style.display = "none";
+    }
+  });
+
+  // Expiry chip badge
+  const expiringItems = _re_getExpiringItems(items, 7);
+  const expiringChip = document.querySelector('[data-mode="gan_het_han"]');
+  if (expiringChip) {
+    let badge = expiringChip.querySelector(".mode-chip-badge");
+    if (expiringItems.length > 0) {
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "mode-chip-badge";
+        expiringChip.appendChild(badge);
+      }
+      badge.textContent = expiringItems.length;
+    } else if (badge) {
+      badge.remove();
+    }
+  }
+};
+
+const initModeSelector = async () => {
+  setChatState("mode");
+  updateSubtitle("Tương tác trực tuyến");
+  currentMode = null;
+
+  // Gắn onclick trực tiếp vào từng mode chip — đảm bảo click luôn hoạt động
+  const chips = document.querySelectorAll(".mode-chip[data-mode]");
+  chips.forEach((chip) => {
+    chip.onclick = null; // xóa handler cũ tránh trùng lặp
+    chip.onclick = () => {
+      const mode = chip.dataset.mode;
+      if (!mode) return;
+      document.querySelectorAll(".mode-chip").forEach((c) => c.classList.remove("selected"));
+      chip.classList.add("selected");
+      initAiSuggestions(mode);
+    };
+  });
+
+  // Nút back về mode selector
+  const btnBack = document.getElementById("btn-back-mode");
+  const btnEmptyChange = document.getElementById("btn-empty-change");
+  if (btnBack) btnBack.onclick = () => initModeSelector();
+  if (btnEmptyChange) btnEmptyChange.onclick = () => initModeSelector();
+
+  // Nút refresh
+  const btnRefresh = document.getElementById("btn-refresh-recipe");
+  if (btnRefresh) {
+    btnRefresh.onclick = () => {
+      if (!currentMode) return;
+      btnRefresh.style.transform = "rotate(360deg)";
+      setTimeout(() => { btnRefresh.style.transform = ""; }, 400);
+      initAiSuggestions(currentMode).then(() => {
+        if (aiSuggestedFoods.length > 1) {
+          renderSuggestion(Math.floor(Math.random() * aiSuggestedFoods.length));
+        }
+      });
+    };
+  }
+
+  // Pre-load fridge items in background while user picks mode → update chip counts
+  loadFridgeItems().then((items) => {
+    cachedFridgeItems = items;
+    updateModeChipCounts(items);
+  });
+};
+
+const initAiSuggestions = async (mode) => {
+  currentMode = mode;
+  const cfg = MODES[mode] || {};
+
   setChatState("loading");
+  updateSubtitle(`Đang tìm món: ${cfg.label || mode}...`);
+
+  // Ensure fresh fridge data
   cachedFridgeItems = await loadFridgeItems();
 
-  // Thử gọi AI trước
-  const aiResponse = await fetchAiSuggestions(cachedFridgeItems);
-  const aiResults = Array.isArray(aiResponse) ? aiResponse : aiResponse?.recipes || [];
-  const aiError = Array.isArray(aiResponse) ? null : aiResponse?.error;
+  let suggestions = [];
 
-  if (aiResults.length) {
-    // ✅ AI thành công
-    aiSuggestedFoods = aiResults;
-  } else if (cachedFridgeItems.length) {
-    // ✅ Fallback: dùng logic local với RECIPE_TEMPLATES
-    aiSuggestedFoods = buildSuggestions(cachedFridgeItems);
-    if (showToast && typeof window.showToast === "function") {
-      const message = aiError
-        ? "Không thể kết nối AI (API key hoặc mạng). Đang dùng gợi ý từ tủ lạnh của bạn."
-        : "Đang dùng gợi ý thông minh từ tủ lạnh của bạn 🥘";
-			window.showToast(message, "info");
-    }
-  } else {
-    // Tủ lạnh trống
-    aiSuggestedFoods = [];
-    if (showToast && typeof window.showToast === "function") {
-      window.showToast("Tủ lạnh đang trống rồi. Bạn thêm vài món vào nhé, Chè sẽ gợi ý ngay!", "info");
+  // Try backend AI first (if available)
+  if (window.sakedoApi) {
+    try {
+      const auth = window.sakedoApi.getStoredAuth();
+      if (auth?.access_token) {
+        const aiResp = await window.sakedoApi.suggestRecipes({
+          items: cachedFridgeItems,
+          mode: mode
+        });
+        const aiList = Array.isArray(aiResp?.recipes) ? aiResp.recipes : [];
+        if (aiList.length) suggestions = aiList;
+      }
+    } catch {
+      // Silently fall through to local engine
     }
   }
 
-  if (!aiSuggestedFoods.length) {
-    toggleSuggestionState(false);
+  // Local engine as fallback (only when fridge has items)
+  // When fridge is empty, do NOT use local engine — it returns all templates with
+  // everything in "missing", which is misleading. Show empty state instead.
+  if (!suggestions.length && cachedFridgeItems.length > 0) {
+    suggestions = _re_buildSuggestions(cachedFridgeItems, mode);
+  }
+
+  aiSuggestedFoods = suggestions;
+
+  if (!aiSuggestedFoods.length || cachedFridgeItems.length === 0) {
+    setChatState("empty");
+    const emptyMsg = cachedFridgeItems.length === 0
+      ? "Tủ lạnh đang trống – hãy thêm thực phẩm trước nhé!"
+      : (cfg.subtitle || "Không tìm thấy món phù hợp");
+    updateSubtitle(emptyMsg);
+    // Update the empty-state description text based on context
+    const emptyDesc = document.querySelector("#state-empty .empty-desc");
+    if (emptyDesc) {
+      emptyDesc.innerHTML = cachedFridgeItems.length === 0
+        ? "Tủ lạnh chưa có thực phẩm nào.<br />Hãy quét hoặc thêm thực phẩm vào tủ trước nhé!"
+        : "Tủ lạnh chưa có đủ nguyên liệu cho chế độ này.<br />Hãy thêm thực phẩm hoặc thử chế độ khác nhé!";
+    }
     return;
   }
 
-  toggleSuggestionState(true);
+  setChatState("food");
+  updateSubtitle(cfg.subtitle || "Gợi ý từ tủ lạnh của bạn");
   renderSuggestion(0);
+  _bindFoodStateHandlers();
 };
 
-document.addEventListener("click", function (e) {
-  // Bấm nút làm mới
-  if (e.target.closest(".btn-refresh")) {
-		initAiSuggestions({ showToast: true }).then(() => {
-			if (aiSuggestedFoods.length > 1) {
-				const btnRight = document.querySelector(".btn-arrow.right");
-				if (btnRight) btnRight.click();
-			}
-		});
+function _bindFoodStateHandlers() {
+  const foodState = document.getElementById("state-food-suggestion");
+
+  // Mũi tên điều hướng
+  const btnLeft = document.querySelector(".btn-arrow.left");
+  const btnRight = document.querySelector(".btn-arrow.right");
+  if (btnLeft) btnLeft.onclick = () => {
+    const idx = parseInt(foodState?.dataset.currentIndex || "0");
+    renderSuggestion((idx - 1 + aiSuggestedFoods.length) % aiSuggestedFoods.length);
+  };
+  if (btnRight) btnRight.onclick = () => {
+    const idx = parseInt(foodState?.dataset.currentIndex || "0");
+    renderSuggestion((idx + 1) % aiSuggestedFoods.length);
+  };
+
+  // Ảnh món ăn → mở công thức
+  const foodImg = document.getElementById("food-preview-img");
+  if (foodImg) foodImg.onclick = () => _openRecipeDetail();
+
+  // Nút Công thức
+  const btnRecipe = document.querySelector(".btn-recipe");
+  if (btnRecipe) btnRecipe.onclick = () => _openRecipeDetail();
+
+  // Nút Cần mua
+  const btnMissing = document.querySelector(".btn-missing");
+  if (btnMissing) btnMissing.onclick = () => {
+    const query = (btnMissing.dataset.query || "").trim();
+    if (query) window.open(`https://www.google.com/search?q=${encodeURIComponent("mua " + query)}`, "_blank", "noopener,noreferrer");
+  };
+}
+
+function _openRecipeDetail() {
+  const btnRecipe = document.querySelector(".btn-recipe");
+  if (btnRecipe && btnRecipe.hasAttribute("disabled")) return;
+  const foodState = document.getElementById("state-food-suggestion");
+  const idx = parseInt(foodState?.dataset.currentIndex || "0");
+  const recipe = aiSuggestedFoods[idx];
+  if (!recipe) return;
+
+  localStorage.setItem("sakedo_selected_recipe", JSON.stringify({
+    title: recipe.name,
+    img: recipe.img,
+    ingredients: recipe.ingredients,
+    steps: recipe.steps,
+    source: "ai-chat"
+  }));
+
+  if (typeof window.showToast === "function") {
+    window.showToast("Đang mở công thức...", "success");
   }
+  setTimeout(() => {
+    if (typeof navigate === "function") navigate("recipe-detail");
+  }, 280);
+}
 
-  // Bấm mũi tên Trái/Phải
-  if (e.target.closest(".btn-arrow.left") || e.target.closest(".btn-arrow.right")) {
-    if (!aiSuggestedFoods.length) return;
-    const isNext = e.target.closest(".btn-arrow.right") ? 1 : -1;
-    const foodState = document.getElementById("state-food-suggestion");
-    const foodImage = document.getElementById("food-preview-img");
-    const foodTitle = document.getElementById("food-preview-title");
+// ─────────────────────────────────────────────
+// 8. EVENT LISTENERS (page-level — set up via initModeSelector / _bindFoodStateHandlers)
+// ─────────────────────────────────────────────
+// Tất cả handlers được gắn trực tiếp bằng .onclick trong initModeSelector()
+// và _bindFoodStateHandlers() để đảm bảo luôn hoạt động sau mỗi lần navigate.
 
-    let currentIdx = parseInt(foodState.dataset.currentIndex || 0);
-    currentIdx = (currentIdx + isNext + aiSuggestedFoods.length) % aiSuggestedFoods.length;
-    foodState.dataset.currentIndex = currentIdx;
+// ─── Expose ra window để inline onclick trong HTML dùng được ────────────────
+window._chatChipClick = (mode) => {
+  document.querySelectorAll(".mode-chip").forEach((c) => c.classList.remove("selected"));
+  const chip = document.querySelector(`.mode-chip[data-mode="${mode}"]`);
+  if (chip) chip.classList.add("selected");
+  initAiSuggestions(mode);
+};
 
-    foodImage.style.opacity = "0";
-    setTimeout(() => {
-      foodImage.src = aiSuggestedFoods[currentIdx].img;
-      foodTitle.innerText = aiSuggestedFoods[currentIdx].name;
-      foodImage.style.opacity = "1";
-    }, 150);
-  }
+window._chatBackToMode = () => initModeSelector();
 
-  if (e.target.closest(".btn-missing")) {
-    const btnMissing = e.target.closest(".btn-missing");
-    const query = (btnMissing?.dataset?.query || "").trim();
-    if (!query) return;
-
-    const shoppingQuery = `mua ${query}`;
-    const shoppingUrl = `https://www.google.com/search?q=${encodeURIComponent(shoppingQuery)}`;
-    window.open(shoppingUrl, "_blank", "noopener,noreferrer");
-  }
-
-  // Xử lý báo thao tác Công thức hoặc nhấn vào hình ảnh món ăn
-  const isRecipeBtn = e.target.closest(".btn-recipe");
-  const isFoodImg = e.target.closest("#food-preview-img");
-  
-  if (isRecipeBtn || isFoodImg) {
-    const btnRecipe = document.querySelector(".btn-recipe");
-    if (btnRecipe && !btnRecipe.hasAttribute("disabled") && aiSuggestedFoods.length) {
-      if (typeof window.showToast === "function") {
-        window.showToast("Đang mở chi tiết công thức...", "success");
-      }
-      
-      const foodState = document.getElementById("state-food-suggestion");
-      let currentIdx = parseInt(foodState?.dataset?.currentIndex || 0);
-
-      const currentTitle = document.getElementById("food-preview-title")?.innerText || "";
-      let recipeData = aiSuggestedFoods.find(f => currentTitle.includes(f.name)) || aiSuggestedFoods[currentIdx];
-
-      localStorage.setItem("sakedo_selected_recipe", JSON.stringify({ 
-        title: recipeData.name, 
-        img: recipeData.img,
-        ingredients: recipeData.ingredients,
-        steps: recipeData.steps
-      }));
-
-      setTimeout(() => {
-        if (typeof navigate === "function") {
-          navigate('recipe-detail');
-        }
-      }, 300);
-    }
-  }
-});
-
+// Page entered
 document.addEventListener("pageChanged", (event) => {
   if (event.detail.page === "ai-chat") {
-    initAiSuggestions();
+    initModeSelector();
   }
 });
 

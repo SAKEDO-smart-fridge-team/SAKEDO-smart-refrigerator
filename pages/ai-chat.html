@@ -1,67 +1,160 @@
 
-
 <section class="ai-chat-container">
   <div class="ai-suggest-card">
+
+    <!-- HEADER -->
     <div class="ai-card-header">
       <div class="ai-chef-info">
-        <img src="assets/img/Chè.png" alt="Mr. Chè" class="ai-avatar" onerror="this.src='assets/img/Chè.png'" />
+        <img src="assets/img/Chè.png" alt="Mr. Chè" class="ai-avatar"
+          onerror="this.src='assets/img/Chè.png'" />
         <div class="ai-text">
-          <h3 data-i18n="chat-title">Mr. Chè</h3>
-          <p data-i18n="chat-online">Hôm nay vào bếp cùng Chè nhé!</p>
+          <h3 data-i18n="chat-title">Mr. Chè - Trợ lý của bạn</h3>
+          <p id="ai-subtitle" class="ai-subtitle-text">Tương tác trực tuyến</p>
         </div>
       </div>
       <div class="ai-card-actions">
-        <button class="btn-icon" type="button" title="Lịch sử gợi ý" aria-label="Lịch sử gợi ý">
+        <button class="btn-icon" id="btn-back-mode" type="button" title="Đổi chế độ" style="display:none;" onclick="window._chatBackToMode && window._chatBackToMode()">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button class="btn-icon" id="btn-history" type="button" title="Lịch sử">
           <i class="fa-solid fa-clock-rotate-left"></i>
         </button>
-        <button class="btn-icon" type="button" title="Đóng" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+        <button class="btn-icon" type="button" title="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
     </div>
 
+    <!-- BODY -->
     <div class="ai-card-body">
-      <!-- Trạng thái chào mừng ban đầu -->
-      <div id="state-welcome" class="state-container">
-        <h2 data-i18n="chat-welcome-title">Hôm nay ăn gì ?!</h2>
-        <p data-i18n="chat-welcome-desc">
-          Cậu hãy nhấn nút làm mới để Chè giúp bạn tìm<br />những món ăn phù hợp
-          nhé!
-        </p>
+
+      <!-- STATE 1: Mode selector -->
+      <div id="state-mode-select" class="state-container">
+        <div class="mode-header">
+          <h2 class="mode-title">Hôm nay bạn muốn ăn gì?</h2>
+          <p class="mode-desc">Chọn nhu cầu để Mr. Chè gợi ý món phù hợp từ tủ lạnh của bạn</p>
+        </div>
+        <div class="mode-grid">
+
+          <button class="mode-chip" data-mode="gan_het_han" onclick="window._chatChipClick && window._chatChipClick('gan_het_han')">
+            <span class="mode-chip-icon">⏰</span>
+            <div class="mode-chip-content">
+              <span class="mode-chip-label">Gần hết hạn</span>
+              <span class="mode-chip-desc">Dùng trước khi hỏng</span>
+            </div>
+          </button>
+
+          <button class="mode-chip" data-mode="giam_can" onclick="window._chatChipClick && window._chatChipClick('giam_can')">
+            <span class="mode-chip-icon">🥗</span>
+            <div class="mode-chip-content">
+              <span class="mode-chip-label">Giảm cân</span>
+              <span class="mode-chip-desc">Ít calo, nhiều rau xanh</span>
+            </div>
+          </button>
+
+          <button class="mode-chip" data-mode="nau_nhanh" onclick="window._chatChipClick && window._chatChipClick('nau_nhanh')">
+            <span class="mode-chip-icon">⚡</span>
+            <div class="mode-chip-content">
+              <span class="mode-chip-label">Nấu nhanh</span>
+              <span class="mode-chip-desc">Dưới 20 phút là xong</span>
+            </div>
+          </button>
+
+          <button class="mode-chip" data-mode="tang_co" onclick="window._chatChipClick && window._chatChipClick('tang_co')">
+            <span class="mode-chip-icon">💪</span>
+            <div class="mode-chip-content">
+              <span class="mode-chip-label">Bổ protein</span>
+              <span class="mode-chip-desc">Thịt, cá, trứng giàu đạm</span>
+            </div>
+          </button>
+
+          <button class="mode-chip" data-mode="thuan_chay" onclick="window._chatChipClick && window._chatChipClick('thuan_chay')">
+            <span class="mode-chip-icon">🌿</span>
+            <div class="mode-chip-content">
+              <span class="mode-chip-label">Thuần chay</span>
+              <span class="mode-chip-desc">Không thịt, không cá</span>
+            </div>
+          </button>
+
+          <button class="mode-chip" data-mode="ngau_nhien" onclick="window._chatChipClick && window._chatChipClick('ngau_nhien')">
+            <span class="mode-chip-icon">🎲</span>
+            <div class="mode-chip-content">
+              <span class="mode-chip-label">Ngẫu nhiên</span>
+              <span class="mode-chip-desc">Bất ngờ từ tủ lạnh</span>
+            </div>
+          </button>
+
+        </div>
       </div>
 
-      <!-- Trạng thái loading khi chờ AI -->
+      <!-- STATE 2: Loading -->
       <div id="state-loading" class="state-container hidden">
-        <img src="assets/img/Chè.png" alt="Mr. Chè" class="ai-avatar-bounce" />
+        <img src="assets/img/Chè.png" alt="Mr. Chè" class="ai-avatar-bounce"
+          onerror="this.style.display='none'" />
         <p class="loading-text">Mr. Chè đang nghĩ món<span class="loading-dots"></span></p>
       </div>
 
-      <!-- Trạng thái hiện món ăn -->
+      <!-- STATE 3: Food suggestion -->
       <div id="state-food-suggestion" class="state-container hidden" data-current-index="0">
-        <button class="btn-arrow left" type="button" title="Món trước" aria-label="Món trước"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="btn-arrow left" type="button" title="Món trước" aria-label="Món trước">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
         <div class="food-card-preview">
-          <img id="food-preview-img" src="assets/img/trungchien.png" alt="Food" />
-          <div id="food-availability-badge" class="food-availability-badge hidden">0/0 nguyên liệu có sẵn</div>
+          <img id="food-preview-img" src="" alt="Food" />
+          <div id="food-availability-badge" class="food-availability-badge hidden">0/0 nguyên liệu</div>
+          <div id="food-mode-badge" class="food-mode-badge hidden"></div>
           <div class="food-overlay">
-            <h4 id="food-preview-title">Trứng chiên cà</h4>
+            <div class="food-overlay-info">
+              <h4 id="food-preview-title">---</h4>
+              <span id="food-preptime" class="food-preptime hidden">
+                <i class="fa-solid fa-clock"></i> <span id="food-preptime-val">--</span> phút
+              </span>
+            </div>
             <div class="food-icon-circle">
               <i class="fa-solid fa-bowl-rice"></i>
             </div>
           </div>
+          <div class="food-card-counter">
+            <span id="food-counter-current">1</span>/<span id="food-counter-total">1</span>
+          </div>
         </div>
-        <button class="btn-arrow right" type="button" title="Món tiếp theo" aria-label="Món tiếp theo"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="btn-arrow right" type="button" title="Món tiếp theo" aria-label="Món tiếp theo">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
       </div>
+
+      <!-- STATE 4: Empty / no match -->
+      <div id="state-empty" class="state-container hidden">
+        <div class="empty-icon">🫙</div>
+        <h3 class="empty-title">Không tìm được món phù hợp</h3>
+        <p class="empty-desc">
+          Tủ lạnh chưa có đủ nguyên liệu cho chế độ này.<br />
+          Hãy thêm thực phẩm hoặc thử chế độ khác nhé!
+        </p>
+        <button class="btn-change-mode" id="btn-empty-change" onclick="window._chatBackToMode && window._chatBackToMode()">
+          <i class="fa-solid fa-arrow-left"></i> Chọn lại chế độ
+        </button>
+      </div>
+
     </div>
 
+    <!-- FOOTER -->
     <div class="ai-card-footer">
-      <div class="recipe-action-group">
+      <div class="recipe-action-group" id="recipe-action-group">
         <button class="btn-recipe" disabled>
-          <i class="fa-regular fa-file-lines"></i> <span data-i18n="chat-recipe-btn">Công thức</span>
+          <i class="fa-regular fa-file-lines"></i>
+          <span data-i18n="chat-recipe-btn">Công thức</span>
         </button>
         <button class="btn-missing hidden" disabled>
           <i class="fa-solid fa-cart-shopping"></i>
           <span id="missing-cta-text">Cần mua 0 thứ</span>
         </button>
       </div>
-      <button class="btn-refresh" type="button" title="Làm mới gợi ý" aria-label="Làm mới gợi ý"><i class="fa-solid fa-rotate"></i></button>
+      <button class="btn-refresh" id="btn-refresh-recipe" type="button"
+        title="Gợi ý lại" style="display:none;">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
     </div>
+
   </div>
 </section>

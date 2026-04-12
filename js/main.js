@@ -1,3 +1,34 @@
+/**
+ * Animate a numeric element from 0 to `target` over `duration` ms.
+ * @param {HTMLElement} el
+ * @param {number} target
+ * @param {number} duration  (ms, default 700)
+ * @param {string} [format]  "padded" → pad to 2 digits with leading zero
+ */
+function animateCounter(el, target, duration = 700, format = "normal") {
+  if (!el) return;
+  const start = performance.now();
+  const from = 0;
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease-out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(from + (target - from) * eased);
+
+    if (format === "padded") {
+      el.textContent = String(current).padStart(2, "0");
+    } else {
+      el.textContent = String(current);
+    }
+
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 	// Khởi tạo ngôn ngữ
 	if (window.sakedoI18n) {
@@ -102,8 +133,9 @@ function getDaysLeft(expiryDate) {
 }
 
 function normalizeLocation(location) {
-	if (location === "nganlanh") return "tulanh";
-	return location || "tulanh";
+	// Giữ nguyên từng vị trí, không gộp nganlanh vào tulanh
+	const valid = ["tulanh", "ngandong", "nganlanh"];
+	return valid.includes(location) ? location : "tulanh";
 }
 
 async function updateHomeStats() {
@@ -142,9 +174,9 @@ async function updateHomeStats() {
 			carbs: 0
 		};
 
-		fridgeCountEls.forEach((el) => (el.textContent = "00"));
-		freezerCountEls.forEach((el) => (el.textContent = "00"));
-		pantryCountEls.forEach((el) => (el.textContent = "00"));
+		fridgeCountEls.forEach((el) => (el.textContent = "00")); // TỦ LẠNH
+		freezerCountEls.forEach((el) => (el.textContent = "00")); // NGĂN ĐÁ
+		pantryCountEls.forEach((el) => (el.textContent = "00")); // NGĂN LẠNH
 		if (expiringCountEl) expiringCountEl.textContent = "0";
 		if (statsCountEl) statsCountEl.textContent = "0";
 		if (capInfoText) capInfoText.textContent = "0%";
@@ -183,6 +215,7 @@ async function updateHomeStats() {
 			if (location === "tulanh") counts.tulanh += 1;
 			else if (location === "ngandong") counts.ngandong += 1;
 			else if (location === "nganlanh") counts.nganlanh += 1;
+			// Mỗi item chỉ được đếm vào đúng 1 ngăn
 
 			const daysLeft = getDaysLeft(item.expiry_date);
 			if (daysLeft !== null && daysLeft <= 3) counts.expiring += 1;
@@ -193,18 +226,59 @@ async function updateHomeStats() {
 			else counts.carbs += Number(item.quantity) || 1;
 		});
 
-		fridgeCountEls.forEach((el) => (el.textContent = String(counts.tulanh + counts.nganlanh).padStart(2, "0")));
-		freezerCountEls.forEach((el) => (el.textContent = String(counts.ngandong).padStart(2, "0")));
-		pantryCountEls.forEach((el) => (el.textContent = String(counts.carbs).padStart(2, "0")));
-		if (expiringCountEl) expiringCountEl.textContent = String(counts.expiring);
-		if (statsCountEl) statsCountEl.textContent = String(counts.total);
+		// Card 1 – TỦ LẠNH: chỉ đếm items có location = tulanh
+		fridgeCountEls.forEach((el) => animateCounter(el, counts.tulanh, 800, "padded"));
+		// Card 2 – NGĂN ĐÁ: chỉ đếm items có location = ngandong
+		freezerCountEls.forEach((el) => animateCounter(el, counts.ngandong, 800, "padded"));
+		// Card 3 – NGĂN LẠNH: chỉ đếm items có location = nganlanh
+		pantryCountEls.forEach((el) => animateCounter(el, counts.nganlanh, 800, "padded"));
+		if (expiringCountEl) animateCounter(expiringCountEl, counts.expiring, 700);
+		if (statsCountEl) animateCounter(statsCountEl, counts.total, 700);
+
+		// Add pulsing glow when there are expiring items
+		const expiringCard = document.querySelector(".card-expiring");
+		if (expiringCard) {
+			if (counts.expiring > 0) {
+				expiringCard.classList.add("has-expiring");
+			} else {
+				expiringCard.classList.remove("has-expiring");
+			}
+		}
 
 		const totalCapacity = 20;
 		const usedPercent = Math.min(100, Math.round((counts.total / totalCapacity) * 100));
 		const freePercent = 100 - usedPercent;
-		if (capInfoText) capInfoText.textContent = `${freePercent}%`;
-		if (circleInner) circleInner.textContent = String(counts.total);
-		if (emptyFillEl) emptyFillEl.style.transform = `rotate(${1.8 * usedPercent}deg)`;
+
+		// Animate percentage text
+		if (capInfoText) {
+			let startVal = 0;
+			const endVal = freePercent;
+			const dur = 800;
+			const t0 = performance.now();
+			const animPct = (now) => {
+				const p = Math.min((now - t0) / dur, 1);
+				const eased = 1 - Math.pow(1 - p, 3);
+				capInfoText.textContent = `${Math.round(startVal + (endVal - startVal) * eased)}%`;
+				if (p < 1) requestAnimationFrame(animPct);
+			};
+			requestAnimationFrame(animPct);
+		}
+
+		if (circleInner) animateCounter(circleInner, counts.total, 800);
+
+		// Animate semi-circle fill
+		if (emptyFillEl) {
+			const targetRot = 1.8 * usedPercent;
+			let startTime = null;
+			const animFill = (now) => {
+				if (!startTime) startTime = now;
+				const p = Math.min((now - startTime) / 900, 1);
+				const eased = 1 - Math.pow(1 - p, 3);
+				emptyFillEl.style.transform = `rotate(${targetRot * eased}deg)`;
+				if (p < 1) requestAnimationFrame(animFill);
+			};
+			requestAnimationFrame(animFill);
+		}
 
 		if (nutritionLegendItems.length >= 3) {
 			nutritionLegendItems[0].innerHTML = `<span class="dot c-red"></span> ${counts.protein} <br /><small data-i18n="db-protein">Đạm</small>`;

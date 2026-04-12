@@ -7,44 +7,78 @@
       <p class="scan-subtitle">Hỗ trợ chụp bằng camera hoặc tải ảnh lên, tự nhận diện nhiều vật thể và điền số lượng.</p>
     </div>
 
+    <!-- Step flow indicator -->
+    <div class="scan-steps">
+      <div class="scan-step active" id="step-1">
+        <span class="step-num">1</span>
+        <span class="step-label">Mở / Tải ảnh</span>
+      </div>
+      <div class="scan-step-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+      <div class="scan-step" id="step-2">
+        <span class="step-num">2</span>
+        <span class="step-label">Chụp ảnh</span>
+      </div>
+      <div class="scan-step-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+      <div class="scan-step" id="step-3">
+        <span class="step-num">3</span>
+        <span class="step-label">Nhận diện</span>
+      </div>
+    </div>
+
     <div class="camera-preview-wrap" id="camera-preview-wrap">
+      <!-- Scanner corners overlay -->
+      <div class="scanner-corners">
+        <span class="scan-corner tl"></span><span class="scan-corner tr"></span>
+        <span class="scan-corner bl"></span><span class="scan-corner br"></span>
+      </div>
+
       <video id="camera-video" autoplay playsinline muted></video>
       <img id="captured-preview" alt="Ảnh đã chụp" />
+
       <div class="camera-empty" id="camera-empty">
         <i class="fa-solid fa-camera"></i>
-        <p>Nhấn "Mở camera" hoặc "Tải ảnh" để bắt đầu</p>
+        <p>Nhấn <strong>Mở camera</strong> hoặc <strong>Tải ảnh</strong> để bắt đầu</p>
       </div>
-      <button class="capture-inside-btn" id="btn-capture" type="button">
-        <i class="fa-solid fa-circle-dot"></i>
-        <span>Chụp ảnh</span>
+
+      <!-- Shutter button — to lớn, dễ bấm -->
+      <button class="shutter-btn" id="btn-capture" type="button" title="Chụp ảnh">
+        <span class="shutter-ring"></span>
+        <span class="shutter-dot"></span>
       </button>
     </div>
 
-    <div class="scan-toolbar">
-      <button class="scan-btn" id="btn-open-camera">
+    <!-- Toolbar phụ: 3 nút nhỏ, cùng hàng -->
+    <div class="scan-toolbar-secondary">
+      <button class="scan-btn-sm" id="btn-open-camera">
         <i class="fa-solid fa-video"></i>
         <span>Mở camera</span>
       </button>
-      <label class="scan-btn upload-btn" for="file-upload-image">
+      <label class="scan-btn-sm upload-btn" for="file-upload-image">
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <span>Tải ảnh</span>
       </label>
       <input id="file-upload-image" type="file" accept="image/*" hidden />
-      <button class="scan-btn primary" id="btn-run-detect">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-        <span>Nhận diện</span>
-      </button>
-      <button class="scan-btn ghost" id="btn-reset-shot">
+      <button class="scan-btn-sm ghost" id="btn-reset-shot">
         <i class="fa-solid fa-arrow-rotate-left"></i>
         <span>Làm mới</span>
       </button>
     </div>
 
+    <!-- Nút nhận diện — full width, nổi bật -->
+    <button class="btn-detect-primary" id="btn-run-detect" type="button">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span>Nhận diện AI</span>
+    </button>
+
     <div class="scan-status" id="scan-status"></div>
 
-    <div class="form-actions">
-      <button class="btn-back" onclick="navigate('home', document.querySelector('.nav-item'))">Trở về</button>
-      <button class="btn-done" id="btn-go-result">Đến kết quả</button>
+    <div class="form-actions scan-form-actions">
+      <button class="btn-back" onclick="navigate('home', document.querySelector('.nav-item'))">
+        <i class="fa-solid fa-arrow-left"></i> Trở về
+      </button>
+      <button class="btn-done" id="btn-go-result">
+        Đến kết quả <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
   </div>
 
@@ -62,10 +96,6 @@
     <div class="form-group" id="manual-location-group">
       <label class="form-label">Vị trí lưu</label>
       <div class="location-options" id="manual-location-options">
-        <button class="location-btn" data-location="tulanh" type="button">
-          <img src="assets/images/tlanh.png" alt="" class="option-icon" />
-          <span>Tủ lạnh</span>
-        </button>
         <button class="location-btn" data-location="ngandong" type="button">
           <img src="assets/images/ngandong.png" alt="" class="option-icon" />
           <span>Ngăn đá</span>

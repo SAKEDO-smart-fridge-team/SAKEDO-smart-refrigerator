@@ -58,16 +58,20 @@ async def add_items_to_fridge(
             "location": item.location,
         }
 
+        set_fields: dict = {
+            "category": item.category,
+            "image_url": image_url,
+            "updated_at": now,
+        }
+        # Chỉ cập nhật note khi client gửi giá trị thực (tránh xóa note cũ khi quét scan)
+        if item.note is not None:
+            set_fields["note"] = item.note.strip()
+
         update_result = await db.fridge_items.update_one(
             filter_query,
             {
                 "$inc": {"quantity": qty},
-                "$set": {
-                    "category": item.category,
-                    "note": item.note,
-                    "image_url": image_url,
-                    "updated_at": now,
-                },
+                "$set": set_fields,
                 "$setOnInsert": {
                     "created_at": now,
                     "user_id": user_id,

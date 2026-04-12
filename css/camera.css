@@ -760,3 +760,310 @@ body.dark-theme .scan-loading-box {
 .validation-msg.show {
   display: flex;
 }
+
+/* =========================================
+   TOUCH-OPTIMIZED CAMERA UI
+   ========================================= */
+
+/* ── Step flow ─────────────────────────────────────────────────────────────── */
+.scan-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.scan-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #dde5ed;
+  background: #f5f8fb;
+  color: #8fa5b5;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.scan-step .step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #dde5ed;
+  color: #8fa5b5;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.scan-step.active {
+  border-color: #4e88a7;
+  background: #e9f3f9;
+  color: #2f6685;
+}
+
+.scan-step.active .step-num {
+  background: #4e88a7;
+  color: #fff;
+}
+
+.scan-step.done {
+  border-color: #6abf85;
+  background: #e8f7ee;
+  color: #357a52;
+}
+
+.scan-step.done .step-num {
+  background: #6abf85;
+  color: #fff;
+}
+
+.scan-step-arrow {
+  color: #c0cdd6;
+  font-size: 0.7rem;
+}
+
+/* ── Scanner corner brackets ─────────────────────────────────────────────── */
+.scanner-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  display: none;
+}
+
+.camera-preview-wrap.is-live .scanner-corners,
+.camera-preview-wrap.has-shot .scanner-corners {
+  display: block;
+}
+
+.scan-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgba(255, 255, 255, 0.85);
+  border-style: solid;
+  border-width: 0;
+}
+
+.scan-corner.tl { top: 12px;  left: 12px;  border-top-width: 3px; border-left-width: 3px;  border-radius: 4px 0 0 0; }
+.scan-corner.tr { top: 12px;  right: 12px; border-top-width: 3px; border-right-width: 3px; border-radius: 0 4px 0 0; }
+.scan-corner.bl { bottom: 70px; left: 12px;  border-bottom-width: 3px; border-left-width: 3px;  border-radius: 0 0 0 4px; }
+.scan-corner.br { bottom: 70px; right: 12px; border-bottom-width: 3px; border-right-width: 3px; border-radius: 0 0 4px 0; }
+
+/* ── Shutter button ──────────────────────────────────────────────────────── */
+.shutter-btn {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 5;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.camera-preview-wrap.is-live .shutter-btn {
+  display: flex;
+}
+
+.shutter-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  transition: transform 0.15s ease;
+}
+
+.shutter-dot {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.shutter-btn:hover .shutter-dot,
+.shutter-btn:active .shutter-dot {
+  transform: scale(0.88);
+  background: #e0eff8;
+}
+
+.shutter-btn:active .shutter-ring {
+  transform: scale(1.08);
+}
+
+/* Ẩn scanner-corners bottom line đè lên shutter */
+.camera-preview-wrap.is-live .scan-corner.bl,
+.camera-preview-wrap.is-live .scan-corner.br {
+  bottom: 100px;
+}
+
+/* ── Toolbar phụ (3 nút nhỏ) ────────────────────────────────────────────── */
+.scan-toolbar-secondary {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.scan-btn-sm {
+  flex: 1;
+  max-width: 160px;
+  min-height: 50px;
+  border-radius: 14px;
+  border: 1.5px solid #d7e0e8;
+  background: #ffffff;
+  color: #3f5566;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scan-btn-sm.ghost {
+  background: #eff4f8;
+  border-color: #e0e8ef;
+}
+
+.scan-btn-sm:hover,
+.scan-btn-sm:active {
+  background: #e3eef5;
+  border-color: #8bb8d0;
+  transform: translateY(-1px);
+}
+
+/* ── Detect primary button ──────────────────────────────────────────────── */
+.btn-detect-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4e88a7 0%, #357596 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(78, 136, 167, 0.32);
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-detect-primary i {
+  font-size: 1.1rem;
+}
+
+.btn-detect-primary:hover {
+  background: linear-gradient(135deg, #3d7a9b 0%, #2b6585 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(78, 136, 167, 0.4);
+}
+
+.btn-detect-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(78, 136, 167, 0.28);
+}
+
+.btn-detect-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Form actions bar ───────────────────────────────────────────────────── */
+.scan-form-actions {
+  margin-top: 20px;
+}
+
+.scan-form-actions .btn-back,
+.scan-form-actions .btn-done {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scan-form-actions .btn-done {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────────────────── */
+body.dark-theme .scan-step {
+  border-color: #3a4a5a;
+  background: #1f2a38;
+  color: #7090a5;
+}
+
+body.dark-theme .scan-step .step-num {
+  background: #3a4a5a;
+  color: #7090a5;
+}
+
+body.dark-theme .scan-step.active {
+  border-color: #5c9ce6;
+  background: #1c2d40;
+  color: #7eb8d4;
+}
+
+body.dark-theme .scan-step.active .step-num {
+  background: #5c9ce6;
+  color: #fff;
+}
+
+body.dark-theme .scan-step.done {
+  border-color: #4caf77;
+  background: #162a20;
+  color: #4caf77;
+}
+
+body.dark-theme .scan-step-arrow {
+  color: #445566;
+}
+
+body.dark-theme .scan-btn-sm {
+  background: #1f2a38;
+  border-color: #3c4a5d;
+  color: #d8e2ea;
+}
+
+body.dark-theme .scan-btn-sm.ghost {
+  background: #1a2230;
+}
+
+body.dark-theme .scan-btn-sm:hover {
+  background: #263447;
+  border-color: #5c9ce6;
+}
+
+body.dark-theme .btn-detect-primary {
+  background: linear-gradient(135deg, #5c9ce6 0%, #3a7ac8 100%);
+  box-shadow: 0 6px 18px rgba(92, 156, 230, 0.28);
+}

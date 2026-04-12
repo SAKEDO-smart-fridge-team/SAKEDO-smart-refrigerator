@@ -3,7 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sakedo App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="css/global.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -39,13 +42,6 @@
         </div>
 
         <div class="camera-btn" onclick="navigate('camera', this)">
-          <div class="camera-bulge">
-            <i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-                <circle cx="12" cy="13" r="3" />
-              </svg></i>
-          </div>
         </div>
 
         <div class="nav-item" onclick="navigate('ai-chat', this)">
@@ -102,6 +98,17 @@
         </div>
       </div>
     </aside>
+
+    <!-- Camera-bulge floating button — tách khỏi sidebar để tránh clip/stacking context -->
+    <div class="camera-bulge" id="camera-bulge"
+      onclick="navigate('camera', document.querySelector('.camera-btn'))" title="Quét nhận diện">
+      <i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+          <circle cx="12" cy="13" r="3" />
+        </svg></i>
+    </div>
+
     <div class="main-wrapper">
       <header class="topbar">
         <div id="auth-buttons" class="auth-buttons" style="display: none;">
@@ -146,11 +153,42 @@
   <script src="js/main.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/profile.js"></script>
+  <script src="js/recipe-engine.js"></script>
   <script src="js/chat.js"></script>
   <script src="js/recipe-detail.js"></script>
   <script src="js/cooking-steps.js"></script>
   <script src="js/favorite.js"></script>
   <script src="js/fridge.js"></script>
+  <script src="js/ripple.js"></script>
+  <script>
+    // Định vị camera-bulge bám theo camera-btn (vì camera-bulge dùng position:fixed)
+    function updateCameraBulge() {
+      const btn = document.querySelector('.camera-btn');
+      const bulge = document.getElementById('camera-bulge');
+      if (!btn || !bulge) return;
+      const rect = btn.getBoundingClientRect();
+      bulge.style.left = rect.right + 'px';
+      bulge.style.top = (rect.top + rect.height / 2) + 'px';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      updateCameraBulge();
+
+      // Theo dõi sidebar expand/collapse (transition width)
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar && window.ResizeObserver) {
+        new ResizeObserver(updateCameraBulge).observe(sidebar);
+      }
+
+      // Cập nhật khi resize cửa sổ
+      window.addEventListener('resize', updateCameraBulge);
+
+      // Cập nhật sau mỗi lần đổi trang
+      document.addEventListener('pageChanged', function () {
+        requestAnimationFrame(updateCameraBulge);
+      });
+    });
+  </script>
 </body>
 
 </html>

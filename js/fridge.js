@@ -6,11 +6,17 @@ let itemsToShow = 6;
 let currentEditingItemId = null;
 let currentAdjustAction = null;
 
-const suggestedRecipes = [
-  { title: "Cá chiên sốt cà", img: "assets/images/cathu.png", type: "man" },
-  { title: "Canh chua cá", img: "assets/img/canhchua.png", type: "canh" },
-  { title: "Trứng chiên cà", img: "assets/img/trungchien.png", type: "man" }
-];
+// Lưu danh sách gợi ý hiện tại (set sau khi fetch) để click có thể tham chiếu
+let activeSuggestedRecipes = [];
+
+// Hàm lấy công thức dự phòng từ recipe-engine (thay thế FALLBACK_RECIPES cứng)
+// Khi window.recipeEngine chưa sẵn sàng, dùng mảng rỗng để tránh crash
+function _getLocalFallbackRecipes(items) {
+  if (window.recipeEngine) {
+    return window.recipeEngine.buildSuggestionsByMode(items || fridgeData, "ngau_nhien").slice(0, 3);
+  }
+  return [];
+}
 
 function calculateDaysLeft(expiryDate) {
   if (!expiryDate) return null;
@@ -169,17 +175,43 @@ function renderFridgeList(category = "all") {
   listContainer.innerHTML = html;
 }
 
-function renderSuggestedRecipes() {
+async function renderSuggestedRecipes() {
   const suggestContainer = document.getElementById("suggested-recipes-grid");
   if (!suggestContainer) return;
 
-  suggestContainer.innerHTML = suggestedRecipes
+  suggestContainer.innerHTML = `<p style="text-align:center;padding:20px;color:#aaa;font-size:0.9rem;">Đang tải gợi ý món ăn...</p>`;
+
+  let recipes = [];
+
+  // Thử gọi backend AI với nguyên liệu trong tủ lạnh
+  const isLoggedIn = window.sakedoApi?.getStoredAuth()?.access_token;
+  if (isLoggedIn && fridgeData.length > 0) {
+    try {
+      const response = await window.sakedoApi.suggestRecipes({ items: fridgeData });
+      if (Array.isArray(response?.recipes) && response.recipes.length) {
+        recipes = response.recipes.slice(0, 3);
+      }
+    } catch {
+      // API không khả dụng → dùng fallback bên dưới
+    }
+  }
+
+  // Fallback: nếu API không trả về gì, dùng engine cục bộ (theo nguyên liệu thực tế trong tủ)
+  if (!recipes.length) {
+    recipes = _getLocalFallbackRecipes(fridgeData);
+  }
+
+  activeSuggestedRecipes = recipes;
+
+  suggestContainer.innerHTML = recipes
     .map(
-      (recipe) => `
-      <div class="recipe-suggest-card" onclick="navigate('recipe-detail')">
-        <img src="${recipe.img}" alt="${recipe.title}">
+      (recipe, idx) => `
+      <div class="recipe-suggest-card" onclick="openFridgeRecipeDetail(${idx})">
+        <img src="${recipe.img || "assets/images/khac.png"}"
+             alt="${recipe.name || recipe.title || ""}"
+             onerror="this.onerror=null;this.src='assets/images/khac.png';">
         <div class="recipe-overlay">
-          <h3>${recipe.title}</h3>
+          <h3>${recipe.name || recipe.title || "Món ăn"}</h3>
           <div class="category-icon">
             <i class="fa-solid fa-bowl-food"></i>
           </div>
@@ -189,6 +221,32 @@ function renderSuggestedRecipes() {
     )
     .join("");
 }
+
+/**
+ * Mở Recipe Detail từ gợi ý trên trang Tủ lạnh.
+ * Lưu đúng dữ liệu vào localStorage trước khi navigate.
+ */
+function openFridgeRecipeDetail(idx) {
+  const recipe = activeSuggestedRecipes[idx];
+  if (!recipe) return;
+
+  localStorage.setItem(
+    "sakedo_selected_recipe",
+    JSON.stringify({
+      title: recipe.name || recipe.title || "Món ăn",
+      img: recipe.img || "assets/images/khac.png",
+      ingredients: recipe.ingredients || { available: [], missing: [] },
+      steps: recipe.steps || [],
+      source: "fridge"
+    })
+  );
+
+  if (typeof navigate === "function") {
+    navigate("recipe-detail");
+  }
+}
+
+window.openFridgeRecipeDetail = openFridgeRecipeDetail;
 
 function openItemDetail(itemId) {
   const item = fridgeData.find((i) => i.id === itemId);
@@ -408,11 +466,11 @@ function toggleEditFridgeItem(isSave = false) {
   resetEditMode();
 }
 
-function initFridgePage() {
+async function initFridgePage() {
   itemsToShow = 6;
   setupFridgeTabs();
+  await fetchFridgeItems();
   renderSuggestedRecipes();
-  fetchFridgeItems();
 
   const btnMore = document.querySelector(".btn-view-more");
   if (btnMore) {

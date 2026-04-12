@@ -62,30 +62,40 @@ function checkFavoriteStatus(recipeTitle) {
 // Khởi tạo trang chi tiết nguyên liệu khi được render
 function initRecipeDetail() {
   const container = document.querySelector(".recipe-detail-container");
-  if (!container) return; // Không ở trang này
+  if (!container) return;
 
-  // Load data từ localStorage
   const savedData = localStorage.getItem("sakedo_selected_recipe");
-  if (savedData) {
-    try {
-      const savedDataObj = JSON.parse(savedData);
-      const { title, img } = savedDataObj;
-      const titleEl = document.getElementById("detail-recipe-title");
-      const imgEl = document.getElementById("detail-recipe-img");
-      
-      if (titleEl && title) titleEl.innerText = title;
-      if (imgEl && img) imgEl.src = img;
+  if (!savedData) return;
 
-      // Cập nhật trạng thái nút yêu thích
-      checkFavoriteStatus(title);
+  try {
+    const savedDataObj = JSON.parse(savedData);
+    const { title, img, source } = savedDataObj;
+    const titleEl = document.getElementById("detail-recipe-title");
+    const imgEl = document.getElementById("detail-recipe-img");
 
-      // Render Ingredients if available
-      if (savedDataObj.ingredients) {
-        renderIngredients(savedDataObj.ingredients);
-      }
-    } catch (e) {
-      console.error("Lỗi parse data món ăn:", e);
+    if (titleEl && title) titleEl.innerText = title;
+    if (imgEl && img) {
+      imgEl.src = img;
+      imgEl.onerror = () => { imgEl.src = "assets/images/khac.png"; };
     }
+
+    // Cập nhật nút Trở về theo trang nguồn
+    const btnBack = container.querySelector(".btn-back");
+    if (btnBack) {
+      const backPage = source === "fridge" ? "fridge" : "ai-chat";
+      const backNavItem = source === "fridge"
+        ? "document.querySelectorAll('.nav-item')[1]"
+        : "document.querySelectorAll('.nav-item')[3]";
+      btnBack.setAttribute("onclick", `navigate('${backPage}', ${backNavItem})`);
+    }
+
+    checkFavoriteStatus(title);
+
+    if (savedDataObj.ingredients) {
+      renderIngredients(savedDataObj.ingredients);
+    }
+  } catch (e) {
+    console.error("Lỗi parse data món ăn:", e);
   }
 }
 
@@ -134,19 +144,9 @@ document.addEventListener("click", function(e) {
   }
 });
 
-// Quan sát thay đổi DOM để phát hiện khi trang recipe-detail được load bằng router.js
-const appRoot = document.getElementById("app-root");
-if (appRoot) {
-  const observer = new MutationObserver((mutations) => {
-    for (let m of mutations) {
-      if (m.addedNodes.length > 0) {
-        initRecipeDetail();
-      }
-    }
-  });
-  observer.observe(appRoot, { childList: true });
-} else {
-  // Fallback nếu chạy riêng lẻ hoặc script load sau cùng
-  document.addEventListener("DOMContentLoaded", initRecipeDetail);
-}
+document.addEventListener("pageChanged", (e) => {
+  if (e.detail.page === "recipe-detail") {
+    initRecipeDetail();
+  }
+});
 
