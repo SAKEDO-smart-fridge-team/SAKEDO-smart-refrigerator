@@ -147,6 +147,43 @@ const defaultRecipeSteps = [
   }
 ];
 
+function renderCookingIngredients(ingredients) {
+  const availableListEl = document.getElementById("cooking-available-ingredients");
+  const missingListEl = document.getElementById("cooking-missing-ingredients");
+  const availableCountEl = document.getElementById("cooking-available-count");
+  const missingCountEl = document.getElementById("cooking-missing-count");
+
+  const available = ingredients?.available || [];
+  const missing = ingredients?.missing || [];
+
+  if (availableCountEl) availableCountEl.textContent = String(available.length);
+  if (missingCountEl) missingCountEl.textContent = String(missing.length);
+
+  if (availableListEl) {
+    availableListEl.innerHTML = available.length
+      ? available.map((item) => `<li>${item.name} (${item.weight || "1 phần"})</li>`).join("")
+      : "<li>Không có dữ liệu</li>";
+  }
+
+  if (missingListEl) {
+    missingListEl.innerHTML = missing.length
+      ? missing.map((item) => `<li>${item.name} (${item.weight || "1 phần"})</li>`).join("")
+      : "<li>Không cần mua thêm</li>";
+  }
+}
+
+function renderPrepTime(prepTime) {
+  const prepTimeEl = document.getElementById("cooking-prep-time");
+  if (!prepTimeEl) return;
+
+  if (typeof prepTime === "number" && prepTime > 0) {
+    prepTimeEl.textContent = `${prepTime} phút`;
+    return;
+  }
+
+  prepTimeEl.textContent = "Chưa rõ";
+}
+
 function renderCookingSteps(steps) {
   const listContainer = document.getElementById("cooking-steps-list");
   if (!listContainer) return;
@@ -176,11 +213,13 @@ function initCookingStepsDetail() {
   // Load data từ localStorage giống màn Recipe Detail
   const savedData = localStorage.getItem("sakedo_selected_recipe");
   let stepsToRender = defaultRecipeSteps;
+  let ingredientData = { available: [], missing: [] };
+  let prepTime = null;
 
   if (savedData) {
     try {
       const savedObj = JSON.parse(savedData);
-      const { title, img, steps } = savedObj;
+      const { title, img, steps, ingredients, prepTime: recipePrepTime } = savedObj;
       const titleEl = document.getElementById("cooking-recipe-title");
       const imgEl = document.getElementById("cooking-recipe-img");
       
@@ -190,10 +229,16 @@ function initCookingStepsDetail() {
       if (steps && steps.length > 0) {
         stepsToRender = steps;
       }
+
+      ingredientData = ingredients || ingredientData;
+      prepTime = recipePrepTime || null;
     } catch (e) {
       console.error("Lỗi parse data món ăn:", e);
     }
   }
+
+  renderPrepTime(prepTime);
+  renderCookingIngredients(ingredientData);
 
   // Khởi tạo các bước nấu (Ở đây có thể gọi API AI để lấy steps động nếu muốn)
   // Rendering the dynamic steps we got from chat.js

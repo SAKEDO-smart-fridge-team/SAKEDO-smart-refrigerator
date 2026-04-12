@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 
@@ -154,6 +154,24 @@ class RecipeSuggestion(BaseModel):
 
 class RecipeSuggestResponse(BaseModel):
     recipes: list[RecipeSuggestion]
+
+
+class FavoriteCreateRequest(BaseModel):
+    title: str
+    img: Optional[str] = None
+    ingredients: Optional[RecipeIngredients] = None
+    steps: list[RecipeStep] = Field(default_factory=list)
+    prepTime: Optional[int] = None
+
+
+class FavoriteResponse(BaseModel):
+    id: str
+    title: str
+    img: str
+    ingredients: RecipeIngredients
+    steps: list[RecipeStep]
+    prepTime: Optional[int] = None
+    created_at: datetime
 
 
 class FoodImageMappingCreate(BaseModel):

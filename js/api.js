@@ -112,6 +112,25 @@ function suggestRecipes(payload = {}) {
 	});
 }
 
+function createFavorite(payload) {
+	return apiRequest("/api/favorites", {
+		method: "POST",
+		body: JSON.stringify(payload)
+	});
+}
+
+function getFavorites() {
+	return apiRequest("/api/favorites", {
+		method: "GET"
+	});
+}
+
+function deleteFavorite(favoriteId) {
+	return apiRequest(`/api/favorites/${favoriteId}`, {
+		method: "DELETE"
+	});
+}
+
 function updateFridgeItem(itemId, payload) {
 	return apiRequest(`/api/fridge/items/${itemId}`, {
 		method: "PATCH",
@@ -214,6 +233,9 @@ window.sakedoApi = {
 	saveScannedItems,
 	getFridgeItems,
 	suggestRecipes,
+	createFavorite,
+	getFavorites,
+	deleteFavorite,
 	updateFridgeItem,
 	adjustFridgeItem,
 	deleteFridgeItem,

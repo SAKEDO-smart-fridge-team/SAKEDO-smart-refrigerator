@@ -237,6 +237,7 @@ function openFridgeRecipeDetail(idx) {
       img: recipe.img || "assets/images/khac.png",
       ingredients: recipe.ingredients || { available: [], missing: [] },
       steps: recipe.steps || [],
+      prepTime: recipe.prepTime,
       source: "fridge"
     })
   );

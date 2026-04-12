@@ -407,6 +407,7 @@ function _openRecipeDetail() {
     img: recipe.img,
     ingredients: recipe.ingredients,
     steps: recipe.steps,
+    prepTime: recipe.prepTime,
     source: "ai-chat"
   }));
 

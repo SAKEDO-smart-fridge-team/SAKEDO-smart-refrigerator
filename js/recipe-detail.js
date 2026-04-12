@@ -8,54 +8,102 @@ function startCooking() {
   }
 }
 
-// Logic cho nút Yêu thích (Favorite)
-function toggleFavorite() {
-  const btn = document.getElementById("btn-favorite-recipe");
-  const icon = btn.querySelector("i");
-  
-  const savedData = localStorage.getItem("sakedo_selected_recipe");
-  if (!savedData) return;
-  
-  const recipe = JSON.parse(savedData);
-  let favorites = JSON.parse(localStorage.getItem("sakedo_favorites") || "[]");
-  
-  const existingIdx = favorites.findIndex(f => f.title === recipe.title);
-  
-  if (existingIdx > -1) {
-    // Xóa khỏi yêu thích
-    favorites.splice(existingIdx, 1);
-    btn.classList.remove("active");
-    icon.className = "fa-regular fa-heart";
-    if (window.showToast) window.showToast("Đã xóa khỏi mục yêu thích", "info");
-  } else {
-    // Thêm vào yêu thích
-    favorites.push({
-      title: recipe.title,
-      img: recipe.img,
-      date: new Date().toISOString()
-    });
-    btn.classList.add("active");
-    icon.className = "fa-solid fa-heart";
-    if (window.showToast) window.showToast("Đã lưu vào mục yêu thích", "success");
+function _getLocalFavorites() {
+  try {
+    return JSON.parse(localStorage.getItem("sakedo_favorites") || "[]");
+  } catch {
+    return [];
   }
-  
-  localStorage.setItem("sakedo_favorites", JSON.stringify(favorites));
 }
 
-function checkFavoriteStatus(recipeTitle) {
+function _setFavoriteButtonState(isFavorite) {
   const btn = document.getElementById("btn-favorite-recipe");
   if (!btn) return;
   const icon = btn.querySelector("i");
-  
-  const favorites = JSON.parse(localStorage.getItem("sakedo_favorites") || "[]");
-  const isFavorite = favorites.some(f => f.title === recipeTitle);
-  
+  if (!icon) return;
+
   if (isFavorite) {
     btn.classList.add("active");
     icon.className = "fa-solid fa-heart";
   } else {
     btn.classList.remove("active");
     icon.className = "fa-regular fa-heart";
+  }
+}
+
+function _buildFavoritePayload(recipe) {
+  return {
+    title: recipe.title || "Món ăn",
+    img: recipe.img || "assets/images/khac.png",
+    ingredients: recipe.ingredients || { available: [], missing: [] },
+    steps: recipe.steps || [],
+    prepTime: recipe.prepTime || null
+  };
+}
+
+// Logic cho nút Yêu thích (Favorite)
+async function toggleFavorite() {
+  const savedData = localStorage.getItem("sakedo_selected_recipe");
+  if (!savedData) return;
+
+  const recipe = JSON.parse(savedData);
+  const auth = window.sakedoApi?.getStoredAuth();
+
+  if (!auth?.access_token) {
+    let favorites = _getLocalFavorites();
+    const existingIdx = favorites.findIndex((f) => f.title === recipe.title);
+
+    if (existingIdx > -1) {
+      favorites.splice(existingIdx, 1);
+      _setFavoriteButtonState(false);
+      if (window.showToast) window.showToast("Đã xóa khỏi mục yêu thích", "info");
+    } else {
+      favorites.push({
+        ..._buildFavoritePayload(recipe),
+        date: new Date().toISOString()
+      });
+      _setFavoriteButtonState(true);
+      if (window.showToast) window.showToast("Đã lưu vào mục yêu thích", "success");
+    }
+
+    localStorage.setItem("sakedo_favorites", JSON.stringify(favorites));
+    return;
+  }
+
+  try {
+    const favorites = await window.sakedoApi.getFavorites();
+    const existing = favorites.find((f) => f.title === recipe.title);
+
+    if (existing?.id) {
+      await window.sakedoApi.deleteFavorite(existing.id);
+      _setFavoriteButtonState(false);
+      if (window.showToast) window.showToast("Đã xóa khỏi mục yêu thích", "info");
+    } else {
+      await window.sakedoApi.createFavorite(_buildFavoritePayload(recipe));
+      _setFavoriteButtonState(true);
+      if (window.showToast) window.showToast("Đã lưu vào mục yêu thích", "success");
+    }
+  } catch (error) {
+    console.error("Không thể cập nhật yêu thích:", error);
+    if (window.showToast) window.showToast("Không thể cập nhật mục yêu thích", "error");
+  }
+}
+
+async function checkFavoriteStatus(recipeTitle) {
+  const auth = window.sakedoApi?.getStoredAuth();
+
+  if (!auth?.access_token) {
+    const favorites = _getLocalFavorites();
+    _setFavoriteButtonState(favorites.some((f) => f.title === recipeTitle));
+    return;
+  }
+
+  try {
+    const favorites = await window.sakedoApi.getFavorites();
+    _setFavoriteButtonState(favorites.some((f) => f.title === recipeTitle));
+  } catch (error) {
+    console.error("Không thể kiểm tra trạng thái yêu thích:", error);
+    _setFavoriteButtonState(false);
   }
 }
 

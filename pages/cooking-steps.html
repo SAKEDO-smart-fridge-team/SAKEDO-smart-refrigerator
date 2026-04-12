@@ -12,6 +12,33 @@
 
   <div class="steps-content">
     <h3 class="section-title">Công thức chuẩn vị:</h3>
+
+    <div class="cooking-meta">
+      <div class="meta-chip">
+        <span class="meta-label">Thời gian</span>
+        <strong id="cooking-prep-time">-- phút</strong>
+      </div>
+      <div class="meta-chip">
+        <span class="meta-label">Nguyên liệu có sẵn</span>
+        <strong id="cooking-available-count">0</strong>
+      </div>
+      <div class="meta-chip">
+        <span class="meta-label">Cần bổ sung</span>
+        <strong id="cooking-missing-count">0</strong>
+      </div>
+    </div>
+
+    <div class="cooking-ingredients-grid">
+      <div class="cooking-ingredients-box">
+        <h4>Nguyên liệu sẵn có</h4>
+        <ul id="cooking-available-ingredients"></ul>
+      </div>
+      <div class="cooking-ingredients-box">
+        <h4>Nguyên liệu cần mua</h4>
+        <ul id="cooking-missing-ingredients"></ul>
+      </div>
+    </div>
+
     <div id="cooking-steps-list">
       <!-- Dữ liệu sẽ được render từ JS để sau này AI trả JSON dễ tích hợp -->
     </div>

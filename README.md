@@ -219,6 +219,12 @@ Kết quả:
 
 - POST /api/recipes/suggest
 
+### Favorites
+
+- POST /api/favorites
+- GET /api/favorites
+- DELETE /api/favorites/{favorite_id}
+
 ## 10. Luồng sử dụng đề xuất
 
 1. Người dùng đăng nhập/đăng ký.

@@ -81,8 +81,66 @@
 .section-title {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   color: #6a7c92;
+}
+
+.cooking-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.meta-chip {
+  background: #f4f8fb;
+  border: 1px solid #d9e6f0;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta-label {
+  color: #6c7f96;
+  font-size: 12px;
+}
+
+.meta-chip strong {
+  color: #30465a;
+  font-size: 16px;
+}
+
+.cooking-ingredients-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.cooking-ingredients-box {
+  border: 1px solid #dce7ef;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fbfdff;
+}
+
+.cooking-ingredients-box h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #47617c;
+}
+
+.cooking-ingredients-box ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.cooking-ingredients-box li {
+  margin-bottom: 6px;
+  color: #4f5f70;
+  font-size: 13px;
 }
 
 /* Dynamic Steps Layout */
@@ -171,6 +229,14 @@
 }
 
 @media (max-width: 600px) {
+  .cooking-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .cooking-ingredients-grid {
+    grid-template-columns: 1fr;
+  }
+
   .chef-mascot {
     width: 70px;
     right: 0;
