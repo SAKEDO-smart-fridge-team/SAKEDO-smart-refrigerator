@@ -9,6 +9,25 @@ from utils.auth import get_current_user_id
 router = APIRouter()
 
 
+def _normalize_string_list(values: list[str] | None) -> list[str]:
+    if not values:
+        return []
+
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        text = str(value).strip()
+        if not text:
+            continue
+        key = text.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        normalized.append(text)
+
+    return normalized
+
+
 def _default_settings(raw_settings: dict | None) -> dict:
     source = raw_settings or {}
     notif_types = source.get("notification_types") or {}
@@ -21,6 +40,11 @@ def _default_settings(raw_settings: dict | None) -> dict:
             "recipe_suggestion": bool(notif_types.get("recipe_suggestion", True)),
         },
         "theme": str(source.get("theme", "light") or "light"),
+        "diet_preference": str(source.get("diet_preference", "none") or "none"),
+        "allergies": _normalize_string_list(source.get("allergies")),
+        "disliked_foods": _normalize_string_list(source.get("disliked_foods")),
+        "favorite_cuisines": _normalize_string_list(source.get("favorite_cuisines")),
+        "onboarding_completed": bool(source.get("onboarding_completed", False)),
     }
 
 
@@ -56,6 +80,21 @@ async def update_my_settings(
 
     if payload.theme is not None:
         update_fields["settings.theme"] = str(payload.theme).strip() or "light"
+
+    if payload.diet_preference is not None:
+        update_fields["settings.diet_preference"] = str(payload.diet_preference).strip() or "none"
+
+    if payload.allergies is not None:
+        update_fields["settings.allergies"] = _normalize_string_list(payload.allergies)
+
+    if payload.disliked_foods is not None:
+        update_fields["settings.disliked_foods"] = _normalize_string_list(payload.disliked_foods)
+
+    if payload.favorite_cuisines is not None:
+        update_fields["settings.favorite_cuisines"] = _normalize_string_list(payload.favorite_cuisines)
+
+    if payload.onboarding_completed is not None:
+        update_fields["settings.onboarding_completed"] = bool(payload.onboarding_completed)
 
     if update_fields:
         await db.users.update_one(

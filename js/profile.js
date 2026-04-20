@@ -9,8 +9,22 @@ let profileSettingsState = {
   notification_types: {
     expiry_alert: true,
     recipe_suggestion: true
-  }
+  },
+  diet_preference: "none",
+  onboarding_completed: false
 };
+
+function applyDietPreferenceToUI(dietPreference) {
+  const selectedDiet = dietPreference || "none";
+  document.querySelectorAll(".pref-item").forEach((item) => {
+    const isActive = (item.dataset.diet || "none") === selectedDiet;
+    const checkIcon = item.querySelector(".check-icon");
+    item.classList.toggle("active", isActive);
+    if (checkIcon) {
+      checkIcon.style.display = isActive ? "inline-block" : "none";
+    }
+  });
+}
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -45,6 +59,7 @@ function applySettingsToUI(settings) {
   if (pushToggle) pushToggle.checked = Boolean(settings.push_notification);
   if (expiryToggle) expiryToggle.checked = Boolean(settings.notification_types?.expiry_alert);
   if (recipeToggle) recipeToggle.checked = Boolean(settings.notification_types?.recipe_suggestion);
+  applyDietPreferenceToUI(settings.diet_preference);
 }
 
 async function loadUserSettings() {
@@ -58,7 +73,9 @@ async function loadUserSettings() {
       notification_types: {
         expiry_alert: Boolean(settings?.notification_types?.expiry_alert),
         recipe_suggestion: Boolean(settings?.notification_types?.recipe_suggestion)
-      }
+      },
+      diet_preference: settings?.diet_preference || "none",
+      onboarding_completed: Boolean(settings?.onboarding_completed)
     };
     applySettingsToUI(profileSettingsState);
   } catch (error) {
@@ -113,7 +130,9 @@ async function updateSettingsWithPatch(patch) {
         patch.notification_types?.expiry_alert ?? profileSettingsState.notification_types.expiry_alert,
       recipe_suggestion:
         patch.notification_types?.recipe_suggestion ?? profileSettingsState.notification_types.recipe_suggestion
-    }
+    },
+    diet_preference: patch.diet_preference ?? profileSettingsState.diet_preference,
+    onboarding_completed: patch.onboarding_completed ?? profileSettingsState.onboarding_completed
   };
 
   const saved = await window.sakedoApi.updateUserSettings(updatedSettings);
@@ -123,7 +142,9 @@ async function updateSettingsWithPatch(patch) {
     notification_types: {
       expiry_alert: Boolean(saved?.notification_types?.expiry_alert),
       recipe_suggestion: Boolean(saved?.notification_types?.recipe_suggestion)
-    }
+    },
+    diet_preference: saved?.diet_preference || "none",
+    onboarding_completed: Boolean(saved?.onboarding_completed)
   };
   applySettingsToUI(profileSettingsState);
 }
@@ -281,6 +302,7 @@ document.addEventListener("click", function (e) {
   // 6.5 Chọn Sở thích
   const prefItem = e.target.closest(".pref-item");
   if (prefItem) {
+    const selectedDiet = prefItem.dataset.diet || "none";
     document.querySelectorAll(".pref-item").forEach((item) => {
       item.classList.remove("active");
       item.querySelector(".check-icon").style.display = "none";
@@ -288,13 +310,21 @@ document.addEventListener("click", function (e) {
     prefItem.classList.add("active");
     prefItem.querySelector(".check-icon").style.display = "inline-block";
 
-    // Đóng Modal tự động sau 0.4 giây
-    setTimeout(() => {
-      const prefsModal = document.getElementById("preferencesModal");
-      if (prefsModal) prefsModal.classList.remove("show");
-    }, 400);
-
-    showToast("Đã cập nhật sở thích");
+    updateSettingsWithPatch({
+      diet_preference: selectedDiet,
+      onboarding_completed: true
+    })
+      .then(() => {
+        setTimeout(() => {
+          const prefsModal = document.getElementById("preferencesModal");
+          if (prefsModal) prefsModal.classList.remove("show");
+        }, 400);
+        showToast("Đã cập nhật sở thích");
+      })
+      .catch((error) => {
+        applyDietPreferenceToUI(profileSettingsState.diet_preference);
+        showToast(error.message || "Không thể lưu sở thích", "error");
+      });
   }
 
   // 7. Accordion (Mở/Đóng Câu hỏi thường gặp)

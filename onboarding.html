@@ -40,9 +40,9 @@
             <h1 class="onboarding-title">Bạn có tuân thủ theo chế độ ăn kiêng nào?</h1>
 
             <div class="diet-options">
-              <button class="diet-btn">Ăn thuần chay</button>
-              <button class="diet-btn">Ăn giảm cân</button>
-              <button class="diet-btn">Ăn tự do</button>
+              <button class="diet-btn" data-value="vegan">Ăn thuần chay</button>
+              <button class="diet-btn" data-value="weight_loss">Ăn giảm cân</button>
+              <button class="diet-btn" data-value="flexible">Ăn tự do</button>
             </div>
 
             <div class="action-buttons">
@@ -59,14 +59,14 @@
             <h1 class="onboarding-title" style="margin-bottom: 30px; font-size: 1.4rem;">Bạn đang bị dị ứng với thực phẩm nào?</h1>
             
             <div class="tag-options">
-              <button class="tag-btn">Trứng</button>
-              <button class="tag-btn">Sữa</button>
-              <button class="tag-btn">Cá</button>
-              <button class="tag-btn">Thịt đỏ</button>
-              <button class="tag-btn">Đậu Phộng</button>
-              <button class="tag-btn">Hải Sản</button>
-              <button class="tag-btn">Hạt</button>
-              <button class="tag-btn">Lúa mì</button>
+              <button class="tag-btn" data-value="Trứng">Trứng</button>
+              <button class="tag-btn" data-value="Sữa">Sữa</button>
+              <button class="tag-btn" data-value="Cá">Cá</button>
+              <button class="tag-btn" data-value="Thịt đỏ">Thịt đỏ</button>
+              <button class="tag-btn" data-value="Đậu phộng">Đậu Phộng</button>
+              <button class="tag-btn" data-value="Hải sản">Hải Sản</button>
+              <button class="tag-btn" data-value="Hạt">Hạt</button>
+              <button class="tag-btn" data-value="Lúa mì">Lúa mì</button>
             </div>
             
             <div class="action-buttons">
@@ -83,14 +83,14 @@
             <h1 class="onboarding-title" style="margin-bottom: 30px; font-size: 1.4rem;">Thực phẩm nào bạn không thích ?</h1>
             
             <div class="tag-options">
-              <button class="tag-btn">Sầu riêng</button>
-              <button class="tag-btn">Hành tây</button>
-              <button class="tag-btn">Tỏi</button>
-              <button class="tag-btn">Đồ cay</button>
-              <button class="tag-btn">Ớt chuông</button>
-              <button class="tag-btn">Đậu phộng</button>
-              <button class="tag-btn">Rau mùi</button>
-              <button class="tag-btn">Cá</button>
+              <button class="tag-btn" data-value="Sầu riêng">Sầu riêng</button>
+              <button class="tag-btn" data-value="Hành tây">Hành tây</button>
+              <button class="tag-btn" data-value="Tỏi">Tỏi</button>
+              <button class="tag-btn" data-value="Đồ cay">Đồ cay</button>
+              <button class="tag-btn" data-value="Ớt chuông">Ớt chuông</button>
+              <button class="tag-btn" data-value="Đậu phộng">Đậu phộng</button>
+              <button class="tag-btn" data-value="Rau mùi">Rau mùi</button>
+              <button class="tag-btn" data-value="Cá">Cá</button>
             </div>
             
             <div class="action-buttons">
@@ -107,19 +107,19 @@
             <h1 class="onboarding-title" style="margin-bottom: 30px; font-size: 1.4rem;">Ẩm thực nào bạn thích nhất?</h1>
             
             <div class="tag-options">
-              <button class="tag-btn">Hàn Quốc</button>
-              <button class="tag-btn">Việt Nam</button>
-              <button class="tag-btn">Ý</button>
-              <button class="tag-btn">Thái Lan</button>
-              <button class="tag-btn">Ấn Độ</button>
-              <button class="tag-btn">Trung Quốc</button>
-              <button class="tag-btn">Nhật Bản</button>
-              <button class="tag-btn">Mỹ</button>
+              <button class="tag-btn" data-value="Hàn Quốc">Hàn Quốc</button>
+              <button class="tag-btn" data-value="Việt Nam">Việt Nam</button>
+              <button class="tag-btn" data-value="Ý">Ý</button>
+              <button class="tag-btn" data-value="Thái Lan">Thái Lan</button>
+              <button class="tag-btn" data-value="Ấn Độ">Ấn Độ</button>
+              <button class="tag-btn" data-value="Trung Quốc">Trung Quốc</button>
+              <button class="tag-btn" data-value="Nhật Bản">Nhật Bản</button>
+              <button class="tag-btn" data-value="Mỹ">Mỹ</button>
             </div>
             
             <div class="action-buttons">
-              <button class="btn-continue-dark" onclick="window.location.href='index.html'">Tiếp tục</button>
-              <a href="index.html" class="btn-skip">Bỏ qua</a>
+              <button class="btn-continue-dark" onclick="completeOnboarding()">Tiếp tục</button>
+              <a href="javascript:void(0)" class="btn-skip" onclick="skipOnboarding()">Bỏ qua</a>
             </div>
           </div>
         </div>
@@ -128,6 +128,7 @@
     </div>
   </div>
 
+  <script src="js/api.js"></script>
   <script src="js/onboarding.js"></script>
 </body>
 

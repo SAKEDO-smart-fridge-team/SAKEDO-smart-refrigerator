@@ -38,6 +38,11 @@ class UserSettingsResponse(BaseModel):
     push_notification: bool = False
     notification_types: NotificationTypeSettings = NotificationTypeSettings()
     theme: str = "light"
+    diet_preference: str = "none"
+    allergies: list[str] = Field(default_factory=list)
+    disliked_foods: list[str] = Field(default_factory=list)
+    favorite_cuisines: list[str] = Field(default_factory=list)
+    onboarding_completed: bool = False
 
 
 class UserSettingsUpdate(BaseModel):
@@ -45,6 +50,11 @@ class UserSettingsUpdate(BaseModel):
     push_notification: Optional[bool] = None
     notification_types: Optional[NotificationTypeSettings] = None
     theme: Optional[str] = None
+    diet_preference: Optional[str] = None
+    allergies: Optional[list[str]] = None
+    disliked_foods: Optional[list[str]] = None
+    favorite_cuisines: Optional[list[str]] = None
+    onboarding_completed: Optional[bool] = None
 
 
 class PushSubscriptionKeys(BaseModel):

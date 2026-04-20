@@ -56,6 +56,11 @@ async def register_user(user: UserRegister, db=Depends(get_db)):
                 "recipe_suggestion": True,
             },
             "theme": "light",
+            "diet_preference": "none",
+            "allergies": [],
+            "disliked_foods": [],
+            "favorite_cuisines": [],
+            "onboarding_completed": False,
         },
     }
 
@@ -140,6 +145,11 @@ async def login_user_google(payload: GoogleLoginRequest, db=Depends(get_db)):
                     "recipe_suggestion": True,
                 },
                 "theme": "light",
+                "diet_preference": "none",
+                "allergies": [],
+                "disliked_foods": [],
+                "favorite_cuisines": [],
+                "onboarding_completed": False,
             },
         }
         new_user = await db.users.insert_one(user_dict)

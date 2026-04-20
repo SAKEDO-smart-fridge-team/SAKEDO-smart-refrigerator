@@ -47,6 +47,15 @@
     submitBtn.style.cursor = loading ? "not-allowed" : "pointer";
   }
 
+  async function getPostLoginRedirectUrl() {
+    try {
+      const settings = await window.sakedoApi.getUserSettings();
+      return settings?.onboarding_completed ? "index.html" : "onboarding.html";
+    } catch (error) {
+      return "onboarding.html";
+    }
+  }
+
   async function handleLogin(event) {
     event.preventDefault();
 
@@ -72,8 +81,10 @@
       window.sakedoApi.saveAuth(authPayload);
       showMessage("Đăng nhập thành công, đang chuyển trang...", "success");
 
+      const nextUrl = await getPostLoginRedirectUrl();
+
       setTimeout(() => {
-        window.location.href = "onboarding.html";
+        window.location.href = nextUrl;
       }, 500);
     } catch (error) {
       showMessage(error.message || "Đăng nhập thất bại.", "error");
@@ -138,8 +149,9 @@
       });
 
       showMessage("Đăng nhập Google thành công, đang chuyển trang...", "success");
+      const nextUrl = await getPostLoginRedirectUrl();
       setTimeout(() => {
-        window.location.href = "onboarding.html";
+        window.location.href = nextUrl;
       }, 500);
     } catch (error) {
       showMessage(error.message || "Đăng nhập Google thất bại.", "error");
