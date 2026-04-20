@@ -53,22 +53,32 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (authButtons) authButtons.style.display = "none";
 
 		const welcomeNameEl = document.getElementById("welcome-name");
+		let currentDisplayName = "Khách hàng";
 
 		function updateTopbarName(name) {
+			currentDisplayName = (name || "").trim() || "Khách hàng";
+			const welcomePrefix = window.sakedoI18n?.translate("top-welcome") || "Xin chào";
 			if (welcomeNameEl) {
-				welcomeNameEl.textContent = `Xin chào, ${name || "Khách hàng"}!`;
+				welcomeNameEl.textContent = `${welcomePrefix}, ${currentDisplayName}!`;
 			}
 		}
 
 		const user = auth.user || {};
-		const emailPrefix = (user.email || "").split("@")[0] || "Bạn";
-		const displayName = user.full_name || user.name || emailPrefix;
+		const emailPrefix = ((user.email || "").split("@")[0] || "Bạn").trim();
+		const displayName =
+			(user.full_name || "").trim() ||
+			(user.name || "").trim() ||
+			emailPrefix;
 
 		updateTopbarName(displayName);
 
 		// Lắng nghe sự kiện cập nhật từ trang Profile
 		document.addEventListener("userUpdated", (e) => {
-			updateTopbarName(e.detail.full_name);
+			updateTopbarName(e?.detail?.full_name || currentDisplayName);
+		});
+
+		document.addEventListener("languageChanged", () => {
+			updateTopbarName(currentDisplayName);
 		});
 	}
 

@@ -204,6 +204,7 @@ class I18nManager {
     this.currentLang = lang;
     localStorage.setItem("sakedo_lang", lang);
     this.translatePage();
+    document.dispatchEvent(new CustomEvent("languageChanged", { detail: { lang } }));
   }
 
   getLanguage() {
