@@ -12,7 +12,7 @@ from config import (
     EXPIRY_ALERT_ENABLED,
 )
 from database import close_db, connect_db, get_db
-from routes import auth, config, favorites, fridge, inference, notifications, recipes
+from routes import admin, auth, config, favorites, fridge, inference, notifications, recipes
 from services.expiry_alert_service import process_expiry_alerts
 
 app = FastAPI(title="Sakedo Smart Fridge API")
@@ -83,6 +83,7 @@ app.include_router(fridge.router, tags=["Fridge"])
 app.include_router(recipes.router, tags=["Recipes"])
 app.include_router(favorites.router, tags=["Favorites"])
 app.include_router(notifications.router, tags=["Notifications"])
+app.include_router(admin.router, tags=["Admin"])
 
 
 @app.get("/", tags=["Root"])

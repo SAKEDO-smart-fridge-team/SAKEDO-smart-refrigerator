@@ -72,6 +72,15 @@
             </svg></i>
           <span class="nav-label" data-i18n="nav-profile">Cài đặt</span>
         </div>
+
+        <div class="nav-item admin-hidden" id="admin-nav-item" onclick="navigate('admin', this)">
+          <i><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 3 7v6c0 5 3.8 8.8 9 9 5.2-.2 9-4 9-9V7z" />
+              <path d="M9.5 12.5 11 14l3.5-3.5" />
+            </svg></i>
+          <span class="nav-label" data-i18n="nav-admin">Quản trị</span>
+        </div>
       </div>
 
       <div class="mode-switch-wrapper">
@@ -159,6 +168,7 @@
   <script src="js/cooking-steps.js"></script>
   <script src="js/favorite.js"></script>
   <script src="js/fridge.js"></script>
+  <script src="js/admin.js"></script>
   <script src="js/ripple.js"></script>
   <script>
     // Định vị camera-bulge bám theo camera-btn (vì camera-bulge dùng position:fixed)

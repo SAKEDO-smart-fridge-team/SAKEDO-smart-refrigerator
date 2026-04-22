@@ -21,7 +21,7 @@ from utils.auth import (
     verify_password,
 )
 from utils.email import hash_reset_token, send_password_reset_email
-from config import ACCESS_TOKEN_EXPIRE_MINUTES, FRONTEND_BASE_URL, PASSWORD_RESET_RETURN_LINK
+from config import ACCESS_TOKEN_EXPIRE_MINUTES, ADMIN_EMAILS, FRONTEND_BASE_URL, PASSWORD_RESET_RETURN_LINK
 
 router = APIRouter()
 
@@ -43,11 +43,18 @@ async def register_user(user: UserRegister, db=Depends(get_db)):
         )
 
     hashed_password = hash_password(user.password)
+    now = datetime.utcnow()
+
+    normalized_email = str(user.email).strip().lower()
+
     user_dict = {
         "full_name": user.full_name,
-        "email": user.email,
+        "email": normalized_email,
         "phone": user.phone,
         "password_hash": hashed_password,
+        "is_admin": normalized_email in ADMIN_EMAILS,
+        "created_at": now,
+        "last_login_at": None,
         "settings": {
             "email_notification": True,
             "push_notification": False,
@@ -68,7 +75,7 @@ async def register_user(user: UserRegister, db=Depends(get_db)):
     return UserResponse(
         id=str(new_user.inserted_id),
         full_name=user.full_name,
-        email=user.email,
+        email=normalized_email,
         phone=user.phone,
     )
 
@@ -101,6 +108,11 @@ async def login_user(user: UserLogin, db=Depends(get_db)):
             detail="Email hoặc mật khẩu không đúng!",
         )
 
+    await db.users.update_one(
+        {"_id": db_user["_id"]},
+        {"$set": {"last_login_at": datetime.utcnow()}},
+    )
+
     access_token = create_access_token(
         data={"sub": str(db_user["_id"])},
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -131,12 +143,16 @@ async def login_user_google(payload: GoogleLoginRequest, db=Depends(get_db)):
 
     db_user = await db.users.find_one({"email": email})
     if not db_user:
+        now = datetime.utcnow()
         user_dict = {
             "full_name": full_name,
             "email": email,
             "phone": "",
             "password_hash": None,
             "auth_provider": "google",
+            "is_admin": email in ADMIN_EMAILS,
+            "created_at": now,
+            "last_login_at": now,
             "settings": {
                 "email_notification": True,
                 "push_notification": False,
@@ -155,6 +171,10 @@ async def login_user_google(payload: GoogleLoginRequest, db=Depends(get_db)):
         new_user = await db.users.insert_one(user_dict)
         user_id = str(new_user.inserted_id)
     else:
+        await db.users.update_one(
+            {"_id": db_user["_id"]},
+            {"$set": {"last_login_at": datetime.utcnow()}},
+        )
         user_id = str(db_user["_id"])
 
     access_token = create_access_token(

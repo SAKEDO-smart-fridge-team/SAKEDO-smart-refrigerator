@@ -222,6 +222,37 @@ function unsubscribePush(payload) {
 	});
 }
 
+function getAdminMe() {
+	return apiRequest("/api/admin/me", {
+		method: "GET"
+	});
+}
+
+function getAdminOverview() {
+	return apiRequest("/api/admin/overview", {
+		method: "GET"
+	});
+}
+
+function getAdminUsers() {
+	return apiRequest("/api/admin/users", {
+		method: "GET"
+	});
+}
+
+function updateUserAdminRole(userId, isAdmin) {
+	return apiRequest(`/api/admin/users/${userId}/role`, {
+		method: "PATCH",
+		body: JSON.stringify({ is_admin: Boolean(isAdmin) })
+	});
+}
+
+function deleteUserByAdmin(userId) {
+	return apiRequest(`/api/admin/users/${userId}`, {
+		method: "DELETE"
+	});
+}
+
 window.sakedoApi = {
 	registerUser,
 	loginUser,
@@ -248,6 +279,11 @@ window.sakedoApi = {
 	updateUserSettings,
 	subscribePush,
 	unsubscribePush,
+	getAdminMe,
+	getAdminOverview,
+	getAdminUsers,
+	updateUserAdminRole,
+	deleteUserByAdmin,
 	API_BASE_URL,
 	GOOGLE_CLIENT_ID
 };

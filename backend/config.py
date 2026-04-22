@@ -55,3 +55,15 @@ YOLO_MODEL_PATH: str = os.getenv(
 # OpenRouter AI
 OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "").strip()
 OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "openai/gpt-oss-120b:free").strip()
+
+
+def _parse_admin_emails(raw: str) -> set[str]:
+    emails: set[str] = set()
+    for value in raw.split(","):
+        email = value.strip().lower()
+        if email:
+            emails.add(email)
+    return emails
+
+
+ADMIN_EMAILS: set[str] = _parse_admin_emails(os.getenv("ADMIN_EMAILS", ""))

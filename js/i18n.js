@@ -7,6 +7,7 @@ const i18nData = {
     "nav-ai-chat": "Mr. Chè",
     "nav-favorite": "Yêu thích",
     "nav-profile": "Cài đặt",
+    "nav-admin": "Quản trị",
     // Topbar
     "top-login": "Đăng nhập",
     "top-register": "Đăng ký",
@@ -94,7 +95,28 @@ const i18nData = {
     "chat-placeholder": "Hỏi Mr. Chè về món ăn...",
     "chat-welcome-title": "Hôm nay ăn gì ?!",
     "chat-welcome-desc": "Cậu hãy nhấn nút làm mới để Chè giúp bạn tìm những món ăn phù hợp nhé!",
-    "chat-recipe-btn": "Công thức"
+    "chat-recipe-btn": "Công thức",
+    // Admin
+    "admin-title": "Bảng điều khiển quản trị",
+    "admin-subtitle": "Quản lý người dùng và theo dõi dữ liệu hệ thống",
+    "admin-total-users": "Tổng người dùng",
+    "admin-total-items": "Tổng sản phẩm",
+    "admin-total-favorites": "Tổng món yêu thích",
+    "admin-expiring": "Sắp hết hạn",
+    "admin-users-title": "Danh sách người dùng",
+    "admin-refresh": "Làm mới",
+    "admin-no-data": "Chưa có dữ liệu người dùng.",
+    "admin-col-name": "Tên",
+    "admin-col-email": "Email",
+    "admin-col-provider": "Đăng nhập",
+    "admin-col-items": "Sản phẩm",
+    "admin-col-role": "Vai trò",
+    "admin-col-actions": "Thao tác",
+    "admin-role-admin": "Admin",
+    "admin-role-user": "User",
+    "admin-action-promote": "Cấp admin",
+    "admin-action-demote": "Gỡ admin",
+    "admin-action-delete": "Xóa user"
   },
   en: {
     // Sidebar
@@ -104,6 +126,7 @@ const i18nData = {
     "nav-ai-chat": "Mr. Che",
     "nav-favorite": "Favorites",
     "nav-profile": "Settings",
+    "nav-admin": "Admin",
     // Topbar
     "top-login": "Login",
     "top-register": "Register",
@@ -191,7 +214,28 @@ const i18nData = {
     "chat-placeholder": "Ask Mr. Che about recipes...",
     "chat-welcome-title": "What to eat today ?!",
     "chat-welcome-desc": "Click the refresh button to let Che help you find suitable dishes!",
-    "chat-recipe-btn": "Recipe"
+    "chat-recipe-btn": "Recipe",
+    // Admin
+    "admin-title": "Admin Dashboard",
+    "admin-subtitle": "Manage users and monitor system data",
+    "admin-total-users": "Total users",
+    "admin-total-items": "Total items",
+    "admin-total-favorites": "Total favorites",
+    "admin-expiring": "Expiring soon",
+    "admin-users-title": "Users",
+    "admin-refresh": "Refresh",
+    "admin-no-data": "No users found.",
+    "admin-col-name": "Name",
+    "admin-col-email": "Email",
+    "admin-col-provider": "Provider",
+    "admin-col-items": "Items",
+    "admin-col-role": "Role",
+    "admin-col-actions": "Actions",
+    "admin-role-admin": "Admin",
+    "admin-role-user": "User",
+    "admin-action-promote": "Promote",
+    "admin-action-demote": "Demote",
+    "admin-action-delete": "Delete"
   }
 };
 

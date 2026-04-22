@@ -148,6 +148,7 @@ Nếu chạy frontend ở port khác, hãy cập nhật FRONTEND_BASE_URL trong 
 | Biến | Mô tả |
 |---|---|
 | MONGODB_URL | Chuỗi kết nối MongoDB |
+| ADMIN_EMAILS | Danh sách email admin (phân tách dấu phẩy) |
 | GOOGLE_CLIENT_ID | Client ID cho Google Login |
 | FRONTEND_BASE_URL | URL frontend dùng trong link reset password |
 | SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD | SMTP để gửi email |
@@ -224,6 +225,14 @@ Kết quả:
 - POST /api/favorites
 - GET /api/favorites
 - DELETE /api/favorites/{favorite_id}
+
+### Admin
+
+- GET /api/admin/me
+- GET /api/admin/overview
+- GET /api/admin/users
+- PATCH /api/admin/users/{user_id}/role
+- DELETE /api/admin/users/{user_id}
 
 ## 10. Luồng sử dụng đề xuất
 

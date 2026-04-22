@@ -1,0 +1,51 @@
+<section class="admin-page">
+  <header class="admin-header">
+    <div>
+      <h2 data-i18n="admin-title">Bảng điều khiển quản trị</h2>
+      <p data-i18n="admin-subtitle">Quản lý người dùng và theo dõi dữ liệu hệ thống</p>
+    </div>
+    <button class="admin-refresh-btn" id="admin-refresh-btn" data-i18n="admin-refresh">Làm mới</button>
+  </header>
+
+  <div class="admin-metrics" id="admin-metrics">
+    <article class="metric-card">
+      <h3 data-i18n="admin-total-users">Tổng người dùng</h3>
+      <p id="metric-total-users">0</p>
+    </article>
+    <article class="metric-card">
+      <h3 data-i18n="admin-total-items">Tổng sản phẩm</h3>
+      <p id="metric-total-items">0</p>
+    </article>
+    <article class="metric-card">
+      <h3 data-i18n="admin-total-favorites">Tổng món yêu thích</h3>
+      <p id="metric-total-favorites">0</p>
+    </article>
+    <article class="metric-card warn">
+      <h3 data-i18n="admin-expiring">Sắp hết hạn</h3>
+      <p id="metric-expiring">0</p>
+    </article>
+  </div>
+
+  <section class="admin-users-section">
+    <h3 data-i18n="admin-users-title">Danh sách người dùng</h3>
+    <div class="admin-table-wrap">
+      <table class="admin-users-table">
+        <thead>
+          <tr>
+            <th data-i18n="admin-col-name">Tên</th>
+            <th data-i18n="admin-col-email">Email</th>
+            <th data-i18n="admin-col-provider">Đăng nhập</th>
+            <th data-i18n="admin-col-items">Sản phẩm</th>
+            <th data-i18n="admin-col-role">Vai trò</th>
+            <th data-i18n="admin-col-actions">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="admin-users-body">
+          <tr>
+            <td colspan="6" class="admin-empty" data-i18n="admin-no-data">Chưa có dữ liệu người dùng.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

@@ -7,8 +7,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from bson import ObjectId
 
+from database import get_db
 from config import (
+    ADMIN_EMAILS,
     ALGORITHM,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     GOOGLE_CLIENT_ID,
@@ -54,6 +57,42 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
             detail="Token không hợp lệ: thiếu thông tin người dùng.",
         )
     return str(user_id)
+
+
+async def get_current_user_document(
+    db=Depends(get_db),
+    user_id: str = Depends(get_current_user_id),
+) -> dict:
+    try:
+        object_id = ObjectId(user_id)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token không hợp lệ: user id sai định dạng.",
+        ) from exc
+
+    user = await db.users.find_one({"_id": object_id})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Không tìm thấy người dùng tương ứng token.",
+        )
+
+    return user
+
+
+async def require_admin_user(
+    user: dict = Depends(get_current_user_document),
+) -> dict:
+    email = str(user.get("email") or "").strip().lower()
+    is_admin = bool(user.get("is_admin", False)) or email in ADMIN_EMAILS
+    if not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Bạn không có quyền truy cập khu vực quản trị.",
+        )
+
+    return user
 
 
 def verify_google_id_token(id_token: str) -> dict:
