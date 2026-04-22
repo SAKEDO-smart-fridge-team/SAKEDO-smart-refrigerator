@@ -116,7 +116,19 @@ const i18nData = {
     "admin-role-user": "User",
     "admin-action-promote": "Cấp admin",
     "admin-action-demote": "Gỡ admin",
-    "admin-action-delete": "Xóa user"
+    "admin-action-delete": "Xóa user",
+    "admin-search-placeholder": "Tìm theo tên hoặc email",
+    "admin-filter-all": "Tất cả",
+    "admin-filter-admin": "Admin",
+    "admin-filter-user": "User",
+    "admin-prev": "Trước",
+    "admin-next": "Sau",
+    "admin-audit-title": "Lịch sử thao tác admin",
+    "admin-audit-col-time": "Thời gian",
+    "admin-audit-col-admin": "Admin",
+    "admin-audit-col-action": "Hành động",
+    "admin-audit-col-target": "Đối tượng",
+    "admin-no-audit": "Chưa có lịch sử thao tác."
   },
   en: {
     // Sidebar
@@ -235,7 +247,19 @@ const i18nData = {
     "admin-role-user": "User",
     "admin-action-promote": "Promote",
     "admin-action-demote": "Demote",
-    "admin-action-delete": "Delete"
+    "admin-action-delete": "Delete",
+    "admin-search-placeholder": "Search by name or email",
+    "admin-filter-all": "All",
+    "admin-filter-admin": "Admin",
+    "admin-filter-user": "User",
+    "admin-prev": "Prev",
+    "admin-next": "Next",
+    "admin-audit-title": "Admin Audit Logs",
+    "admin-audit-col-time": "Time",
+    "admin-audit-col-admin": "Admin",
+    "admin-audit-col-action": "Action",
+    "admin-audit-col-target": "Target",
+    "admin-no-audit": "No audit logs yet."
   }
 };
 

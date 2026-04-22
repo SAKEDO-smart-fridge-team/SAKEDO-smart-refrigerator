@@ -27,7 +27,17 @@
   </div>
 
   <section class="admin-users-section">
-    <h3 data-i18n="admin-users-title">Danh sách người dùng</h3>
+    <div class="admin-users-header">
+      <h3 data-i18n="admin-users-title">Danh sách người dùng</h3>
+      <div class="admin-user-controls">
+        <input id="admin-search-input" type="text" data-i18n="admin-search-placeholder" placeholder="Tìm theo tên hoặc email" />
+        <select id="admin-role-filter" title="Role Filter">
+          <option value="all" data-i18n="admin-filter-all">Tất cả</option>
+          <option value="admin" data-i18n="admin-filter-admin">Admin</option>
+          <option value="user" data-i18n="admin-filter-user">User</option>
+        </select>
+      </div>
+    </div>
     <div class="admin-table-wrap">
       <table class="admin-users-table">
         <thead>
@@ -43,6 +53,32 @@
         <tbody id="admin-users-body">
           <tr>
             <td colspan="6" class="admin-empty" data-i18n="admin-no-data">Chưa có dữ liệu người dùng.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="admin-pagination">
+      <button id="admin-prev-page" type="button" data-i18n="admin-prev">Trước</button>
+      <span id="admin-page-info">1 / 1</span>
+      <button id="admin-next-page" type="button" data-i18n="admin-next">Sau</button>
+    </div>
+  </section>
+
+  <section class="admin-users-section admin-audit-section">
+    <h3 data-i18n="admin-audit-title">Lịch sử thao tác admin</h3>
+    <div class="admin-table-wrap">
+      <table class="admin-users-table">
+        <thead>
+          <tr>
+            <th data-i18n="admin-audit-col-time">Thời gian</th>
+            <th data-i18n="admin-audit-col-admin">Admin</th>
+            <th data-i18n="admin-audit-col-action">Hành động</th>
+            <th data-i18n="admin-audit-col-target">Đối tượng</th>
+          </tr>
+        </thead>
+        <tbody id="admin-audit-body">
+          <tr>
+            <td colspan="4" class="admin-empty" data-i18n="admin-no-audit">Chưa có lịch sử thao tác.</td>
           </tr>
         </tbody>
       </table>

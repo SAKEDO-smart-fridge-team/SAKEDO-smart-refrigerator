@@ -230,7 +230,8 @@ Kết quả:
 
 - GET /api/admin/me
 - GET /api/admin/overview
-- GET /api/admin/users
+- GET /api/admin/users?q=&role=all|admin|user&page=1&page_size=20
+- GET /api/admin/audit-logs?page=1&page_size=10
 - PATCH /api/admin/users/{user_id}/role
 - DELETE /api/admin/users/{user_id}
 

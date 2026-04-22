@@ -234,9 +234,33 @@ function getAdminOverview() {
 	});
 }
 
-function getAdminUsers() {
-	return apiRequest("/api/admin/users", {
-		method: "GET"
+function getAdminUsers(params = {}, options = {}) {
+	const searchParams = new URLSearchParams();
+	if (params.q) searchParams.set("q", String(params.q));
+	if (params.role) searchParams.set("role", String(params.role));
+	if (params.page) searchParams.set("page", String(params.page));
+	if (params.pageSize) searchParams.set("page_size", String(params.pageSize));
+
+	const query = searchParams.toString();
+	const path = query ? `/api/admin/users?${query}` : "/api/admin/users";
+
+	return apiRequest(path, {
+		method: "GET",
+		signal: options.signal
+	});
+}
+
+function getAdminAuditLogs(params = {}, options = {}) {
+	const searchParams = new URLSearchParams();
+	if (params.page) searchParams.set("page", String(params.page));
+	if (params.pageSize) searchParams.set("page_size", String(params.pageSize));
+
+	const query = searchParams.toString();
+	const path = query ? `/api/admin/audit-logs?${query}` : "/api/admin/audit-logs";
+
+	return apiRequest(path, {
+		method: "GET",
+		signal: options.signal
 	});
 }
 
@@ -282,6 +306,7 @@ window.sakedoApi = {
 	getAdminMe,
 	getAdminOverview,
 	getAdminUsers,
+	getAdminAuditLogs,
 	updateUserAdminRole,
 	deleteUserByAdmin,
 	API_BASE_URL,
